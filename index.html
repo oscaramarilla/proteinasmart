@@ -1,0 +1,354 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Paraguay Future Invest — El hub de inteligencia de inversión macroeconómica de Paraguay: energía, agroindustria, tecnología, logística bioceánica y real estate productivo." />
+  <meta name="keywords" content="Paraguay, inversión, energía, hidrógeno verde, data centers, agroindustria, logística bioceánica, real estate industrial" />
+  <meta name="author" content="Paraguay Future Invest" />
+
+  <!-- Open Graph -->
+  <meta property="og:title" content="Paraguay Future Invest — El oro del futuro" />
+  <meta property="og:description" content="La energía más barata de la región, corredores bioceánicos y agroindustria 4.0. Descubre por qué Paraguay es la mejor inversión macro de Sudamérica." />
+  <meta property="og:type" content="website" />
+
+  <title>Paraguay Future Invest — El oro del futuro</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Sora:wght@300;400;600;700;800&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="css/styles.css" />
+</head>
+<body>
+  <!-- Animated background canvas -->
+  <canvas id="bg-canvas" aria-hidden="true"></canvas>
+
+  <!-- Progress bar -->
+  <div class="scroll-progress" id="scrollProgress"></div>
+
+  <!-- Navbar -->
+  <header class="navbar" id="navbar">
+    <a href="#hero" class="brand">
+      <span class="brand-mark">🇵🇾</span>
+      <span class="brand-text">Paraguay<strong>Future</strong>Invest</span>
+    </a>
+    <nav class="nav-links" id="navLinks">
+      <a href="#energia">Energía</a>
+      <a href="#agro">Agroindustria</a>
+      <a href="#tech">Tecnología</a>
+      <a href="#logistica">Logística</a>
+      <a href="#realestate">Real Estate</a>
+      <a href="#contacto" class="nav-cta">Invertir</a>
+    </nav>
+    <div class="lang-toggle">
+      <button data-lang="es" class="active">ES</button>
+      <button data-lang="en">EN</button>
+    </div>
+    <button class="burger" id="burger" aria-label="Menu">
+      <span></span><span></span><span></span>
+    </button>
+  </header>
+
+  <!-- HERO -->
+  <section class="hero" id="hero">
+    <div class="hero-content">
+      <span class="eyebrow reveal">El corazón energético de Sudamérica</span>
+      <h1 class="reveal">
+        Paraguay es el
+        <span class="gradient-text">oro del futuro</span>
+      </h1>
+      <p class="hero-sub reveal">
+        La energía más barata de la región, excedentes gigantes, ubicación estratégica
+        y estabilidad eléctrica. Una plataforma de inteligencia para la mejor inversión
+        macroeconómica de la próxima década.
+      </p>
+      <div class="hero-cta reveal">
+        <a href="#energia" class="btn btn-primary">Explorar oportunidades</a>
+        <a href="#mapa" class="btn btn-ghost">Ver tesis de inversión ↓</a>
+      </div>
+
+      <div class="hero-stats reveal">
+        <div class="stat">
+          <span class="stat-num" data-target="100" data-suffix="%">0</span>
+          <span class="stat-label">Energía renovable</span>
+        </div>
+        <div class="stat">
+          <span class="stat-num" data-target="14" data-suffix=" GW">0</span>
+          <span class="stat-label">Capacidad hidroeléctrica</span>
+        </div>
+        <div class="stat">
+          <span class="stat-num" data-target="50" data-prefix="+" data-suffix="%">0</span>
+          <span class="stat-label">Excedente exportable</span>
+        </div>
+        <div class="stat">
+          <span class="stat-num" data-target="3" data-suffix=" países">0</span>
+          <span class="stat-label">Hub bioceánico</span>
+        </div>
+      </div>
+    </div>
+    <div class="scroll-hint" aria-hidden="true"><span></span></div>
+  </section>
+
+  <!-- TESIS / RANKING -->
+  <section class="section" id="mapa">
+    <div class="section-head">
+      <span class="kicker">La tesis</span>
+      <h2>Cinco ejes que redefinen el mapa de inversión</h2>
+      <p>Ordenados por retorno macroeconómico esperado. De la energía barata a la
+        infraestructura productiva, cada eje se refuerza con el siguiente.</p>
+    </div>
+
+    <div class="ranking">
+      <a href="#energia" class="rank-card gold">
+        <span class="medal">🥇</span>
+        <h3>Energía + Industrialización</h3>
+        <p>El oro del futuro. Industrias electrointensivas, data centers e hidrógeno verde.</p>
+        <span class="rank-return">Retorno: <strong>Altísimo</strong></span>
+      </a>
+      <a href="#agro" class="rank-card silver">
+        <span class="medal">🥈</span>
+        <h3>Tierra agrícola + transformación</h3>
+        <p>No vender granos, sino procesarlos. Proteínas vegetales y agroindustria 4.0.</p>
+        <span class="rank-return">Retorno: <strong>Muy alto</strong></span>
+      </a>
+      <a href="#tech" class="rank-card bronze">
+        <span class="medal">🥉</span>
+        <h3>Tecnología + infraestructura digital</h3>
+        <p>País subinvertido en digitalización. Retorno marginal enorme.</p>
+        <span class="rank-return">Retorno: <strong>Alto</strong></span>
+      </a>
+      <a href="#logistica" class="rank-card">
+        <span class="medal">🏅</span>
+        <h3>Logística + corredores bioceánicos</h3>
+        <p>El hub entre Brasil, Argentina y Chile. Puertos secos y transporte inteligente.</p>
+        <span class="rank-return">Retorno: <strong>Estratégico</strong></span>
+      </a>
+      <a href="#realestate" class="rank-card">
+        <span class="medal">🧱</span>
+        <h3>Real estate productivo</h3>
+        <p>Galpones, depósitos y parques industriales. No residencial: productivo.</p>
+        <span class="rank-return">Retorno: <strong>Sólido</strong></span>
+      </a>
+    </div>
+  </section>
+
+  <!-- EJE 1: ENERGIA -->
+  <section class="section sector" id="energia">
+    <div class="sector-grid">
+      <div class="sector-text reveal">
+        <span class="kicker gold-text">🥇 Eje 1 · El oro del futuro</span>
+        <h2>Energía + Industrialización</h2>
+        <p class="lead">
+          Paraguay tiene la energía más barata de la región, excedentes gigantes,
+          ubicación estratégica y estabilidad eléctrica. La combinación perfecta para
+          atraer la industria pesada que el mundo está relocalizando.
+        </p>
+        <ul class="feature-list">
+          <li><strong>Industrias electrointensivas</strong> — costo energético imbatible</li>
+          <li><strong>Data centers</strong> — energía 100% limpia y estable 24/7</li>
+          <li><strong>Hidrógeno verde</strong> — exportación de energía embotellada</li>
+          <li><strong>Fertilizantes</strong> — sustitución de importaciones regionales</li>
+          <li><strong>Acero verde &amp; aluminio</strong> — manufactura descarbonizada</li>
+          <li><strong>Manufactura pesada</strong> — reshoring sudamericano</li>
+        </ul>
+        <a href="#contacto" class="btn btn-primary">Quiero la tesis completa</a>
+      </div>
+      <div class="sector-visual reveal">
+        <div class="energy-orb">
+          <div class="orb-core"></div>
+          <div class="orb-ring r1"></div>
+          <div class="orb-ring r2"></div>
+          <div class="orb-ring r3"></div>
+        </div>
+        <div class="mini-metrics">
+          <div class="mini"><span class="mini-num" data-target="100" data-suffix="%">0</span><span>Renovable</span></div>
+          <div class="mini"><span class="mini-num" data-target="24" data-suffix="/7">0</span><span>Estabilidad</span></div>
+          <div class="mini"><span class="mini-num" data-target="1" data-prefix="#">0</span><span>Energía + barata</span></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- EJE 2: AGRO -->
+  <section class="section sector alt" id="agro">
+    <div class="sector-grid reverse">
+      <div class="sector-text reveal">
+        <span class="kicker silver-text">🥈 Eje 2 · Más allá de la soja</span>
+        <h2>Tierra agrícola + transformación</h2>
+        <p class="lead">
+          El futuro no es vender granos, sino procesarlos. Cada kilo transformado
+          multiplica el valor exportable y crea cadenas industriales completas.
+        </p>
+        <div class="chip-grid">
+          <span class="chip">Proteínas vegetales</span>
+          <span class="chip">Biocombustibles</span>
+          <span class="chip">Aceites premium</span>
+          <span class="chip">Agroindustria 4.0</span>
+          <span class="chip">Genética animal</span>
+        </div>
+        <a href="#contacto" class="btn btn-primary">Explorar agroindustria</a>
+      </div>
+      <div class="sector-visual reveal">
+        <div class="value-chain">
+          <div class="vc-step"><span>🌱</span><p>Grano</p><small>Valor base</small></div>
+          <div class="vc-arrow">→</div>
+          <div class="vc-step"><span>⚙️</span><p>Proceso</p><small>+3x valor</small></div>
+          <div class="vc-arrow">→</div>
+          <div class="vc-step highlight"><span>📦</span><p>Producto</p><small>+8x valor</small></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- EJE 3: TECH -->
+  <section class="section sector" id="tech">
+    <div class="sector-grid">
+      <div class="sector-text reveal">
+        <span class="kicker bronze-text">🥉 Eje 3 · La oportunidad digital</span>
+        <h2>Tecnología + infraestructura digital</h2>
+        <p class="lead">
+          Paraguay está subinvertido en digitalización: el retorno marginal de cada
+          inversión es enorme. Energía barata + talento joven = ecosistema tech.
+        </p>
+        <div class="chip-grid">
+          <span class="chip">Fibra óptica</span>
+          <span class="chip">IA aplicada a logística</span>
+          <span class="chip">Fintech</span>
+          <span class="chip">Automatización</span>
+          <span class="chip">Plataformas B2B</span>
+        </div>
+        <a href="#contacto" class="btn btn-primary">Ver casos tech</a>
+      </div>
+      <div class="sector-visual reveal">
+        <div class="tech-grid-anim" id="techGrid"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- EJE 4: LOGISTICA -->
+  <section class="section sector alt" id="logistica">
+    <div class="sector-grid reverse">
+      <div class="sector-text reveal">
+        <span class="kicker">🏅 Eje 4 · Corazón geográfico</span>
+        <h2>Logística + corredores bioceánicos</h2>
+        <p class="lead">
+          El país será el hub entre Brasil, Argentina y Chile. Los corredores
+          bioceánicos conectan el Atlántico con el Pacífico atravesando Paraguay.
+        </p>
+        <div class="chip-grid">
+          <span class="chip">Parques logísticos</span>
+          <span class="chip">Puertos secos</span>
+          <span class="chip">Transporte inteligente</span>
+          <span class="chip">Almacenamiento frío</span>
+        </div>
+        <a href="#contacto" class="btn btn-primary">Mapa de corredores</a>
+      </div>
+      <div class="sector-visual reveal">
+        <div class="corridor-map">
+          <div class="node n-atlantic">🌊<small>Atlántico</small></div>
+          <div class="corridor-line"></div>
+          <div class="node n-py">🇵🇾<small>Hub PY</small></div>
+          <div class="corridor-line"></div>
+          <div class="node n-pacific">⛰️<small>Pacífico</small></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- EJE 5: REAL ESTATE -->
+  <section class="section sector" id="realestate">
+    <div class="sector-grid">
+      <div class="sector-text reveal">
+        <span class="kicker">🧱 Eje 5 · Infraestructura productiva</span>
+        <h2>Real estate productivo</h2>
+        <p class="lead">
+          No residencial: productivo. La infraestructura física que soporta toda la
+          industrialización energética, agroindustrial y logística.
+        </p>
+        <div class="chip-grid">
+          <span class="chip">Galpones</span>
+          <span class="chip">Depósitos</span>
+          <span class="chip">Parques industriales</span>
+          <span class="chip">Centros de distribución</span>
+        </div>
+        <a href="#contacto" class="btn btn-primary">Oportunidades inmobiliarias</a>
+      </div>
+      <div class="sector-visual reveal">
+        <div class="warehouse-stack">
+          <div class="wh"></div><div class="wh"></div><div class="wh"></div>
+          <div class="wh"></div><div class="wh"></div><div class="wh"></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- WHY NOW -->
+  <section class="section why" id="why">
+    <div class="section-head">
+      <span class="kicker">Por qué ahora</span>
+      <h2>La ventana de oportunidad se está abriendo</h2>
+    </div>
+    <div class="why-grid">
+      <div class="why-card reveal"><span>⚡</span><h3>Reshoring global</h3><p>El mundo relocaliza la industria buscando energía limpia y barata.</p></div>
+      <div class="why-card reveal"><span>🌍</span><h3>Descarbonización</h3><p>El acero verde y el hidrógeno necesitan exactamente lo que Paraguay ofrece.</p></div>
+      <div class="why-card reveal"><span>📈</span><h3>Macro estable</h3><p>Grado de inversión, baja deuda y moneda estable en la región.</p></div>
+      <div class="why-card reveal"><span>👥</span><h3>Bono demográfico</h3><p>Población joven y costo laboral competitivo.</p></div>
+    </div>
+  </section>
+
+  <!-- CTA / CONTACTO -->
+  <section class="section cta-section" id="contacto">
+    <div class="cta-box reveal">
+      <h2>Construyamos el futuro de Paraguay juntos</h2>
+      <p>Recibe el dossier de inteligencia de inversión con datos, métricas y
+        oportunidades concretas por sector.</p>
+      <form class="cta-form" id="leadForm">
+        <input type="text" name="name" placeholder="Nombre" required />
+        <input type="email" name="email" placeholder="Email" required />
+        <select name="sector" required>
+          <option value="" disabled selected>Sector de interés</option>
+          <option>Energía + Industrialización</option>
+          <option>Agroindustria</option>
+          <option>Tecnología</option>
+          <option>Logística</option>
+          <option>Real Estate productivo</option>
+        </select>
+        <button type="submit" class="btn btn-primary">Recibir dossier</button>
+      </form>
+      <p class="form-note" id="formNote"></p>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer class="footer">
+    <div class="footer-inner">
+      <div class="footer-brand">
+        <span class="brand-mark">🇵🇾</span>
+        <span class="brand-text">Paraguay<strong>Future</strong>Invest</span>
+        <p>Inteligencia de inversión macroeconómica · Open knowledge project.</p>
+      </div>
+      <div class="footer-cols">
+        <div>
+          <h4>Ejes</h4>
+          <a href="#energia">Energía</a>
+          <a href="#agro">Agroindustria</a>
+          <a href="#tech">Tecnología</a>
+          <a href="#logistica">Logística</a>
+          <a href="#realestate">Real Estate</a>
+        </div>
+        <div>
+          <h4>Proyecto</h4>
+          <a href="#mapa">Tesis de inversión</a>
+          <a href="#why">Por qué ahora</a>
+          <a href="#contacto">Contacto</a>
+        </div>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p>© <span id="year"></span> Paraguay Future Invest. Datos con fines informativos. Hecho con 💚 en Paraguay.</p>
+    </div>
+  </footer>
+
+  <script src="js/main.js"></script>
+</body>
+</html>
