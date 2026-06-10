@@ -1,0 +1,9 @@
+{
+  "redirects": [
+    {
+      "source": "/(.*)",
+      "destination": "https://www.aycweb.com/invertir-en-paraguay",
+      "permanent": true
+    }
+  ]
+}
