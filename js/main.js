@@ -6,6 +6,9 @@
 (function () {
   'use strict';
 
+  /* ---------- CONFIG — reemplazá con tu número real ---------- */
+  const WA_NUMBER = '595XXXXXXXXX'; // ej: 595981123456
+
   /* ---------- Navbar scroll state + progress bar ---------- */
   const navbar = document.getElementById('navbar');
   const progress = document.getElementById('scrollProgress');
@@ -99,22 +102,62 @@
     }, 700);
   }
 
-  /* ---------- Lead form ---------- */
+  /* ---------- Lead form → n8n Webhook ---------- */
   const form = document.getElementById('leadForm');
   const note = document.getElementById('formNote');
+  const submitBtn = form ? form.querySelector('button[type="submit"]') : null;
+
+  // IMPORTANTE: Reemplaza esta URL con la URL de producción de tu Webhook en n8n
+  const N8N_WEBHOOK_URL = 'https://TU-DOMINIO-N8N.com/webhook/landing-leads'; 
+
   if (form) {
-    form.addEventListener('submit', (e) => {
+    form.addEventListener('submit', async (e) => {
       e.preventDefault();
-      const data = Object.fromEntries(new FormData(form).entries());
-      note.textContent =
-        '✓ ¡Gracias, ' + (data.name || '') + '! Te enviaremos el dossier de ' +
-        (data.sector || 'inversión') + ' pronto.';
-      form.reset();
+      
+      const formData = new FormData(form);
+      const data = Object.fromEntries(formData.entries());
+      
+      // Cambiar estado del botón a cargando
+      const originalBtnText = submitBtn.textContent;
+      submitBtn.textContent = 'Enviando...';
+      submitBtn.disabled = true;
+      note.style.color = '#fff'; // Resetear color
+      note.textContent = 'Procesando tu solicitud...';
+
       try {
-        const leads = JSON.parse(localStorage.getItem('pfi_leads') || '[]');
-        leads.push({ ...data, ts: Date.now() });
-        localStorage.setItem('pfi_leads', JSON.stringify(leads));
-      } catch (_) {}
+        const response = await fetch(N8N_WEBHOOK_URL, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            name: data.name,
+            email: data.email,
+            sector: data.sector,
+            source: 'Landing Page PFI',
+            timestamp: new Date().toISOString()
+          }),
+        });
+
+        if (response.ok) {
+          // Éxito
+          note.style.color = '#15c47e'; // Verde éxito
+          note.textContent = '✓ ¡Dossier enviado! Revisa tu bandeja de entrada (y spam).';
+          form.reset();
+        } else {
+          // Error del servidor (ej. 500)
+          throw new Error('Respuesta del servidor no fue OK');
+        }
+      } catch (error) {
+        // Error de red o CORS
+        console.error('Error al enviar el lead:', error);
+        note.style.color = '#f5c542'; // Amarillo/Naranja advertencia
+        note.textContent = '⚠ Hubo un problema al enviar. Por favor, intenta de nuevo o contáctanos directamente.';
+      } finally {
+        // Restaurar botón
+        submitBtn.textContent = originalBtnText;
+        submitBtn.disabled = false;
+      }
     });
   }
 

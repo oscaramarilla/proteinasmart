@@ -1,4 +1,4 @@
-/* =========================================================
+anzemos cc/* =========================================================
    Paraguay Future Invest — styles.css
    Modern, world-class investment landing page
    ========================================================= */
@@ -181,6 +181,8 @@ body::before {
 .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 14px 34px rgba(245,197,66,0.4); }
 .btn-ghost { background: var(--surface); border-color: var(--border); color: var(--text); }
 .btn-ghost:hover { background: var(--surface-strong); transform: translateY(-2px); }
+.btn-outline { border-color: var(--green); color: var(--green); }
+.btn-outline:hover { background: rgba(21,196,126,0.1); }
 
 .hero-stats {
   display: grid;
@@ -230,6 +232,7 @@ body::before {
 .gold-text { color: var(--gold); }
 .silver-text { color: var(--silver); }
 .bronze-text { color: var(--bronze); }
+.green-text { color: var(--green); }
 
 /* ============ RANKING ============ */
 .ranking { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 1.1rem; }
@@ -354,6 +357,73 @@ body::before {
 }
 .wh:hover { border-color: var(--gold); transform: translateY(-4px); transition: 0.2s; }
 
+/* Modular build visual */
+.modular-build {
+  position: relative;
+  width: 260px;
+  height: 230px;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  grid-template-rows: repeat(2, 1fr);
+  gap: 10px;
+  align-content: end;
+}
+.mod-block {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  position: relative;
+  overflow: hidden;
+  opacity: 0;
+  transform: translateY(14px) scale(0.92);
+  animation: modIn 0.6s ease forwards;
+}
+.mod-block::after {
+  content: '';
+  position: absolute; inset: 0;
+  background: linear-gradient(135deg, rgba(21,196,126,0.18), rgba(79,140,255,0.12));
+  opacity: 0;
+  transition: opacity 0.3s;
+}
+.mod-block:hover { border-color: var(--green); transform: translateY(-4px); }
+.mod-block:hover::after { opacity: 1; }
+.mod-block.b1 { animation-delay: 0.05s; }
+.mod-block.b2 { animation-delay: 0.20s; }
+.mod-block.b3 { animation-delay: 0.35s; }
+.mod-block.b4 { animation-delay: 0.50s; }
+.mod-block.b5 { animation-delay: 0.65s; grid-column: span 1; }
+.mod-roof {
+  grid-column: 1 / -1;
+  height: 14px;
+  border-radius: 8px;
+  background: linear-gradient(90deg, var(--green), var(--blue));
+  box-shadow: 0 0 22px rgba(21,196,126,0.45);
+  opacity: 0;
+  transform: translateY(14px);
+  animation: modIn 0.6s ease 0.8s forwards;
+  order: -1;
+}
+@keyframes modIn { to { opacity: 1; transform: translateY(0) scale(1); } }
+
+/* Modular audience cards */
+.modular-audience {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 1.2rem;
+  margin-top: clamp(2.5rem, 6vw, 4rem);
+}
+.aud-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 1.6rem 1.4rem;
+  transition: transform 0.25s, border-color 0.25s, background 0.25s;
+}
+.aud-card:hover { transform: translateY(-5px); border-color: var(--green); background: var(--surface-strong); }
+.aud-card span { font-size: 1.9rem; display: block; margin-bottom: 0.6rem; }
+.aud-card h3 { font-size: 1.08rem; margin-bottom: 0.4rem; }
+.aud-card p { color: var(--text-dim); font-size: 0.9rem; }
+
 /* ============ WHY ============ */
 .why-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px,1fr)); gap: 1.2rem; }
 .why-card {
@@ -386,6 +456,18 @@ body::before {
 .cta-form select { grid-column: 1 / -1; }
 .cta-form button { grid-column: 1 / -1; justify-content: center; }
 .form-note { margin-top: 1rem; color: var(--green); font-size: 0.9rem; min-height: 1.2rem; }
+
+/* ============ CONSULTING MICRO-CTA ============ */
+.consulting-micro-cta {
+  margin-top: 2rem;
+  background: var(--surface);
+  border: 1px solid rgba(21,196,126,0.3);
+  border-radius: var(--radius);
+  padding: clamp(1.5rem, 4vw, 2.5rem);
+  text-align: center;
+}
+.consulting-content h3 { font-size: 1.3rem; margin-bottom: 0.6rem; }
+.consulting-content p { color: var(--text-dim); max-width: 500px; margin: 0 auto 1.4rem; font-size: 0.95rem; }
 
 /* ============ FOOTER ============ */
 .footer { border-top: 1px solid var(--border); margin-top: 3rem; background: var(--bg-soft); }
