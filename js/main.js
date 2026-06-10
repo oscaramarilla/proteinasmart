@@ -135,6 +135,8 @@
             email: data.email,
             sector: data.sector,
             source: 'Landing Page PFI',
+            aycweb_origin: 'proteinasmart.com', // Sello de infraestructura
+            lead_type: 'inversor', // Clasificación inicial
             timestamp: new Date().toISOString()
           }),
         });
