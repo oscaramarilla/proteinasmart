@@ -3,7 +3,10 @@
   "cleanUrls": true,
   "trailingSlash": false,
   "rewrites": [
-    { "source": "/keto", "destination": "/?disciplina=keto" },
+    { "source": "/proteinas", "destination": "/?categoria=proteinas" },
+    { "source": "/deportivos", "destination": "/?categoria=deportivos" },
+    { "source": "/keto", "destination": "/?categoria=keto" },
+    { "source": "/longevidad", "destination": "/?categoria=longevidad" },
     { "source": "/low-carb", "destination": "/?disciplina=low-carb" },
     { "source": "/healthy-habits", "destination": "/?disciplina=healthy-habits" },
     { "source": "/neuroplasticidad", "destination": "/?disciplina=neuroplasticidad" }

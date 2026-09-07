@@ -37,7 +37,9 @@ Sigue el principio `Configuración define / Dominio decide / Servicios ejecutan 
 | `js/config.js` | **Configuración.** Contacto, WhatsApp, envíos, pagos, tracking, endpoint del formulario. |
 | `js/catalog.js` | **Datos.** Array de productos + categorías + objetivos. Es el "backend" del catálogo. |
 | `js/main.js` | **Dominio y servicios.** Filtros, render, armado del mensaje de WhatsApp, formulario, tracking. |
-| `index.html` | **Presentación.** Estructura semántica, SEO y datos estructurados (Store + FAQPage). |
+| `js/cart.js` | **Estado del carrito.** Reducer inmutable con persistencia en localStorage y total en guaraníes. |
+| `js/data-source.js` | **Fuente híbrida.** Catálogo remoto desde Supabase(CDN ESM) con fallback inmediato al array local. |
+| `index.html` | **Presentación.** Estructura semántica, SEO y datos estructurados(Store + FAQPage). |
 | `css/styles.css` | Identidad visual, animaciones y responsive. |
 
 El HTML **no tiene datos de contacto hardcodeados**: los inyecta `main.js` desde `config.js`
@@ -49,7 +51,9 @@ proteinasmart/
 ├── css/styles.css
 ├── js/
 │   ├── config.js     ← empezá acá
-│   ├── catalog.js    ← productos y precios
+│   ├── catalog.js    ← productos y precios（protocolos por producto）
+│   ├── cart.js       ← carrito multi-producto（localStorage）
+│   ├── data-source.js ← catálogo híbrido Supabase → fallback local
 │   └── main.js
 ├── vercel.json
 └── README.md

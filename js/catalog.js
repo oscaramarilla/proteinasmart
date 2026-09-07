@@ -256,9 +256,31 @@ window.PS_CATALOG = [
 ];
 
 /* Propiedad visual normalizada: una URL vacia activa el fallback tipografico. */
+/* Asesoría por producto(Regla de Venta del Dossier): cada item sabe su protocolo
+   y su complemento natural para el upsell en el checkout de WhatsApp. */
+const PS_ASESORIA_POR_PRODUCTO = {
+  'whey-isolate-2lb': { protocolo: 'Ganar masa', complemento: 'Creatina + EAA' },
+  'whey-concentrada-5lb': { protocolo: 'Ganar masa', complemento: 'Creatina + EAA' },
+  'proteina-vegana': { protocolo: 'Bajar grasa / Definir', complemento: 'EAA + Aceite MCT' },
+  'colageno-hidrolizado': { protocolo: 'Belleza & longevidad', complemento: 'Omega 3 + Vitamina D3+K2' },
+  'creatina-mono': { protocolo: 'Ganar masa', complemento: 'Whey Protein + EAA' },
+  'pre-entreno': { protocolo: 'Energía sostenida', complemento: 'Aceite MCT + Vitamina D3+K2' },
+  'eaa-bcaa': { protocolo: 'Bajar grasa / Definir', complemento: 'Whey Isolate o Proteína Vegetal + MCT' },
+  'glutamina': { protocolo: 'Recuperación muscular', complemento: 'Whey Protein + Creatina' },
+  'aceite-mct': { protocolo: 'Energía sostenida', complemento: 'Vitamina D3+K2 + Pre-entreno' },
+  'barras-keto': { protocolo: 'Keto / Low carb', complemento: 'Aceite MCT + Sustituto de Comida' },
+  'sustituto-comida': { protocolo: 'Keto / Low carb', complemento: 'Aceite MCT + Proteína Vegetal' },
+  'endulzante-monkfruit': { protocolo: 'Keto / Low carb', complemento: 'Aceite MCT + Barras Keto' },
+  'omega-3': { protocolo: 'Foco y claridad mental', complemento: 'Magnesio Glicinato + Nootrópico Focus' },
+  'magnesio-glicinato': { protocolo: 'Foco y claridad mental', complemento: 'Omega 3 + Nootrópico Focus' },
+  'vitamina-d3-k2': { protocolo: 'Energía sostenida', complemento: 'Aceite MCT + Omega 3' },
+  'nootropico-focus': { protocolo: 'Foco y claridad mental', complemento: 'Omega 3 + Magnesio Glicinato' },
+};
+
 window.PS_CATALOG = window.PS_CATALOG.map((producto) => ({
   ...producto,
   imagen: producto.imagen || '',
+  ...(PS_ASESORIA_POR_PRODUCTO[producto.id] || {}),
 }));
 
 /* Categorías: título y descripción de cada filtro */
