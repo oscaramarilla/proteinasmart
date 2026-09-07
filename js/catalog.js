@@ -255,6 +255,12 @@ window.PS_CATALOG = [
   },
 ];
 
+/* Propiedad visual normalizada: una URL vacia activa el fallback tipografico. */
+window.PS_CATALOG = window.PS_CATALOG.map((producto) => ({
+  ...producto,
+  imagen: producto.imagen || '',
+}));
+
 /* Categorías: título y descripción de cada filtro */
 window.PS_CATEGORIAS = [
   { id: 'todos', nombre: 'Todo el catálogo', icono: '◆' },

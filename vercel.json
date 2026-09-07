@@ -2,6 +2,12 @@
   "$schema": "https://openapi.vercel.sh/vercel.json",
   "cleanUrls": true,
   "trailingSlash": false,
+  "rewrites": [
+    { "source": "/keto", "destination": "/?disciplina=keto" },
+    { "source": "/low-carb", "destination": "/?disciplina=low-carb" },
+    { "source": "/healthy-habits", "destination": "/?disciplina=healthy-habits" },
+    { "source": "/neuroplasticidad", "destination": "/?disciplina=neuroplasticidad" }
+  ],
   "headers": [
     {
       "source": "/(.*)",
