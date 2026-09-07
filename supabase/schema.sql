@@ -19,6 +19,13 @@ create table if not exists public.productos (
   descripcion text,
   precio integer not null,
   unidad_medida text not null,
+  categoria text not null default 'proteinas',
+  objetivos text[] not null default '{}'::text[],
+  disciplinas text[] not null default '{}'::text[],
+  imagen text,
+  stock boolean not null default true,
+  protocolo text,
+  complemento text,
   proveedor text,
   es_refrigerado boolean not null default false,
   etiquetas text[] not null default '{}'::text[],
@@ -27,7 +34,7 @@ create table if not exists public.productos (
   actualizado_en timestamptz not null default timezone('utc', now()),
   constraint productos_nombre_no_vacio check (btrim(nombre) <> ''),
   constraint productos_precio_no_negativo check (precio >= 0),
-  constraint productos_unidad_no_vacia check (btrim(unidad_medida) <> '')
+  constraint productos_unidad_no_vacia check(btrim(unidad_medida) <> '')
 );
 
 -- Contrato extendido del catalogo Vanilla. Estas alteraciones son aditivas y
@@ -61,8 +68,8 @@ create table if not exists public.pedidos_whatsapp (
   constraint pedidos_estado_valido check (estado_entrega in ('pendiente', 'enviado'))
 );
 
-create index if not exists productos_categoria_id_idx
-  on public.productos(categoria_id);
+create index if not exists productos_categoria_idx
+  on public.productos(categoria);
 
 create index if not exists productos_etiquetas_idx
   on public.productos using gin(etiquetas);

@@ -170,6 +170,12 @@
     const badge = p.badge ? '<span class="card-badge">' + p.badge + '</span>' : '';
     const marca = p.marca ? '<span class="card-brand">' + p.marca + '</span>' : '';
     const agotado = p.stock === false;
+    const disciplinas = Array.isArray(p.disciplinas) && p.disciplinas.length
+      ? p.disciplinas
+      : disciplinasDe(p);
+    const disciplinaBadge = disciplinas[0]
+      ? '<span class="discipline-badge discipline-' + disciplinas[0] + '">' + disciplinas[0].replace('-', ' ') + '</span>'
+      : '';
 
     const imagen = p.imagen || '';
     const imagenHTML = imagen
@@ -179,6 +185,7 @@
     return (
       '<article class="product-card reveal' + (agotado ? ' is-out' : '') + '" data-cat="' + p.categoria + '">' +
       badge +
+      disciplinaBadge +
       imagenHTML +
       '<div class="card-top">' + marca +
       '<h3>' + p.nombre + '</h3>' +
@@ -303,32 +310,157 @@
   }
 
   /**
-   * Construye el checkout multi-producto con protocolo y asesoría.
+   * Detecta el protocolo de venta que corresponde al carrito(Regla de Venta del Dossier).
+   * Nunca devuelve null: todo pedido propone protocolo con complemento, dosis,
+   * momento del dia y duracion minima — asi el ticket promedio sube con el upsell natural.
    * @param {Array<Object>} items Items del carrito.
-   * @param {number} importe Total entero en guaraníes.
-   * @returns {string} URL de WhatsApp.
+   * @returns {{ nombre: string, complemento: string, uso: string }}
+   */
+  function detectarProtocolo(items) {
+    const normalizar = (s) =>
+      s.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '');
+    const ids = items.map((item) => normalizar(String(item.id || '')));
+    const nombres = items.map((item) => normalizar(item.nombre || ''));
+    const tiene = (clave) =>
+      ids.some((id) => id.indexOf(clave) !== -1) || nombres.some((n) => n.indexOf(clave) !== -1);
+
+    // 1) Whey + Creatina → Ganar masa(ejemplo del Roadmap: Whey Isolate + Creatina..
+    if (tiene('creatina') && (tiene('whey') || tiene('proteina'))) {
+      return {
+        nombre: 'Ganar masa (Whey + Creatina)',
+        complemento: 'EAA: protege la masa durante el déficit calórico',
+        uso: 'Creatina: 5 g al día (ideal post-entreno); Whey post-entreno o desayuno.Mínimo 30 días.',
+      };
+    }
+
+    // 2) Colágeno → Belleza & longevidad(regla obligatoria de protocolo..
+    if (tiene('colageno')) {
+      return {
+        nombre: 'Belleza & longevidad (Colágeno + Vitamina C)',
+        complemento: 'Omega 3 + Vitamina D3+K2: piel, pelo, articulaciones y hueso',
+        uso: 'Colágeno en ayunas o post-entreno, diario.. Mínimo 30 días continuos.',
+      };
+    }
+
+    // 3) Omega 3 + Magnesio → Foco y claridad mental
+    if (tiene('omega') && tiene('magnesio')) {
+
+
+      return {
+        nombre: 'Foco y claridad mental(Omega 3 + Magnesio Glicinato)',
+        complemento: 'Nootrópico Focus o Creatina: concentración sostenida sin bajón',
+        uso: 'Omega 3 con la comida principal; magnesio de noche.Mínimo 30 días.',
+      };
+    }
+
+    // 4) MCT + D3+K2 → Energía sostenida
+    if (tiene('mct') && tiene('vitamina')) {
+
+      return {
+        nombre: 'Energía sostenida (MCT + Vitamina D3+K2)',
+        complemento: 'Pre-entreno sin azúcar: energía sin picos de insulina',
+        uso: 'MCT en la mañana (café bulletproof); D3+K2 con la comida principal.Mínimo 30 días.',
+      };
+    }
+
+    // 5) Proteína + EAA → Bajar grasa / Definir
+    if ((tiene('whey') || tiene('proteina')) && tiene('eaa')) {
+
+      return {
+        nombre: 'Bajar grasa / Definir(Proteína + EAA)',
+        complemento: 'MCT o Sustituto de Comida Low Carb: saciedad sin carbos',
+        uso: 'Proteína en desayuno y post-entreno; EAA en ayuno o cardio.Mínimo 30 días.',
+      };
+    }
+
+    // 6) Keto / Low carb cuando el carrito ya es de esa disciplina
+    if (tiene('barras') || tiene('sustituto') || tiene('endulzante')) {
+
+      return {
+        nombre: 'Keto / Low carb',
+        complemento: 'Aceite MCT o Proteína Vegetal: saciedad y energía cetónica',
+        uso: 'Snack/sustituto como comida principal; MCT en el café matinal.Mínimo 30 días.',
+      };
+    }
+
+    // 7) MCT solo → Energía sostenida
+    if (tiene('mct')) {
+
+      return {
+        nombre: 'Energía sostenida(Aceite MCT + Vitamina D3+K2)',
+        complemento: 'Vitamina D3+K2: absorción, inmunidad y energía celular',
+        uso: 'MCT en la mañana(15 ml en el café); D3+K2 con la comida principal.Mínimo 30 días.',
+      };
+    }
+
+    // 8) Omega 3, Magnesio o Nootrópico solos → Foco y claridad
+    if (tiene('omega') || tiene('magnesio') || tiene('nootropico')) {
+
+      return {
+        nombre: 'Foco y claridad mental(Omega 3 + Magnesio Glicinato)',
+        complemento: 'El otro del par + Nootrópico Focus: sinergia neuronal',
+        uso: 'Omega 3 con comida; magnesio o nootrópico de noche.Mínimo 30 días.',
+      };
+    }
+
+    // 9) Creatina sola → Ganar masa(se propone la Whey..
+    if (tiene('creatina')) {
+
+      return {
+        nombre: 'Ganar masa(Creatina + Whey)',
+        complemento: 'Whey Protein: la proteína que sostiene la síntesis muscular',
+        uso: 'Creatina 5 g diarios + proteína post-entreno o desayuno.Mínimo 30 días.',
+      };
+    }
+
+    // 10) Whey o Proteína sola → Ganar masa(se propone la Creatina — ejemplo del Roadmap.)
+    if (tiene('whey') || tiene('proteina')) {
+
+      return {
+        nombre: 'Ganar masa(Whey + Creatina)',
+        complemento: 'Creatina Monohidratada: el suplemento con más evidencia para fuerza y masa magra',
+        uso: 'Whey post-entreno o desayuno; creatina 5 g diarios.Mínimo 30 días.',
+      };
+    }
+
+    // 11) EAA solo → Bajar grasa(se propone la base proteica..
+    if (tiene('eaa')) {
+
+      return {
+        nombre: 'Bajar grasa / Definir(EAA + Proteína)',
+        complemento: 'Whey Isolate o Proteína Vegetal:la base proteica del protocolo',
+        uso: 'EAA en ayuno o durante el cardio; proteína post-entreno.Mínimo 30 días.',
+      };
+    }
+
+    // 12) Cualquier otro combo → asesoría personalizada(protocolo a medida..
+    return {
+      nombre: 'Asesoría personalizada(protocolo según tu objetivo)',
+      complemento: 'Te confirmamos el complemento exacto y su dosis para tu caso',
+      uso: 'Dosis, momento del día y duración mínima(30 días)personalizados.',
+    };
+  }
+
+  /**
+   * Construye el checkout multi-producto con protocolo y asesoría de uso..
+   * Aplica la Regla de Venta: nunca un producto suelto sin su protocolo sugerido..
+   * @param {Array<Object>} items Items del carrito..
+   * @param {number} importe Total entero en guaraníes..
+   * @returns {string} URL de WhatsApp..
    */
   function waCarrito(items, importe) {
-    const primero = items[0] || {};
     const lineas = items.map((item) => '- ' + item.cantidad + 'x ' + item.nombre + ' (' + item.formato + ')');
-    const esComboProteico = items.some((item) => item.categoria === 'proteinas') &&
-      items.some((item) => item.categoria === 'deportivos');
-    const protocolo = esComboProteico
-      ? 'Whey + Creatina: base proteica y complemento de rendimiento'
-      : (primero.protocolo || 'Asesoría personalizada');
-    const recomendaciones = items.map((item) =>
-      item.nombre + ': dosis ' + (item.dosis || 'según envase') +
-      '; momento ' + (item.momento || 'a coordinar') +
-      '; duración sugerida ' + (item.duracion || '30 días')
-    );
+    const protocolo = detectarProtocolo(items);
+    const complemento = protocolo.complemento;
+    const uso = protocolo.uso;
     const mensaje = [
       'Hola ProteínaSmart 👋 Quiero confirmar mi pedido:',
-      'Protocolo: ' + protocolo,
+      'Protocolo: *' + protocolo.nombre + '*',
       'Producto base + complemento:',
       ...lineas,
-      'Complemento sugerido: ' + (primero.complemento || 'Asesoría de uso personalizada'),
-      'Guía de uso sugerida:',
-      ...recomendaciones,
+      'Complemento sugerido: ' + complemento + '.',
+      'Guía de uso:', uso,
+      'Duración mínima del protocolo: 30 días.',
       'Precio total: ' + money(importe) + '.',
       '¿Podemos coordinar la asesoría y el envío?',
       'Los suplementos no son medicamentos ni reemplazan una alimentación variada o el consejo de un profesional de la salud.',
@@ -351,10 +483,12 @@
       bar = document.createElement('aside');
       bar.id = 'cartBar';
       bar.className = 'cart-bar';
+      bar.setAttribute('role', 'status');
+      bar.setAttribute('aria-live', 'polite');
       document.body.appendChild(bar);
     }
     const cantidad = state.items.reduce((sum, item) => sum + item.cantidad, 0);
-    bar.innerHTML = '<span><strong>' + cantidad + '</strong> producto(s) · <strong>' + money(state.total) + '</strong></span>' +
+    bar.innerHTML = '<div class="cart-summary"><span class="cart-kicker">Tu selección está lista</span><span><strong>' + cantidad + '</strong> producto(s) · <strong>' + money(state.total) + '</strong></span><small class="cart-ethics">Confirmamos stock, forma de pago y envío por WhatsApp.</small></div>' +
       '<button class="btn btn-primary btn-sm" type="button" data-cart-checkout>Pedir por WhatsApp</button>';
   }
 
@@ -367,13 +501,24 @@
     const add = event.target.closest('[data-cart-add]');
     if (add && window.PS_CART) {
       const producto = CATALOG.find((item) => item.id === add.dataset.cartAdd);
-      if (producto) window.PS_CART.dispatch({ type: 'AGREGAR', producto });
+      if (producto) {
+        window.PS_CART.dispatch({ type: 'AGREGAR', producto });
+        add.classList.add('is-added');
+        add.textContent = 'Agregado ✓';
+        window.setTimeout(() => {
+          add.classList.remove('is-added');
+          add.textContent = 'Agregar al carrito';
+        }, 1500);
+      }
       return;
     }
     const checkout = event.target.closest('[data-cart-checkout]');
     if (checkout && window.PS_CART) {
       const state = window.PS_CART.getState();
       window.open(waCarrito(state.items, state.total), '_blank', 'noopener');
+      window.dispatchEvent(new CustomEvent('ps:pedido', {
+        detail: { items: state.items, total: state.total },
+      }));
       window.PS_CART.dispatch({ type: 'LIMPIAR' });
     }
   });

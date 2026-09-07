@@ -1,0 +1,21 @@
+# Dependencias
+node_modules/
+
+# Entornos — las credenciales NUNCA se commitean
+.env
+.env.*
+!.env.example
+
+# Builds Next.js (web/ tiene su propio .gitignore; esto protege la raiz)
+.next/
+out/
+dist/
+build/
+
+# Sistema
+.DS_Store
+Thumbs.db
+*.log
+
+# Vercel
+.vercel
