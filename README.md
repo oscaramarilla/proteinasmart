@@ -75,6 +75,7 @@ Abrí `js/catalog.js` y sumá un objeto al array `PS_CATALOG`:
   objetivos: ['masa', 'definicion'],
   badge: 'Más vendido',
   resumen: 'Beneficio concreto en una línea.',
+  imagen: '',                      // URL opcional; vacío = fallback tipográfico
   stock: true,
 }
 ```
@@ -126,10 +127,10 @@ producto cuando el catálogo pase a base de datos.
 
 ## Roadmap
 
-- [ ] Imágenes reales de producto (hoy las tarjetas son tipográficas)
-- [ ] Landings por categoría y artículos SEO
-- [ ] Migración del catálogo a Supabase + panel de carga
-- [ ] Carrito multi-producto con resumen único a WhatsApp
+- [x] Imágenes reales de producto con fallback tipográfico
+- [x] Landings por disciplina mediante URLSearchParams y rewrites de Vercel
+- [x] Migración híbrida del catálogo a Supabase con fallback local
+- [x] Carrito multi-producto persistente con resumen único a WhatsApp
 - [ ] Pasarela de pago local (Bancard / Pagopar)
 
 ---

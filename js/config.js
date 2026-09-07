@@ -44,6 +44,12 @@ window.PS_CONFIG = {
     metaPixel: '',  // ej: '1234567890'
   },
 
+  // Opcional: si queda vacío, el catálogo local sigue operando sin downtime.
+  supabase: {
+    url: '',
+    anonKey: '',
+  },
+
   // Endpoint del formulario de asesoría (Formspree, n8n, Supabase Edge Function…)
   // Si queda vacío, el formulario deriva el lead a WhatsApp automáticamente.
   formEndpoint: '',

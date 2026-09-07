@@ -15,6 +15,26 @@
      badge       → etiqueta corta opcional ('Más vendido', 'Nuevo'…)
      resumen     → una línea, beneficio concreto
      stock       → true | false
+
+   PRECIOS — relevamiento de mercado Paraguay, septiembre 2026.
+   Fuentes: suplementosasuncion.com.py (gama económica/media) y
+   vitaminshoppeparaguay.com.py (gama premium importada).
+   Referencias relevadas:
+     Whey 1 kg gama económica ......... Gs 140.000 – 200.000
+     Whey isolate 1 kg ................ Gs 200.000 (Growth) – 360.000 (ENA True Made)
+     Whey isolate premium ............. Gs 299.000 (22 tomas) – 525.000 (45 tomas)
+     Creatina 300 g ................... Gs 170.000 – 300.000 (premium 295.000)
+     Pre-entreno (C4) ................. Gs 260.000 – 285.000
+     BCAA/EAA 280 g ................... Gs 140.000 – 150.000
+     Colágeno hidrolizado + C, 30 tomas Gs 255.000
+     Omega 3 (120–200 caps) ........... Gs 149.000 – 200.000
+     Magnesio glicinato 120 caps ...... Gs 199.000
+     Vitamina D3 + K2, 60 caps ........ Gs 155.000
+     Aceite MCT 710 ml ................ Gs 255.000
+   Posicionamiento elegido: por debajo de la gama premium importada y por
+   encima de la gama económica — coherente con "marketplace con criterio".
+   SIN DATO DE MERCADO (estimados, validar con proveedor): barras keto,
+   sustituto de comida, endulzante monk fruit, nootrópico focus, glutamina.
    ========================================================= */
 
 window.PS_CATALOG = [
@@ -25,7 +45,7 @@ window.PS_CATALOG = [
     marca: '',
     categoria: 'proteinas',
     formato: '2 lb · 27 servicios',
-    precio: 420000,
+    precio: 330000,
     precioAntes: 0,
     objetivos: ['masa', 'definicion'],
     badge: 'Más vendido',
@@ -38,7 +58,7 @@ window.PS_CATALOG = [
     marca: '',
     categoria: 'proteinas',
     formato: '5 lb · 68 servicios',
-    precio: 690000,
+    precio: 450000,
     precioAntes: 0,
     objetivos: ['masa'],
     badge: '',
@@ -51,7 +71,7 @@ window.PS_CATALOG = [
     marca: '',
     categoria: 'proteinas',
     formato: '1 kg · 30 servicios',
-    precio: 395000,
+    precio: 265000,
     precioAntes: 0,
     objetivos: ['definicion', 'masa'],
     badge: '',
@@ -64,8 +84,8 @@ window.PS_CATALOG = [
     marca: '',
     categoria: 'proteinas',
     formato: '300 g · 30 servicios',
-    precio: 210000,
-    precioAntes: 245000,
+    precio: 215000,
+    precioAntes: 255000,
     objetivos: ['belleza'],
     badge: 'Belleza & longevidad',
     resumen: 'Péptidos tipo I y III para piel, cabello, uñas y articulaciones.',
@@ -79,7 +99,7 @@ window.PS_CATALOG = [
     marca: '',
     categoria: 'deportivos',
     formato: '300 g · 100 servicios',
-    precio: 185000,
+    precio: 235000,
     precioAntes: 0,
     objetivos: ['masa', 'foco', 'energia'],
     badge: 'Base de todo',
@@ -92,7 +112,7 @@ window.PS_CATALOG = [
     marca: '',
     categoria: 'deportivos',
     formato: '300 g · 30 servicios',
-    precio: 265000,
+    precio: 255000,
     precioAntes: 0,
     objetivos: ['energia', 'foco'],
     badge: '',
@@ -105,7 +125,7 @@ window.PS_CATALOG = [
     marca: '',
     categoria: 'deportivos',
     formato: '400 g · 40 servicios',
-    precio: 295000,
+    precio: 185000,
     precioAntes: 0,
     objetivos: ['definicion', 'masa'],
     badge: '',
@@ -118,7 +138,7 @@ window.PS_CATALOG = [
     marca: '',
     categoria: 'deportivos',
     formato: '300 g · 60 servicios',
-    precio: 175000,
+    precio: 145000,
     precioAntes: 0,
     objetivos: ['definicion'],
     badge: '',
@@ -133,7 +153,7 @@ window.PS_CATALOG = [
     marca: '',
     categoria: 'keto',
     formato: '500 ml',
-    precio: 190000,
+    precio: 185000,
     precioAntes: 0,
     objetivos: ['energia', 'foco'],
     badge: 'Keto esencial',
@@ -146,7 +166,7 @@ window.PS_CATALOG = [
     marca: '',
     categoria: 'keto',
     formato: '12 u · 2 g carbos netos',
-    precio: 160000,
+    precio: 145000,
     precioAntes: 0,
     objetivos: ['definicion'],
     badge: '',
@@ -159,7 +179,7 @@ window.PS_CATALOG = [
     marca: '',
     categoria: 'keto',
     formato: '1 kg · 20 servicios',
-    precio: 340000,
+    precio: 295000,
     precioAntes: 0,
     objetivos: ['definicion'],
     badge: '',
@@ -172,7 +192,7 @@ window.PS_CATALOG = [
     marca: '',
     categoria: 'keto',
     formato: '250 g',
-    precio: 95000,
+    precio: 89000,
     precioAntes: 0,
     objetivos: ['definicion'],
     badge: '',
@@ -187,7 +207,7 @@ window.PS_CATALOG = [
     marca: '',
     categoria: 'longevidad',
     formato: '120 cápsulas',
-    precio: 175000,
+    precio: 169000,
     precioAntes: 0,
     objetivos: ['foco', 'belleza'],
     badge: 'Neuroplasticidad',
@@ -200,7 +220,7 @@ window.PS_CATALOG = [
     marca: '',
     categoria: 'longevidad',
     formato: '120 cápsulas',
-    precio: 145000,
+    precio: 165000,
     precioAntes: 0,
     objetivos: ['foco', 'energia'],
     badge: '',
@@ -213,7 +233,7 @@ window.PS_CATALOG = [
     marca: '',
     categoria: 'longevidad',
     formato: '90 cápsulas',
-    precio: 130000,
+    precio: 145000,
     precioAntes: 0,
     objetivos: ['belleza', 'energia'],
     badge: '',
@@ -226,7 +246,7 @@ window.PS_CATALOG = [
     marca: '',
     categoria: 'longevidad',
     formato: '60 cápsulas',
-    precio: 210000,
+    precio: 195000,
     precioAntes: 0,
     objetivos: ['foco'],
     badge: 'Nuevo',
@@ -234,6 +254,12 @@ window.PS_CATALOG = [
     stock: true,
   },
 ];
+
+/* Propiedad visual normalizada: una URL vacia activa el fallback tipografico. */
+window.PS_CATALOG = window.PS_CATALOG.map((producto) => ({
+  ...producto,
+  imagen: producto.imagen || '',
+}));
 
 /* Categorías: título y descripción de cada filtro */
 window.PS_CATEGORIAS = [

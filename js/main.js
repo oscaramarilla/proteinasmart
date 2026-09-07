@@ -8,7 +8,7 @@
   'use strict';
 
   const CFG = window.PS_CONFIG || {};
-  const CATALOG = window.PS_CATALOG || [];
+  let CATALOG = window.PS_CATALOG || [];
   const CATEGORIAS = window.PS_CATEGORIAS || [];
   const OBJETIVOS = window.PS_OBJETIVOS || [];
 
@@ -115,8 +115,52 @@
   const filtros = $('#catalogFilters');
   const emptyState = $('#catalogEmpty');
 
-  let filtroCategoria = 'todos';
-  let filtroObjetivo = null;
+  const DISCIPLINAS = [
+    { id: 'todos', nombre: 'Todas las disciplinas' },
+    { id: 'keto', nombre: 'Cetogénica' },
+    { id: 'low-carb', nombre: 'Low Carb' },
+    { id: 'healthy-habits', nombre: 'Healthy Habits' },
+    { id: 'neuroplasticidad', nombre: 'Neuroplasticidad' },
+  ];
+
+  // Estado inicial desde la URL: los filtros son compartibles e indexables
+  // (ej.: ?categoria=keto, ?objetivo=foco o ?disciplina=low-carb).
+  const paramsIniciales = new URLSearchParams(window.location.search);
+  const categoriaInicial = paramsIniciales.get('categoria');
+  const objetivoInicial = paramsIniciales.get('objetivo');
+  const disciplinaInicial = paramsIniciales.get('disciplina');
+  let filtroCategoria = CATEGORIAS.some((c) => c.id === categoriaInicial) ? categoriaInicial : 'todos';
+  let filtroObjetivo = OBJETIVOS.some((o) => o.id === objetivoInicial) ? objetivoInicial : null;
+  let filtroDisciplina = DISCIPLINAS.some((d) => d.id === disciplinaInicial) ? disciplinaInicial : 'todos';
+
+  /**
+   * Devuelve las disciplinas declaradas o inferidas para un producto local.
+   * @param {Object} producto Producto del catálogo.
+   * @returns {Array<string>} Identificadores de disciplina.
+   */
+  function disciplinasDe(producto) {
+    if (Array.isArray(producto.disciplinas) && producto.disciplinas.length) return producto.disciplinas;
+    const mapa = {
+      keto: ['keto', 'low-carb'],
+      deportivos: ['healthy-habits'],
+      proteinas: ['healthy-habits', 'low-carb'],
+      longevidad: ['neuroplasticidad', 'healthy-habits'],
+    };
+    return mapa[producto.categoria] || [];
+  }
+
+  /**
+   * Sincroniza la URL sin recargar para reflejar los filtros activos (categoria, objetivo y disciplina).
+   * @returns {void}
+   */
+  function sincronizarURL() {
+    const params = new URLSearchParams();
+    if (filtroCategoria !== 'todos') params.set('categoria', filtroCategoria);
+    if (filtroObjetivo) params.set('objetivo', filtroObjetivo);
+    if (filtroDisciplina !== 'todos') params.set('disciplina', filtroDisciplina);
+    const query = params.toString();
+    window.history.replaceState({}, '', window.location.pathname + (query ? '?' + query : '') + window.location.hash);
+  }
 
   function cardHTML(p) {
     const antes =
@@ -127,9 +171,15 @@
     const marca = p.marca ? '<span class="card-brand">' + p.marca + '</span>' : '';
     const agotado = p.stock === false;
 
+    const imagen = p.imagen || '';
+    const imagenHTML = imagen
+      ? '<div class="card-image"><img src="' + imagen + '" alt="" loading="lazy" /></div>'
+      : '<div class="card-image card-image-fallback" aria-hidden="true"><span>Proteína<br><strong>Smart</strong></span></div>';
+
     return (
       '<article class="product-card reveal' + (agotado ? ' is-out' : '') + '" data-cat="' + p.categoria + '">' +
       badge +
+      imagenHTML +
       '<div class="card-top">' + marca +
       '<h3>' + p.nombre + '</h3>' +
       '<span class="card-format">' + p.formato + '</span>' +
@@ -139,8 +189,7 @@
       '<div class="card-price">' + antes + '<strong>' + money(p.precio) + '</strong></div>' +
       (agotado
         ? '<span class="btn btn-disabled">Sin stock</span>'
-        : '<a class="btn btn-primary btn-sm" target="_blank" rel="noopener" href="' +
-          waProducto(p) + '" data-track="pedido" data-id="' + p.id + '">Pedir por WhatsApp</a>') +
+        : '<button class="btn btn-primary btn-sm" type="button" data-cart-add="' + p.id + '">Agregar al carrito</button>') +
       '</div>' +
       '</article>'
     );
@@ -152,7 +201,8 @@
       const okCat = filtroCategoria === 'todos' || p.categoria === filtroCategoria;
       const okObj =
         !filtroObjetivo || (p.objetivos || []).indexOf(filtroObjetivo) !== -1;
-      return okCat && okObj;
+      const okDisciplina = filtroDisciplina === 'todos' || disciplinasDe(p).indexOf(filtroDisciplina) !== -1;
+      return okCat && okObj && okDisciplina;
     });
 
     grid.innerHTML = items.map(cardHTML).join('');
@@ -162,11 +212,25 @@
     requestAnimationFrame(() => $$('.product-card', grid).forEach((c) => c.classList.add('visible')));
   }
 
+  const disciplineFilters = $('#disciplineFilters');
+  function renderDisciplineFilters() {
+    if (!disciplineFilters) return;
+    disciplineFilters.innerHTML = DISCIPLINAS.map((disciplina) =>
+      '<button class="chip' + (disciplina.id === filtroDisciplina ? ' active' : '') + '" data-discipline="' + disciplina.id + '">' + disciplina.nombre + '</button>'
+    ).join('');
+    $$('.chip', disciplineFilters).forEach((btn) => btn.addEventListener('click', () => {
+      filtroDisciplina = btn.dataset.discipline;
+      sincronizarURL();
+      $$('.chip', disciplineFilters).forEach((chip) => chip.classList.toggle('active', chip === btn));
+      renderCatalogo();
+    }));
+  }
+
   function renderFiltros() {
     if (!filtros) return;
     filtros.innerHTML = CATEGORIAS.map(
       (c) =>
-        '<button class="chip' + (c.id === 'todos' ? ' active' : '') + '" data-cat="' +
+        '<button class="chip' + (c.id === filtroCategoria ? ' active' : '') + '" data-cat="' +
         c.id + '"><span>' + c.icono + '</span>' + c.nombre + '</button>'
     ).join('');
 
@@ -175,6 +239,7 @@
         $$('.chip', filtros).forEach((b) => b.classList.remove('active'));
         btn.classList.add('active');
         filtroCategoria = btn.dataset.cat;
+        sincronizarURL();
         renderCatalogo();
       });
     });
@@ -186,7 +251,7 @@
   if (objetivosWrap) {
     objetivosWrap.innerHTML = OBJETIVOS.map(
       (o) =>
-        '<button class="goal-card reveal" data-goal="' + o.id + '">' +
+        '<button class="goal-card reveal' + (o.id === filtroObjetivo ? ' active' : '') + '" data-goal="' + o.id + '">' +
         '<span class="goal-icon">' + o.icono + '</span>' +
         '<span class="goal-name">' + o.nombre + '</span>' +
         '</button>'
@@ -208,6 +273,7 @@
           const todos = $('.chip[data-cat="todos"]', filtros);
           if (todos) todos.classList.add('active');
         }
+        sincronizarURL();
         renderCatalogo();
         const dest = $('#catalogo');
         if (dest) dest.scrollIntoView({ behavior: 'smooth', block: 'start' });
@@ -216,7 +282,106 @@
   }
 
   renderFiltros();
+  renderDisciplineFilters();
   renderCatalogo();
+/* ================= FALLBACK VISUAL (404) ================= */
+  // Si una imagen falla (404 o red lenta), la tarjeta vuelve sola al
+  // diseno tipografico premium sin romper el layout ni mostrar iconos rotos.
+  if (grid) {
+    grid.addEventListener(
+      'error',
+      (e) => {
+        const img = e.target;
+        if (img.tagName !== 'IMG') return;
+        const contenedor = img.closest('.card-image');
+        if (!contenedor) return;
+        contenedor.classList.add('card-image-fallback');
+        contenedor.innerHTML = '<span>Proteína<br><strong>Smart</strong></span>';
+      },
+      true
+    );
+  }
+
+  /**
+   * Construye el checkout multi-producto con protocolo y asesoría.
+   * @param {Array<Object>} items Items del carrito.
+   * @param {number} importe Total entero en guaraníes.
+   * @returns {string} URL de WhatsApp.
+   */
+  function waCarrito(items, importe) {
+    const primero = items[0] || {};
+    const lineas = items.map((item) => '- ' + item.cantidad + 'x ' + item.nombre + ' (' + item.formato + ')');
+    const esComboProteico = items.some((item) => item.categoria === 'proteinas') &&
+      items.some((item) => item.categoria === 'deportivos');
+    const protocolo = esComboProteico
+      ? 'Whey + Creatina: base proteica y complemento de rendimiento'
+      : (primero.protocolo || 'Asesoría personalizada');
+    const recomendaciones = items.map((item) =>
+      item.nombre + ': dosis ' + (item.dosis || 'según envase') +
+      '; momento ' + (item.momento || 'a coordinar') +
+      '; duración sugerida ' + (item.duracion || '30 días')
+    );
+    const mensaje = [
+      'Hola ProteínaSmart 👋 Quiero confirmar mi pedido:',
+      'Protocolo: ' + protocolo,
+      'Producto base + complemento:',
+      ...lineas,
+      'Complemento sugerido: ' + (primero.complemento || 'Asesoría de uso personalizada'),
+      'Guía de uso sugerida:',
+      ...recomendaciones,
+      'Precio total: ' + money(importe) + '.',
+      '¿Podemos coordinar la asesoría y el envío?',
+      'Los suplementos no son medicamentos ni reemplazan una alimentación variada o el consejo de un profesional de la salud.',
+    ].join('\n');
+    return waLink(mensaje);
+  }
+
+  /**
+   * Renderiza la barra flotante y sus acciones desde el estado global.
+   * @param {Object} state Estado público del carrito.
+   * @returns {void}
+   */
+  function renderCarrito(state) {
+    let bar = $('#cartBar');
+    if (!state.items.length) {
+      if (bar) bar.remove();
+      return;
+    }
+    if (!bar) {
+      bar = document.createElement('aside');
+      bar.id = 'cartBar';
+      bar.className = 'cart-bar';
+      document.body.appendChild(bar);
+    }
+    const cantidad = state.items.reduce((sum, item) => sum + item.cantidad, 0);
+    bar.innerHTML = '<span><strong>' + cantidad + '</strong> producto(s) · <strong>' + money(state.total) + '</strong></span>' +
+      '<button class="btn btn-primary btn-sm" type="button" data-cart-checkout>Pedir por WhatsApp</button>';
+  }
+
+  if (window.PS_CART) {
+    window.PS_CART.subscribe(renderCarrito);
+    renderCarrito(window.PS_CART.getState());
+  }
+
+  document.addEventListener('click', (event) => {
+    const add = event.target.closest('[data-cart-add]');
+    if (add && window.PS_CART) {
+      const producto = CATALOG.find((item) => item.id === add.dataset.cartAdd);
+      if (producto) window.PS_CART.dispatch({ type: 'AGREGAR', producto });
+      return;
+    }
+    const checkout = event.target.closest('[data-cart-checkout]');
+    if (checkout && window.PS_CART) {
+      const state = window.PS_CART.getState();
+      window.open(waCarrito(state.items, state.total), '_blank', 'noopener');
+      window.PS_CART.dispatch({ type: 'LIMPIAR' });
+    }
+  });
+
+  window.addEventListener('ps:catalogo-remoto', (event) => {
+    CATALOG = event.detail;
+    renderCatalogo();
+  });
 
   /* ================= DATOS DE CONTACTO EN EL DOM ================= */
 
@@ -341,13 +506,65 @@
     /* eslint-enable */
   }
 
-  /* ================= CLICKS DE PEDIDO ================= */
+  /* ================= MEDICIÓN DE CONVERSIÓN =================
+     La métrica que manda en este negocio es: visitas → clics a WhatsApp.
+     Todo clic que abre WhatsApp se registra, venga de una tarjeta de producto,
+     de un CTA general o del botón flotante. */
+
+  function track(nombre, props) {
+    if (typeof gtag !== 'undefined') gtag('event', nombre, props || {});
+    if (typeof fbq !== 'undefined') fbq('trackCustom', nombre, props || {});
+    if (typeof window.va === 'function') window.va('event', { name: nombre, data: props || {} });
+  }
+
   document.addEventListener('click', (e) => {
-    const a = e.target.closest('[data-track="pedido"]');
-    if (!a) return;
-    if (typeof gtag !== 'undefined') gtag('event', 'begin_checkout', { item_id: a.dataset.id });
-    if (typeof fbq !== 'undefined') fbq('track', 'InitiateCheckout', { content_ids: [a.dataset.id] });
+    // Pedido de un producto concreto
+    const pedido = e.target.closest('[data-track="pedido"]');
+    if (pedido) {
+      const id = pedido.dataset.id;
+      track('pedido_whatsapp', { producto: id });
+      if (typeof gtag !== 'undefined') gtag('event', 'begin_checkout', { item_id: id });
+      if (typeof fbq !== 'undefined') fbq('track', 'InitiateCheckout', { content_ids: [id] });
+      return;
+    }
+
+    // Cualquier otro CTA que abre WhatsApp
+    const wa = e.target.closest('[data-wa]');
+    if (wa) {
+      const origen = wa.classList.contains('wa-float')
+        ? 'boton_flotante'
+        : wa.classList.contains('nav-cta')
+        ? 'navbar'
+        : wa.closest('.hero')
+        ? 'hero'
+        : wa.closest('.final-cta')
+        ? 'cta_final'
+        : 'otro';
+      track('contacto_whatsapp', { origen: origen });
+      if (typeof fbq !== 'undefined') fbq('track', 'Contact', { source: origen });
+    }
   });
+
+  // Profundidad de scroll: dice si el catálogo se está viendo o la gente rebota en el hero
+  (function () {
+    const hitos = [25, 50, 75, 100];
+    const vistos = {};
+    window.addEventListener(
+      'scroll',
+      () => {
+        const h = document.documentElement.scrollHeight - window.innerHeight;
+        if (h <= 0) return;
+        const pct = (window.scrollY / h) * 100;
+        hitos.forEach((m) => {
+          if (pct >= m && !vistos[m]) {
+            vistos[m] = true;
+            track('scroll_' + m);
+          }
+        });
+      },
+      { passive: true }
+    );
+  })();
 
   /* ================= REVEALS INICIALES ================= */
   observeReveals(document);
