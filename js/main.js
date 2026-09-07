@@ -1,43 +1,71 @@
 /* =========================================================
-   Paraguay Future Invest — main.js
-   Interactions: nav, counters, reveal, particles, i18n
+   ProteínaSmart — main.js
+   DOMINIO decide · SERVICIOS ejecutan · PRESENTACIÓN muestra
+   Vanilla JS, sin dependencias ni build.
    ========================================================= */
 
 (function () {
   'use strict';
 
-  /* ---------- CONFIG — reemplazá con tu número real ---------- */
-  const WA_NUMBER = '595XXXXXXXXX'; // ej: 595981123456
+  const CFG = window.PS_CONFIG || {};
+  const CATALOG = window.PS_CATALOG || [];
+  const CATEGORIAS = window.PS_CATEGORIAS || [];
+  const OBJETIVOS = window.PS_OBJETIVOS || [];
 
-  /* ---------- Navbar scroll state + progress bar ---------- */
-  const navbar = document.getElementById('navbar');
-  const progress = document.getElementById('scrollProgress');
+  const $ = (sel, ctx) => (ctx || document).querySelector(sel);
+  const $$ = (sel, ctx) => Array.from((ctx || document).querySelectorAll(sel));
+
+  /* ================= SERVICIOS ================= */
+
+  const money = (n) =>
+    n > 0 ? 'Gs ' + n.toLocaleString('es-PY') : 'Consultar';
+
+  function waLink(texto) {
+    const num = (CFG.contacto && CFG.contacto.whatsapp) || '';
+    return 'https://wa.me/' + num + '?text=' + encodeURIComponent(texto);
+  }
+
+  function waProducto(p) {
+    const base = (CFG.mensajes && CFG.mensajes.pedidoPrefijo) || 'Hola, quiero pedir:';
+    return waLink(
+      base + ' *' + p.nombre + '* (' + p.formato + ') — ' + money(p.precio) +
+      '. ¿Tenés stock disponible?'
+    );
+  }
+
+  /* ================= NAV + SCROLL ================= */
+
+  const navbar = $('#navbar');
+  const progress = $('#scrollProgress');
 
   function onScroll() {
     const y = window.scrollY;
-    navbar.classList.toggle('scrolled', y > 40);
-    const h = document.documentElement.scrollHeight - window.innerHeight;
-    progress.style.width = (h > 0 ? (y / h) * 100 : 0) + '%';
+    if (navbar) navbar.classList.toggle('scrolled', y > 40);
+    if (progress) {
+      const h = document.documentElement.scrollHeight - window.innerHeight;
+      progress.style.width = (h > 0 ? (y / h) * 100 : 0) + '%';
+    }
   }
   window.addEventListener('scroll', onScroll, { passive: true });
   onScroll();
 
-  /* ---------- Mobile menu ---------- */
-  const burger = document.getElementById('burger');
-  const navLinks = document.getElementById('navLinks');
-  burger.addEventListener('click', () => {
-    burger.classList.toggle('open');
-    navLinks.classList.toggle('open');
-  });
-  navLinks.querySelectorAll('a').forEach((a) =>
-    a.addEventListener('click', () => {
-      burger.classList.remove('open');
-      navLinks.classList.remove('open');
-    })
-  );
+  const burger = $('#burger');
+  const navLinks = $('#navLinks');
+  if (burger && navLinks) {
+    burger.addEventListener('click', () => {
+      burger.classList.toggle('open');
+      navLinks.classList.toggle('open');
+    });
+    $$('a', navLinks).forEach((a) =>
+      a.addEventListener('click', () => {
+        burger.classList.remove('open');
+        navLinks.classList.remove('open');
+      })
+    );
+  }
 
-  /* ---------- Reveal on scroll ---------- */
-  const revealEls = document.querySelectorAll('.reveal');
+  /* ================= REVEAL ================= */
+
   const revealObs = new IntersectionObserver(
     (entries) => {
       entries.forEach((e) => {
@@ -47,28 +75,26 @@
         }
       });
     },
-    { threshold: 0.15 }
+    { threshold: 0.12 }
   );
-  revealEls.forEach((el, i) => {
-    el.style.transitionDelay = (i % 4) * 0.08 + 's';
-    revealObs.observe(el);
-  });
+  function observeReveals(root) {
+    $$('.reveal', root).forEach((el) => revealObs.observe(el));
+  }
 
-  /* ---------- Animated counters ---------- */
+  /* ================= CONTADORES ================= */
+
   function animateCounter(el) {
     const target = parseFloat(el.dataset.target);
     const prefix = el.dataset.prefix || '';
     const suffix = el.dataset.suffix || '';
-    const dur = 1600;
+    const dur = 1400;
     const start = performance.now();
-    function tick(now) {
+    (function tick(now) {
       const p = Math.min((now - start) / dur, 1);
       const eased = 1 - Math.pow(1 - p, 3);
-      const val = Math.round(eased * target);
-      el.textContent = prefix + val + suffix;
+      el.textContent = prefix + Math.round(eased * target) + suffix;
       if (p < 1) requestAnimationFrame(tick);
-    }
-    requestAnimationFrame(tick);
+    })(performance.now());
   }
   const counterObs = new IntersectionObserver(
     (entries) => {
@@ -81,173 +107,248 @@
     },
     { threshold: 0.5 }
   );
-  document.querySelectorAll('.stat-num, .mini-num').forEach((el) => counterObs.observe(el));
+  $$('.stat-num').forEach((el) => counterObs.observe(el));
 
-  /* ---------- Tech grid animation ---------- */
-  const techGrid = document.getElementById('techGrid');
-  if (techGrid) {
-    const total = 36;
-    for (let i = 0; i < total; i++) {
-      const c = document.createElement('div');
-      c.className = 'cell';
-      techGrid.appendChild(c);
-    }
-    const cells = techGrid.querySelectorAll('.cell');
-    setInterval(() => {
-      cells.forEach((c) => c.classList.remove('on'));
-      const n = 6 + Math.floor(Math.random() * 6);
-      for (let i = 0; i < n; i++) {
-        cells[Math.floor(Math.random() * cells.length)].classList.add('on');
-      }
-    }, 700);
+  /* ================= CATÁLOGO ================= */
+
+  const grid = $('#catalogGrid');
+  const filtros = $('#catalogFilters');
+  const emptyState = $('#catalogEmpty');
+
+  let filtroCategoria = 'todos';
+  let filtroObjetivo = null;
+
+  function cardHTML(p) {
+    const antes =
+      p.precioAntes && p.precioAntes > p.precio
+        ? '<span class="price-was">' + money(p.precioAntes) + '</span>'
+        : '';
+    const badge = p.badge ? '<span class="card-badge">' + p.badge + '</span>' : '';
+    const marca = p.marca ? '<span class="card-brand">' + p.marca + '</span>' : '';
+    const agotado = p.stock === false;
+
+    return (
+      '<article class="product-card reveal' + (agotado ? ' is-out' : '') + '" data-cat="' + p.categoria + '">' +
+      badge +
+      '<div class="card-top">' + marca +
+      '<h3>' + p.nombre + '</h3>' +
+      '<span class="card-format">' + p.formato + '</span>' +
+      '</div>' +
+      '<p class="card-sum">' + p.resumen + '</p>' +
+      '<div class="card-foot">' +
+      '<div class="card-price">' + antes + '<strong>' + money(p.precio) + '</strong></div>' +
+      (agotado
+        ? '<span class="btn btn-disabled">Sin stock</span>'
+        : '<a class="btn btn-primary btn-sm" target="_blank" rel="noopener" href="' +
+          waProducto(p) + '" data-track="pedido" data-id="' + p.id + '">Pedir por WhatsApp</a>') +
+      '</div>' +
+      '</article>'
+    );
   }
 
-  /* ---------- Lead form → n8n Webhook ---------- */
-  const form = document.getElementById('leadForm');
-  const note = document.getElementById('formNote');
-  const submitBtn = form ? form.querySelector('button[type="submit"]') : null;
+  function renderCatalogo() {
+    if (!grid) return;
+    const items = CATALOG.filter((p) => {
+      const okCat = filtroCategoria === 'todos' || p.categoria === filtroCategoria;
+      const okObj =
+        !filtroObjetivo || (p.objetivos || []).indexOf(filtroObjetivo) !== -1;
+      return okCat && okObj;
+    });
 
-  // IMPORTANTE: Reemplaza esta URL con la URL de producción de tu Webhook en n8n
-  const N8N_WEBHOOK_URL = 'https://TU-DOMINIO-N8N.com/webhook/landing-leads'; 
+    grid.innerHTML = items.map(cardHTML).join('');
+    if (emptyState) emptyState.hidden = items.length > 0;
+    observeReveals(grid);
+    // sin animación diferida en re-render: se muestran de una
+    requestAnimationFrame(() => $$('.product-card', grid).forEach((c) => c.classList.add('visible')));
+  }
+
+  function renderFiltros() {
+    if (!filtros) return;
+    filtros.innerHTML = CATEGORIAS.map(
+      (c) =>
+        '<button class="chip' + (c.id === 'todos' ? ' active' : '') + '" data-cat="' +
+        c.id + '"><span>' + c.icono + '</span>' + c.nombre + '</button>'
+    ).join('');
+
+    $$('.chip', filtros).forEach((btn) => {
+      btn.addEventListener('click', () => {
+        $$('.chip', filtros).forEach((b) => b.classList.remove('active'));
+        btn.classList.add('active');
+        filtroCategoria = btn.dataset.cat;
+        renderCatalogo();
+      });
+    });
+  }
+
+  /* ================= SELECTOR POR OBJETIVO ================= */
+
+  const objetivosWrap = $('#objetivoGrid');
+  if (objetivosWrap) {
+    objetivosWrap.innerHTML = OBJETIVOS.map(
+      (o) =>
+        '<button class="goal-card reveal" data-goal="' + o.id + '">' +
+        '<span class="goal-icon">' + o.icono + '</span>' +
+        '<span class="goal-name">' + o.nombre + '</span>' +
+        '</button>'
+    ).join('');
+
+    $$('.goal-card', objetivosWrap).forEach((btn) => {
+      btn.addEventListener('click', () => {
+        const isActive = btn.classList.contains('active');
+        $$('.goal-card', objetivosWrap).forEach((b) => b.classList.remove('active'));
+        if (isActive) {
+          filtroObjetivo = null;
+        } else {
+          btn.classList.add('active');
+          filtroObjetivo = btn.dataset.goal;
+        }
+        filtroCategoria = 'todos';
+        if (filtros) {
+          $$('.chip', filtros).forEach((b) => b.classList.remove('active'));
+          const todos = $('.chip[data-cat="todos"]', filtros);
+          if (todos) todos.classList.add('active');
+        }
+        renderCatalogo();
+        const dest = $('#catalogo');
+        if (dest) dest.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      });
+    });
+  }
+
+  renderFiltros();
+  renderCatalogo();
+
+  /* ================= DATOS DE CONTACTO EN EL DOM ================= */
+
+  const C = CFG.contacto || {};
+  const O = CFG.operacion || {};
+  const bind = {
+    '[data-cfg="telefono"]': C.telefonoLocal,
+    '[data-cfg="email"]': C.email,
+    '[data-cfg="ruc"]': C.ruc,
+    '[data-cfg="responsable"]': C.responsable,
+    '[data-cfg="ciudad"]': C.ciudad,
+    '[data-cfg="horario"]': O.horario,
+    '[data-cfg="envio-asuncion"]': O.envioAsuncion,
+    '[data-cfg="envio-interior"]': O.envioInterior,
+    '[data-cfg="pagos"]': O.pagos,
+    '[data-cfg="facturacion"]': O.facturacion,
+  };
+  Object.keys(bind).forEach((sel) => {
+    if (bind[sel]) $$(sel).forEach((el) => (el.textContent = bind[sel]));
+  });
+
+  $$('[data-wa]').forEach((a) => {
+    const msg = a.dataset.wa || (CFG.mensajes && CFG.mensajes.consultaGeneral) || 'Hola';
+    a.href = waLink(msg);
+    a.target = '_blank';
+    a.rel = 'noopener';
+  });
+
+  $$('[data-tel]').forEach((a) => {
+    a.href = 'tel:+' + (C.whatsapp || '');
+  });
+
+  $$('[data-mail]').forEach((a) => {
+    a.href = 'mailto:' + (C.email || '');
+  });
+
+  /* ================= FORMULARIO DE ASESORÍA ================= */
+
+  const form = $('#leadForm');
+  const note = $('#formNote');
 
   if (form) {
     form.addEventListener('submit', async (e) => {
       e.preventDefault();
-      
-      const formData = new FormData(form);
-      const data = Object.fromEntries(formData.entries());
-      
-      // Cambiar estado del botón a cargando
-      const originalBtnText = submitBtn.textContent;
-      submitBtn.textContent = 'Enviando...';
-      submitBtn.disabled = true;
-      note.style.color = '#fff'; // Resetear color
-      note.textContent = 'Procesando tu solicitud...';
+      const data = Object.fromEntries(new FormData(form).entries());
+      const btn = form.querySelector('button[type="submit"]');
+      const original = btn.textContent;
+
+      const resumen =
+        'Hola ProteínaSmart 👋 Soy *' + (data.name || '') + '*.\n' +
+        'Objetivo: ' + (data.objetivo || '-') + '\n' +
+        'Nivel de actividad: ' + (data.nivel || '-') + '\n' +
+        (data.mensaje ? 'Detalle: ' + data.mensaje : '');
+
+      // Sin endpoint configurado → el lead va directo a WhatsApp
+      if (!CFG.formEndpoint) {
+        window.open(waLink(resumen), '_blank', 'noopener');
+        if (note) {
+          note.classList.add('ok');
+          note.textContent = '✓ Te abrimos WhatsApp con tu consulta lista para enviar.';
+        }
+        return;
+      }
+
+      btn.textContent = 'Enviando...';
+      btn.disabled = true;
+      if (note) { note.classList.remove('ok', 'warn'); note.textContent = 'Procesando tu consulta...'; }
 
       try {
-        const response = await fetch(N8N_WEBHOOK_URL, {
+        const res = await fetch(CFG.formEndpoint, {
           method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
+          headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
-            name: data.name,
-            email: data.email,
-            sector: data.sector,
-            source: 'Landing Page PFI',
-            aycweb_origin: 'proteinasmart.com', // Sello de infraestructura
-            lead_type: 'inversor', // Clasificación inicial
-            timestamp: new Date().toISOString()
+            ...data,
+            source: 'proteinasmart.com',
+            lead_type: 'asesoria_nutricional',
+            timestamp: new Date().toISOString(),
           }),
         });
-
-        if (response.ok) {
-          // Éxito
-          note.style.color = '#15c47e'; // Verde éxito
-          note.textContent = '✓ ¡Dossier enviado! Revisa tu bandeja de entrada (y spam).';
-          form.reset();
-        } else {
-          // Error del servidor (ej. 500)
-          throw new Error('Respuesta del servidor no fue OK');
+        if (!res.ok) throw new Error('bad response');
+        if (note) { note.classList.add('ok'); note.textContent = '✓ Recibimos tu consulta. Te escribimos hoy mismo.'; }
+        form.reset();
+        if (typeof gtag !== 'undefined') gtag('event', 'generate_lead', { objetivo: data.objetivo });
+        if (typeof fbq !== 'undefined') fbq('track', 'Lead', { content_name: data.objetivo });
+      } catch (err) {
+        if (note) {
+          note.classList.add('warn');
+          note.innerHTML = '⚠ No pudimos enviar el formulario. <a href="' + waLink(resumen) + '" target="_blank" rel="noopener">Escribinos por WhatsApp</a>.';
         }
-      } catch (error) {
-        // Error de red o CORS
-        console.error('Error al enviar el lead:', error);
-        note.style.color = '#f5c542'; // Amarillo/Naranja advertencia
-        note.textContent = '⚠ Hubo un problema al enviar. Por favor, intenta de nuevo o contáctanos directamente.';
       } finally {
-        // Restaurar botón
-        submitBtn.textContent = originalBtnText;
-        submitBtn.disabled = false;
+        btn.textContent = original;
+        btn.disabled = false;
       }
     });
   }
 
-  /* ---------- Footer year ---------- */
-  const yearEl = document.getElementById('year');
+  /* ================= AÑO ================= */
+  const yearEl = $('#year');
   if (yearEl) yearEl.textContent = new Date().getFullYear();
 
-  /* ---------- Lightweight i18n (ES/EN) ---------- */
-  const i18n = {
-    en: {
-      'Energía': 'Energy',
-      'Agroindustria': 'Agribusiness',
-      'Tecnología': 'Technology',
-      'Logística': 'Logistics',
-      'Real Estate': 'Real Estate',
-      'Invertir': 'Invest',
-    },
-  };
-  const langButtons = document.querySelectorAll('.lang-toggle button');
-  const navAnchors = document.querySelectorAll('.nav-links a');
-  const originalNav = Array.from(navAnchors).map((a) => a.textContent);
-  langButtons.forEach((btn) => {
-    btn.addEventListener('click', () => {
-      langButtons.forEach((b) => b.classList.remove('active'));
-      btn.classList.add('active');
-      const lang = btn.dataset.lang;
-      navAnchors.forEach((a, i) => {
-        const orig = originalNav[i];
-        a.textContent = lang === 'en' && i18n.en[orig] ? i18n.en[orig] : orig;
-      });
-    });
+  /* ================= TRACKING OPCIONAL ================= */
+  const T = CFG.tracking || {};
+  if (T.ga4) {
+    const s = document.createElement('script');
+    s.async = true;
+    s.src = 'https://www.googletagmanager.com/gtag/js?id=' + T.ga4;
+    document.head.appendChild(s);
+    window.dataLayer = window.dataLayer || [];
+    window.gtag = function () { window.dataLayer.push(arguments); };
+    gtag('js', new Date());
+    gtag('config', T.ga4);
+  }
+  if (T.metaPixel) {
+    /* eslint-disable */
+    !function(f,b,e,v,n,t,s){if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+    n.callMethod.apply(n,arguments):n.queue.push(arguments)};if(!f._fbq)f._fbq=n;
+    n.push=n;n.loaded=!0;n.version='2.0';n.queue=[];t=b.createElement(e);t.async=!0;
+    t.src=v;s=b.getElementsByTagName(e)[0];s.parentNode.insertBefore(t,s)}(window,
+    document,'script','https://connect.facebook.net/en_US/fbevents.js');
+    fbq('init', T.metaPixel);
+    fbq('track', 'PageView');
+    /* eslint-enable */
+  }
+
+  /* ================= CLICKS DE PEDIDO ================= */
+  document.addEventListener('click', (e) => {
+    const a = e.target.closest('[data-track="pedido"]');
+    if (!a) return;
+    if (typeof gtag !== 'undefined') gtag('event', 'begin_checkout', { item_id: a.dataset.id });
+    if (typeof fbq !== 'undefined') fbq('track', 'InitiateCheckout', { content_ids: [a.dataset.id] });
   });
 
-  /* ---------- Particle background ---------- */
-  const canvas = document.getElementById('bg-canvas');
-  const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-  if (canvas && !reduce) {
-    const ctx = canvas.getContext('2d');
-    let w, h, particles;
-    const COLORS = ['#f5c542', '#15c47e', '#4f8cff'];
-
-    function resize() {
-      w = canvas.width = window.innerWidth;
-      h = canvas.height = window.innerHeight;
-      const count = Math.min(70, Math.floor((w * h) / 22000));
-      particles = Array.from({ length: count }, () => ({
-        x: Math.random() * w,
-        y: Math.random() * h,
-        vx: (Math.random() - 0.5) * 0.4,
-        vy: (Math.random() - 0.5) * 0.4,
-        r: Math.random() * 1.8 + 0.6,
-        c: COLORS[Math.floor(Math.random() * COLORS.length)],
-      }));
-    }
-    function draw() {
-      ctx.clearRect(0, 0, w, h);
-      for (let i = 0; i < particles.length; i++) {
-        const p = particles[i];
-        p.x += p.vx;
-        p.y += p.vy;
-        if (p.x < 0 || p.x > w) p.vx *= -1;
-        if (p.y < 0 || p.y > h) p.vy *= -1;
-        ctx.beginPath();
-        ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
-        ctx.fillStyle = p.c;
-        ctx.globalAlpha = 0.5;
-        ctx.fill();
-        // connect lines
-        for (let j = i + 1; j < particles.length; j++) {
-          const q = particles[j];
-          const dx = p.x - q.x;
-          const dy = p.y - q.y;
-          const dist = dx * dx + dy * dy;
-          if (dist < 14000) {
-            ctx.beginPath();
-            ctx.moveTo(p.x, p.y);
-            ctx.lineTo(q.x, q.y);
-            ctx.strokeStyle = p.c;
-            ctx.globalAlpha = 0.08 * (1 - dist / 14000);
-            ctx.stroke();
-          }
-        }
-      }
-      ctx.globalAlpha = 1;
-      requestAnimationFrame(draw);
-    }
-    window.addEventListener('resize', resize);
-    resize();
-    draw();
-  }
+  /* ================= REVEALS INICIALES ================= */
+  observeReveals(document);
 })();

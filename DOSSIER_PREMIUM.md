@@ -1,90 +1,150 @@
-# Paraguay 2030: El nuevo gigante energético del Mercosur
+# Dossier comercial — ProteínaSmart
 
-## Índice
-1. **Introducción**
-   - Por qué Paraguay está entrando en su década dorada
-   - Comparación regional
-2. **Energía y matriz eléctrica**
-   - Itaipú, Yacyretá y Acaray
-   - Costos energéticos vs. Brasil, Argentina, Uruguay y Chile
-   - Proyecciones 2026–2035
-3. **Hidrógeno verde**
-   - Potencial real
-   - Costos de producción
-   - Proyectos actuales
-   - Oportunidades para inversores
-4. **Agroindustria**
-   - Exportaciones
-   - Nuevos mercados
-   - Innovación en proteína vegetal
-5. **Infraestructura**
-   - Parques industriales
-   - Zonas francas
-   - Logística (Corredor Bioceánico)
-6. **Tecnología**
-   - Startups
-   - IA aplicada a agro y energía
-   - Incentivos fiscales
-7. **Riesgos y mitigación**
-   - Riesgos políticos
-   - Riesgos económicos
-   - Riesgos regulatorios
-8. **Estrategias de entrada**
-   - Inversión directa
-   - Joint ventures
-   - Fondos
-   - Startups
-9. **Conclusión**
-   - Por qué ahora es el momento
-   - Cómo avanzar
+**Proteína inteligente · Tu marketplace de proteínas para la salud, la belleza y la longevidad**
+Oscar Amarilla · 0985 864 209 · RUC 4499507-5 · Asunción, Paraguay
 
 ---
 
-## 1. Introducción
-### Por qué Paraguay está entrando en su década dorada
-Paraguay ha mantenido una estabilidad macroeconómica envidiable durante las últimas dos décadas. Mientras la región enfrentaba volatilidad, Paraguay creció apoyado en pilares sólidos: inflación controlada, una política fiscal amigable (el régimen 10/10/10) y deuda pública manejable. La reciente obtención del **Grado de Inversión** por calificadoras internacionales marca el punto de inflexión que habilita la entrada masiva de capital institucional.
+## 1. Posicionamiento
 
-### Comparación regional
-Frente a sus vecinos, Paraguay destaca no por el tamaño de su mercado interno, sino por ser la **plataforma productiva más eficiente**. Los costos laborales competitivos, sumados a la energía más barata de Sudamérica, lo posicionan como la "fábrica" ideal para exportar a Brasil, Argentina y el mundo.
+La categoría "suplementos" en Paraguay compite por precio y por góndola. ProteínaSmart no
+compite ahí: compite por **criterio de compra**.
 
-## 2. Energía y matriz eléctrica
-### Itaipú, Yacyretá y Acaray
-Con una matriz 100% renovable, Paraguay produce muchísima más energía de la que consume. Las represas binacionales (Itaipú y Yacyretá) garantizan un excedente que, históricamente, se cedía a los países vecinos. Hoy, la estrategia nacional es industrializar esa energía localmente.
+> No vendemos el suplemento de moda. Vendemos la decisión: qué tomar, cuándo, con qué
+> combinarlo y qué no necesitás comprar.
 
-### Costos energéticos
-El costo por MWh en Paraguay puede llegar a ser hasta un 60% más bajo que en Brasil y un 40% más bajo que en Chile o Uruguay, lo que es un imán para industrias electrointensivas (acero verde, data centers, criptominería).
+Eso convierte el negocio de *retail de commodities* en *asesoría con producto*, que es lo
+que sostiene margen y recompra.
 
-### Proyecciones 2026–2035
-Para 2030, se proyecta que el país consumirá todo su excedente si el ritmo de instalación industrial se mantiene, abriendo la puerta a nuevas inversiones en generación solar y pequeñas centrales hidroeléctricas (PCH).
+### Las cuatro disciplinas del filtro
 
-## 3. Hidrógeno verde
-### Potencial real y Costos de producción
-El hidrógeno verde requiere dos cosas: agua y electricidad renovable barata. Paraguay tiene ambas en abundancia. Las proyecciones indican que Paraguay puede producir H2V a un costo de los más competitivos a nivel global (por debajo de USD 2/kg).
+| Disciplina | Qué aporta al criterio | Traducción en catálogo |
+|---|---|---|
+| **Cetogénica** | La grasa como combustible; insulina baja y estable | Carga glucémica mínima, MCT, cero azúcar |
+| **Low carb** | Saciedad y composición corporal sin pasar hambre | Proteína de alta calidad, sustitutos, endulzantes |
+| **Healthy habits** | Lo que se sostiene gana | Formatos simples, sabores tomables, protocolos cortos |
+| **Neuroplasticidad** | El cerebro también se nutre y se entrena | Omega 3, magnesio, colina, creatina |
 
-### Proyectos actuales y Oportunidades
-Ya existen megaproyectos en fases iniciales y de factibilidad liderados por consorcios europeos y británicos (como Omega Green). Las oportunidades para inversores privados radican en la cadena de suministro, logística de exportación en forma de amoníaco verde, y provisión de tecnología.
+Un producto entra al catálogo solo si tiene evidencia y un uso claro dentro de al menos
+una de esas cuatro. Ese es el activo diferencial.
 
-## 4. Agroindustria
-Paraguay es uno de los mayores exportadores mundiales de soja y carne bovina. Sin embargo, el margen real está en el **procesamiento** (Aceites, biocombustibles, y nutrición animal). 
-La tendencia actual es la **innovación en proteína vegetal** e integración de AgTech, multiplicando el valor exportable y abriendo nuevos mercados premium en Asia y Medio Oriente.
+---
 
-## 5. Infraestructura
-La logística es la gran apuesta del Estado. El **Corredor Bioceánico** es una obra carretera que atraviesa el Chaco paraguayo, uniendo los puertos de aguas profundas de Chile (Pacífico) con los del Atlántico en Brasil.
-Para el inversor, la necesidad es clara: **Parques industriales, zonas francas y puertos secos** a lo largo de este corredor para el almacenamiento y ensamblaje de mercancías.
+## 2. Cliente objetivo (ICP)
 
-## 6. Tecnología
-Paraguay es un país joven (bono demográfico) y nativo digital. El ecosistema de **Startups** está en ebullición, particularmente en soluciones Fintech y AgTech (IA aplicada a rendimientos de cultivos). El gobierno ofrece generosos **incentivos fiscales** (Ley 60/90, Maquila) que eximen de aranceles a la importación de bienes de capital tecnológico.
+| Segmento | Dolor | Gatillo de compra | Ticket esperado |
+|---|---|---|---|
+| **Performance 25–40** | Entrena y no ve resultados | Recomendación concreta de proteína + creatina | Gs 500.000 – 900.000 |
+| **Belleza & longevidad 30–50** | Piel, pelo, energía, edad | Colágeno + omega 3 + vitamina D | Gs 350.000 – 600.000 |
+| **Keto / low carb** | Ya está en el estilo de vida, le falta producto confiable | MCT, snacks, endulzantes | Gs 250.000 – 500.000 |
+| **Foco y productividad** | Cansancio mental, mala calidad de sueño | Magnesio, omega 3, nootrópico | Gs 300.000 – 550.000 |
 
-## 7. Riesgos y mitigación
-- **Riesgos políticos:** Mitigados por una fuerte continuidad del modelo económico, independientemente de los cambios de gobierno en las últimas décadas.
-- **Riesgos económicos:** Moneda históricamente estable (el Guaraní es la moneda más antigua en circulación en Sudamérica sin quitar ceros).
-- **Riesgos regulatorios:** El principal desafío es la burocracia. **Mitigación:** Asociarse con *partners* locales (Joint Ventures) para navegar el *soft-landing*.
+Los cuatro comparten una cosa: **no saben qué comprar**. El sitio resuelve exactamente eso
+con el selector por objetivo.
 
-## 8. Estrategias de entrada
-- **Inversión directa:** Compra de tierras o desarrollo de *Greenfield projects* (ej. Real estate industrial).
-- **Joint ventures:** La ruta más recomendada para sortear la curva de aprendizaje local.
-- **Fondos de inversión:** Aportar capital en fondos de Private Equity locales con historial comprobado.
+---
 
-## 9. Conclusión
-La ventana de oportunidad para entrar a Paraguay con márgenes de "mercado frontera" se está cerrando ahora que es un país de "grado de inversión". Los activos (tierra, energía, capacidad logística) experimentarán una fuerte compresión de tasas de retorno (Cap Rates) en los próximos años a medida que el capital institucional aterrice. 
-**El momento de estructurar posiciones a largo plazo es ahora.**
+## 3. Estructura de la oferta
+
+1. **Producto de entrada** (Gs 130.000 – 200.000): magnesio, vitamina D3+K2, endulzante.
+   Baja fricción, sirve para probar el servicio.
+2. **Producto ancla** (Gs 350.000 – 450.000): whey isolate, colágeno, proteína vegetal.
+   Es el que define la percepción de precio.
+3. **Protocolo combinado** (Gs 600.000 – 900.000): 2–3 productos con instrucciones de uso.
+   Es donde está el margen y la recompra a 30 días.
+
+**Regla de venta:** nunca vender un producto suelto sin proponer el protocolo. La asesoría
+gratuita existe para que el cliente vea el protocolo antes de decidir el precio.
+
+---
+
+## 4. Protocolos base (guion de recomendación)
+
+| Objetivo | Núcleo | Complemento | Timing |
+|---|---|---|---|
+| Ganar masa | Whey concentrada + creatina | EAA | Post-entreno / diario 5 g |
+| Bajar grasa | Whey isolate o vegetal + EAA | MCT, sustituto de comida | Desayuno y post-entreno |
+| Belleza | Colágeno + vitamina C | Omega 3, D3+K2 | En ayunas, diario |
+| Foco | Omega 3 + magnesio glicinato | Nootrópico, creatina | Omega con comida, magnesio de noche |
+| Energía sostenida | MCT + D3+K2 | Pre-entreno sin azúcar | Mañana |
+
+Cada recomendación debe cerrar con **dosis, momento del día y duración mínima** (30 días).
+Sin eso no hay recompra.
+
+---
+
+## 5. Embudo comercial
+
+```
+Instagram / SEO / recomendación
+        ↓
+proteinasmart.com — selector por objetivo
+        ↓
+Catálogo filtrado (el cliente ya se auto-segmentó)
+        ↓
+"Pedir por WhatsApp" con mensaje prellenado
+        ↓
+Asesoría 1-a-1 → se propone el protocolo (upsell natural)
+        ↓
+Pago + entrega + factura
+        ↓
+Seguimiento a los 25 días → recompra
+```
+
+El paso que más ingresos genera **no es la web, es el mensaje de seguimiento a los 25 días**.
+Es la palanca más barata del negocio y la que casi nadie ejecuta.
+
+---
+
+## 6. Guion de WhatsApp (primer contacto)
+
+> Hola, ¡gracias por escribir! Antes de pasarte precios te hago dos preguntas para no
+> venderte algo que no necesitás: **¿cuál es tu objetivo hoy** (masa, bajar grasa, piel/pelo,
+> foco) **y cuántas veces por semana entrenás?**
+
+Luego:
+
+> Con eso te recomiendo *[protocolo]*. La base es *[producto ancla]* y lo ideal es sumarle
+> *[complemento]* porque *[razón en una línea]*. El protocolo completo te queda en
+> *[precio]*, o podés arrancar solo con la base en *[precio]*. ¿Cuál preferís?
+
+Cierre:
+
+> Perfecto. Te lo mando *[hoy en Gran Asunción / por encomienda]*, con factura. ¿Transferencia,
+> billetera o efectivo?
+
+Y a los 25 días:
+
+> ¿Cómo te fue con *[producto]*? Si ya se te está por terminar, te reservo el próximo para
+> que no cortes el protocolo.
+
+---
+
+## 7. Métricas a mirar (mensual)
+
+| Métrica | Referencia inicial | Por qué importa |
+|---|---|---|
+| Visitas → clics en WhatsApp | > 8 % | Mide si el catálogo convence |
+| Conversaciones → pedidos | > 35 % | Mide el guion de venta |
+| Ticket promedio | Subir 15 % con protocolo | Mide el upsell |
+| Recompra a 60 días | > 30 % | Mide el seguimiento |
+| Productos sin rotación a 90 días | < 15 % del catálogo | Mide el criterio de compra |
+
+---
+
+## 8. Próximos pasos de infraestructura
+
+1. **Imágenes reales** de producto (hoy las tarjetas son tipográficas).
+2. **Landings por categoría** (`/proteinas`, `/keto`, `/longevidad`) para captar búsquedas
+   de intención informativa.
+3. **Contenido SEO**: guías por objetivo, no fichas de producto. La búsqueda es
+   "qué proteína tomar para bajar grasa", no "whey isolate 2 lb".
+4. **Catálogo en Supabase** + panel de carga, para dejar de editar `catalog.js` a mano.
+5. **Automatización del seguimiento a 25 días** vía WhatsApp — el mayor ROI de todo el plan.
+
+---
+
+*Los suplementos alimenticios no son medicamentos y no reemplazan una alimentación variada
+ni el consejo de un profesional de la salud.*
+
+Infraestructura digital por [AYCweb](https://aycweb.com).
