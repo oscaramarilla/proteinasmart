@@ -9,16 +9,25 @@
   <meta name="description" content="Marketplace de proteínas y suplementos deportivos en Paraguay. Whey, colágeno, creatina, keto y longevidad, con asesoramiento real y envío en Asunción. Proteína inteligente para la salud, la belleza y la longevidad." />
   <meta name="keywords" content="proteina paraguay, whey protein asuncion, suplementos deportivos paraguay, creatina paraguay, keto paraguay, colageno, aceite MCT, omega 3, marketplace suplementos" />
   <meta name="author" content="ProteínaSmart" />
-  <link rel="canonical" href="https://proteinasmart.com/" />
+  <link rel="canonical" href="https://www.proteinasmart.com/" />
 
-  <!-- Open Graph -->
+  <!-- Open Graph — controla cómo se ve el link compartido en WhatsApp, Instagram y Facebook -->
   <meta property="og:site_name" content="ProteínaSmart" />
   <meta property="og:title" content="ProteínaSmart — Proteína inteligente" />
   <meta property="og:description" content="Tu marketplace de proteínas para la salud, la belleza y la longevidad. Whey, keto, deportivos y longevidad con asesoramiento real en Paraguay." />
   <meta property="og:type" content="website" />
-  <meta property="og:url" content="https://proteinasmart.com/" />
+  <meta property="og:url" content="https://www.proteinasmart.com/" />
   <meta property="og:locale" content="es_PY" />
+  <meta property="og:image" content="https://www.proteinasmart.com/og-image.png" />
+  <meta property="og:image:secure_url" content="https://www.proteinasmart.com/og-image.png" />
+  <meta property="og:image:type" content="image/png" />
+  <meta property="og:image:width" content="1200" />
+  <meta property="og:image:height" content="630" />
+  <meta property="og:image:alt" content="ProteínaSmart — tu marketplace de proteínas para la salud, la belleza y la longevidad" />
   <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="ProteínaSmart — Proteína inteligente" />
+  <meta name="twitter:description" content="Tu marketplace de proteínas para la salud, la belleza y la longevidad." />
+  <meta name="twitter:image" content="https://www.proteinasmart.com/og-image.png" />
 
   <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>💪</text></svg>" />
 
@@ -35,7 +44,8 @@
     "name": "ProteínaSmart",
     "alternateName": "Proteína inteligente",
     "description": "Marketplace de proteínas y suplementos deportivos para la salud, la belleza y la longevidad.",
-    "url": "https://proteinasmart.com/",
+    "url": "https://www.proteinasmart.com/",
+    "image": "https://www.proteinasmart.com/og-image.png",
     "telephone": "+595985864209",
     "address": {
       "@type": "PostalAddress",
@@ -43,7 +53,7 @@
       "addressCountry": "PY"
     },
     "areaServed": "Paraguay",
-    "priceRange": "Gs 95.000 – Gs 690.000",
+    "priceRange": "Gs 89.000 – Gs 450.000",
     "currenciesAccepted": "PYG",
     "paymentAccepted": "Transferencia bancaria, Tigo Money, Personal Pay, efectivo",
     "openingHours": "Mo-Sa 08:00-19:00"
@@ -103,16 +113,18 @@
   <!-- ============ HERO ============ -->
   <section class="hero" id="hero">
     <div class="hero-content">
-      <span class="eyebrow reveal">Proteína inteligente</span>
-      <h1 class="reveal">
+      <!-- El bloque del hero NO usa .reveal a propósito: es el elemento LCP y debe pintarse
+           en el primer frame. Solo se animan las métricas, que están debajo del fold. -->
+      <span class="eyebrow">Proteína inteligente</span>
+      <h1>
         Tu marketplace de proteínas para la <span class="gradient-text">salud, la belleza y la longevidad</span>
       </h1>
-      <p class="hero-sub reveal">
+      <p class="hero-sub">
         Suplementación seleccionada con criterio, no por moda. Cruzamos lo que funciona de la
         alimentación cetogénica, el enfoque low carb, los hábitos sostenibles y la neuroplasticidad
         para que cada producto que comprás tenga una razón concreta detrás.
       </p>
-      <div class="hero-cta reveal">
+      <div class="hero-cta">
         <a href="#catalogo" class="btn btn-primary">Ver el catálogo</a>
         <a class="btn btn-ghost" data-wa href="#">Asesoría gratuita por WhatsApp</a>
       </div>
@@ -402,6 +414,10 @@
       <path d="M12.04 2C6.58 2 2.13 6.45 2.13 11.91c0 1.75.46 3.45 1.32 4.95L2 22l5.25-1.38a9.9 9.9 0 0 0 4.79 1.22h.01c5.46 0 9.91-4.45 9.91-9.91C21.96 6.45 17.5 2 12.04 2zm5.8 14.06c-.24.68-1.42 1.32-1.95 1.36-.5.05-.97.23-3.27-.68-2.75-1.08-4.5-3.9-4.64-4.08-.13-.18-1.11-1.48-1.11-2.82 0-1.34.7-2 .95-2.27.25-.27.54-.34.72-.34.18 0 .36 0 .52.01.17.01.39-.06.61.47.23.55.77 1.9.84 2.04.07.14.11.3.02.48-.09.18-.14.29-.27.45-.14.16-.29.36-.41.48-.14.14-.28.29-.12.57.16.27.71 1.17 1.53 1.9 1.05.94 1.94 1.23 2.21 1.37.27.14.43.11.59-.07.16-.18.68-.79.86-1.07.18-.27.36-.22.61-.13.25.09 1.59.75 1.86.89.27.14.45.2.52.32.07.11.07.66-.17 1.34z"/>
     </svg>
   </a>
+
+  <!-- Vercel Web Analytics — sin cookies, no requiere banner de consentimiento.
+       Requiere activar "Web Analytics" en el proyecto de Vercel (Dashboard → Analytics). -->
+  <script defer src="/_vercel/insights/script.js"></script>
 
   <script src="js/config.js"></script>
   <script src="js/catalog.js"></script>

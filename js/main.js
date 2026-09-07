@@ -341,13 +341,65 @@
     /* eslint-enable */
   }
 
-  /* ================= CLICKS DE PEDIDO ================= */
+  /* ================= MEDICIÓN DE CONVERSIÓN =================
+     La métrica que manda en este negocio es: visitas → clics a WhatsApp.
+     Todo clic que abre WhatsApp se registra, venga de una tarjeta de producto,
+     de un CTA general o del botón flotante. */
+
+  function track(nombre, props) {
+    if (typeof gtag !== 'undefined') gtag('event', nombre, props || {});
+    if (typeof fbq !== 'undefined') fbq('trackCustom', nombre, props || {});
+    if (typeof window.va === 'function') window.va('event', { name: nombre, data: props || {} });
+  }
+
   document.addEventListener('click', (e) => {
-    const a = e.target.closest('[data-track="pedido"]');
-    if (!a) return;
-    if (typeof gtag !== 'undefined') gtag('event', 'begin_checkout', { item_id: a.dataset.id });
-    if (typeof fbq !== 'undefined') fbq('track', 'InitiateCheckout', { content_ids: [a.dataset.id] });
+    // Pedido de un producto concreto
+    const pedido = e.target.closest('[data-track="pedido"]');
+    if (pedido) {
+      const id = pedido.dataset.id;
+      track('pedido_whatsapp', { producto: id });
+      if (typeof gtag !== 'undefined') gtag('event', 'begin_checkout', { item_id: id });
+      if (typeof fbq !== 'undefined') fbq('track', 'InitiateCheckout', { content_ids: [id] });
+      return;
+    }
+
+    // Cualquier otro CTA que abre WhatsApp
+    const wa = e.target.closest('[data-wa]');
+    if (wa) {
+      const origen = wa.classList.contains('wa-float')
+        ? 'boton_flotante'
+        : wa.classList.contains('nav-cta')
+        ? 'navbar'
+        : wa.closest('.hero')
+        ? 'hero'
+        : wa.closest('.final-cta')
+        ? 'cta_final'
+        : 'otro';
+      track('contacto_whatsapp', { origen: origen });
+      if (typeof fbq !== 'undefined') fbq('track', 'Contact', { source: origen });
+    }
   });
+
+  // Profundidad de scroll: dice si el catálogo se está viendo o la gente rebota en el hero
+  (function () {
+    const hitos = [25, 50, 75, 100];
+    const vistos = {};
+    window.addEventListener(
+      'scroll',
+      () => {
+        const h = document.documentElement.scrollHeight - window.innerHeight;
+        if (h <= 0) return;
+        const pct = (window.scrollY / h) * 100;
+        hitos.forEach((m) => {
+          if (pct >= m && !vistos[m]) {
+            vistos[m] = true;
+            track('scroll_' + m);
+          }
+        });
+      },
+      { passive: true }
+    );
+  })();
 
   /* ================= REVEALS INICIALES ================= */
   observeReveals(document);
