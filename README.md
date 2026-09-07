@@ -116,6 +116,71 @@ npx serve .
 
 ---
 
+## Automatización: seguimiento a 25 días
+
+La palanca de mayor ROI del negocio (Dossier §6)) automatizada con la infraestructura que ya tenés:
+
+```
+checkout de WhatsApp (js/main.js)
+      │   dispatchea ps:pedido
+      ▼
+js/pedidos.js — registra el pedido en Supabase (pedidos_whatsapp)
+      │   fallback silencioso: si Supabase falla, la venta sigue igual.
+
+      ▼
+Edge Function seguimiento-25-dias (supabase/edge-functions/)
+      │   busca pedidos de hace ~25 dias sin seguimiento,
+      │   arma el mensaje protocolizado (marketing/08) y envia por WhatsApp.
+
+      ▼
+pg_cron (09:00 diario: supabase/migrations/20260907_seguimiento_25dias.sql）
+      │
+      ├─ Sin telefono valido de cliente → seguimientos_pendientes
+      └─ Enviado OK → seguimiento_25dias_enviado = true
+```
+
+### Pasos de deploy
+
+1. **Subir la edge function:**
+
+   ```bash
+   supabase functions deploy seguimiento-25-dias --no-verify-jwt
+   ```
+
+   > Nota: si preferís mantener `verify_jwt = true` (recomendado), primero configirá los
+   > secrets y después deploy normal; el cron ya pasa el service key en el header.
+
+
+
+2. **Configurar secrets** (reemplazá los valores):
+
+   ```bash
+   supabase secrets set WHATSAPP_PROVIDER=evolution
+   supabase secrets set WHATSAPP_API_URL=https://tu-evolution.evo.ws
+   supabase secrets set WHATSAPP_API_KEY=tu_api_key
+   supabase secrets set WHATSAPP_INSTANCE=tu_instancia
+   # Para Meta Cloud API:
+   # supabase secrets set WHATSAPP_PROVIDER=meta
+   # supabase secrets set WHATSAPP_PHONE_ID=phone_number_id
+   # supabase secrets set WHATSAPP_TOKEN=token_meta
+   # Opcional:
+   # supabase secrets set NUMERO_WHATSAPP_NEGOCIO=595985864209
+   # Modo seguro: WHATSAPP_DRY_RUN=true (default) solo reporta sin enviar.
+
+   # Para ACTIVAR el envio real:
+   supabase secrets set WHATSAPP_DRY_RUN=false
+   ```
+
+3. **Correr la migración** en el SQL Editor (`supabase/migrations/20260907_seguimiento_25dias.sql`) y reemplazar los dos placeholders (`REEMPLAZAR_PROYECTO`, `REEMPLAZAR_SERVICE_ROLE_KEY`).
+
+4. **Conectar js/config.js y web/.env.local** con tus credenciales reales de Supabase (nunca se commitean; ver `.gitignore`).
+
+> **Limitación actual:** el checkout web abre `wa.me` sin capturar el número del comprador, así que el pedido registra el teléfono de la empresa como referencia y el seguimiento cae en `seguimientos_pendientes`. El siguiente paso es capturar el número en el checkout o enriquecerlo con el webhook entrante de WhatsApp (Evolution/Meta), y el envío se vuelve 100% automático.
+
+
+
+---
+
 ## SEO
 
 - Title, description, canonical y Open Graph orientados a `proteína + Paraguay`.
@@ -135,6 +200,8 @@ producto cuando el catálogo pase a base de datos.
 - [x] Landings por disciplina mediante URLSearchParams y rewrites de Vercel
 - [x] Migración híbrida del catálogo a Supabase con fallback local
 - [x] Carrito multi-producto persistente con resumen único a WhatsApp
+- [ ] Automatización del seguimiento a 25 días (edge function + cron listos; falta conectar WhatsApp y capturar el teléfono del cliente)
+- [ ] Panel de carga del catálogo (dashboard Next.js en `web/app/admin`; falta conectar credenciales)
 - [ ] Pasarela de pago local (Bancard / Pagopar)
 
 ---

@@ -516,6 +516,9 @@
     if (checkout && window.PS_CART) {
       const state = window.PS_CART.getState();
       window.open(waCarrito(state.items, state.total), '_blank', 'noopener');
+      window.dispatchEvent(new CustomEvent('ps:pedido', {
+        detail: { items: state.items, total: state.total },
+      }));
       window.PS_CART.dispatch({ type: 'LIMPIAR' });
     }
   });
