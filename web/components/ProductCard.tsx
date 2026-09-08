@@ -1,5 +1,6 @@
 'use client';
 
+import Image from 'next/image';
 import { useCartStore } from '../lib/useCartStore';
 
 type ProductCardProps = {
@@ -9,6 +10,7 @@ type ProductCardProps = {
   unidad: string;
   etiquetas: string[];
   imagenUrl: string;
+  proveedor: string;
 };
 
 const badgeStyles: Record<string, string> = {
@@ -33,6 +35,7 @@ export default function ProductCard({
   unidad,
   etiquetas,
   imagenUrl,
+  proveedor,
 }: ProductCardProps) {
   const agregarItem = useCartStore((state) => state.agregarItem);
   const precioFormateado = new Intl.NumberFormat('es-PY').format(precio);
@@ -40,10 +43,13 @@ export default function ProductCard({
   return (
     <article className="group flex h-full flex-col overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm transition-shadow duration-200 hover:shadow-md">
       <div className="relative aspect-[4/3] overflow-hidden bg-slate-100">
-        <img
+        <Image
           src={imagenUrl}
           alt={nombre}
-          className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
+          fill
+          unoptimized
+          sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+          className="object-cover transition-transform duration-300 group-hover:scale-105"
           loading="lazy"
         />
 
@@ -73,7 +79,7 @@ export default function ProductCard({
 
         <button
           type="button"
-          onClick={() => agregarItem({ id, nombre, precio, unidad, imagenUrl })}
+          onClick={() => agregarItem({ id, nombre, precio, unidad, imagenUrl, proveedor })}
           className="mt-auto w-full rounded-xl bg-emerald-700 px-4 py-3 text-sm font-semibold text-white transition duration-150 hover:bg-emerald-800 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-600 focus-visible:ring-offset-2 active:scale-[0.98]"
         >
           Agregar al carrito

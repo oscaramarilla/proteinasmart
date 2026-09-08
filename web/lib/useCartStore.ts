@@ -7,6 +7,10 @@ export type CartItem = {
   unidad: string;
   cantidad: number;
   imagenUrl?: string;
+  // Alimenta la consolidación de compras del Dashboard de Compras
+  // (web/app/admin/page.tsx). Opcional porque productos.proveedor es
+  // nullable: no todos los productos tienen proveedor cargado.
+  proveedor?: string;
 };
 
 type CartItemInput = Omit<CartItem, 'cantidad'> & {
