@@ -65,6 +65,6 @@
   }
 
   window.addEventListener('ps:pedido', (event) => {
-    registrarPedido(event.detail);
+    registrarPedido((/** @type {CustomEvent} */ (event)).detail);
   });
 })();
