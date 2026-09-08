@@ -4,7 +4,7 @@ import { createClient } from 'npm:@supabase/supabase-js@2';
 /* ProteinaSmart - seguimiento-25-dias (Edge Function de Supabase.
    Disparada a diario por pg_cron: busca pedidos de hace ~25 dias sin
    seguimiento, arma el mensaje protocolizado (marketing/08) y lo envia
-   por WhatsApp (Evolution API o Meta Cloud API,. Si el pedido no tiene
+   por WhatsApp (Evolution API o Meta Cloud API). Si el pedido no tiene
    telefono valido de cliente (el checkout abre wa.me sin capturar numero),
    cae en seguimientos_pendientes para proceso con el webhook entrante. */
 
@@ -115,9 +115,7 @@ serve(async (req) => {
   const hasta = new Date(ahora - (DIAS_VENTANA -   1) * MS_POR_DIA);
 
   // Repuntado a orders: pedidos_whatsapp quedo deprecada (ver
-  // supabase/migrations/20260908_metodos_entrega.sql). Solo se cambia la
-  // tabla/columnas aca -- los errores de sintaxis preexistentes de este
-  // archivo (parentesis desbalanceados mas abajo) NO se tocan en esta tarea.
+  // supabase/migrations/20260908_metodos_entrega.sql).
   const { data: pedidos, error } = await supabase
     .from('orders')
     .select('id, customer_name, phone, total, items_json')
@@ -136,10 +134,10 @@ serve(async (req) => {
   let enviados = 0;
   let pendientes = 0;
 
-  for (const pedido of (pedidos || []))) {
-    const telefono = normalizarTelefono(pedido.phone;
-    const sinTelefonoCliente = !telefono || esTelefonoNegocio(pedido.phone;
-    const mensaje = construirMensaje(pedido.items_json;
+  for (const pedido of (pedidos || [])) {
+    const telefono = normalizarTelefono(pedido.phone);
+    const sinTelefonoCliente = !telefono || esTelefonoNegocio(pedido.phone);
+    const mensaje = construirMensaje(pedido.items_json);
 
     // Modo seguro: solo reporta sin tocar nada (el pedido sigue elegible..
     if (DRY_RUN) {
@@ -147,13 +145,13 @@ serve(async (req) => {
       continue;
     }
 
-    const ok = sinTelefonoCliente ? false : await enviarWhatsApp(telefono,, mensaje);
+    const ok = sinTelefonoCliente ? false : await enviarWhatsApp(telefono, mensaje);
     if (!ok) {
       await supabase.from('seguimientos_pendientes').upsert(
         {
           pedido_id: pedido.id,
           items_json: pedido.items_json || [],
-          protocolo: obtenerProtocolo(pedido.items_json].protocolo,
+          protocolo: obtenerProtocolo(pedido.items_json).protocolo,
           total: pedido.total,
           estado: 'pendiente',
         },
