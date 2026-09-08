@@ -1,4 +1,5 @@
 import { revalidatePath } from 'next/cache';
+import { supabaseAdminRequest } from '../../lib/supabaseAdmin';
 
 export const dynamic = 'force-dynamic';
 
@@ -29,42 +30,15 @@ type ComprasPorProveedor = Record<
   Record<string, CompraConsolidada>
 >;
 
-function getSupabaseConfig() {
-  const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
-  const key = process.env.SUPABASE_SERVICE_ROLE_KEY;
-
-  if (!url || !key) {
-    throw new Error(
-      'Faltan NEXT_PUBLIC_SUPABASE_URL y SUPABASE_SERVICE_ROLE_KEY.',
-    );
-  }
-
-  return { url, key };
-}
-
 async function obtenerPedidosPendientes(): Promise<Pedido[]> {
-  const { url, key } = getSupabaseConfig();
-  const query = new URLSearchParams({
-    select: 'id,items_json',
-    estado_entrega: 'eq.pendiente',
-  });
-
-  const response = await fetch(
-    `${url}/rest/v1/pedidos_whatsapp?${query.toString()}`,
-    {
-      headers: {
-        apikey: key,
-        Authorization: `Bearer ${key}`,
-      },
-      cache: 'no-store',
-    },
+  // Join a delivery_details: orders es la tabla viva (pedidos_whatsapp
+  // quedó deprecada, ver supabase/migrations/20260908_metodos_entrega.sql).
+  // compra_realizada es independiente de estado: un pedido puede estar
+  // 'entregado' y seguir necesitando reposición. Se excluyen los
+  // cancelados porque esos no van a comprarse.
+  return supabaseAdminRequest<Pedido[]>(
+    'orders?select=id,items_json,delivery_details(city,address,courier_company_id)&compra_realizada=eq.false&estado=neq.cancelado',
   );
-
-  if (!response.ok) {
-    throw new Error('No se pudieron obtener los pedidos pendientes.');
-  }
-
-  return response.json();
 }
 
 function leerItems(value: unknown): PedidoItem[] {
@@ -164,26 +138,18 @@ export async function marcarComoComprado(formData: FormData) {
     return;
   }
 
-  const { url, key } = getSupabaseConfig();
-  const response = await fetch(
-    `${url}/rest/v1/pedidos_whatsapp?id=in.(${ids.join(',')})`,
-    {
-      method: 'PATCH',
-      headers: {
-        apikey: key,
-        Authorization: `Bearer ${key}`,
-        'Content-Type': 'application/json',
-        Prefer: 'return=minimal',
-      },
-      body: JSON.stringify({ estado_entrega: 'enviado' }),
-    },
-  );
+  // compra_realizada es un eje aparte de estado: describe si ya se repuso
+  // el stock, no el ciclo del pedido de cara al cliente.
+  await supabaseAdminRequest(`orders?id=in.(${ids.join(',')})`, {
+    method: 'PATCH',
+    headers: { Prefer: 'return=minimal' },
+    body: JSON.stringify({
+      compra_realizada: true,
+      compra_realizada_en: new Date().toISOString(),
+    }),
+  });
 
-  if (!response.ok) {
-    throw new Error('No se pudieron marcar los pedidos como comprados.');
-  }
-
-  revalidatePath('/dashboard-compras');
+  revalidatePath('/admin');
 }
 
 export default async function DashboardComprasPage() {
@@ -194,6 +160,11 @@ export default async function DashboardComprasPage() {
     <main className="min-h-screen bg-slate-50 px-4 py-10 text-slate-950 sm:px-6 lg:px-8">
       <div className="mx-auto max-w-7xl">
         <header className="mb-8">
+          <nav className="mb-4 text-sm text-slate-500">
+            <a href="/admin/facturas" className="hover:underline">
+              Facturas pendientes
+            </a>
+          </nav>
           <p className="text-sm font-semibold uppercase tracking-[0.18em] text-emerald-700">
             Operaciones · Jueves
           </p>
