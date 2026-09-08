@@ -14,7 +14,8 @@
      objetivos   → ['masa','definicion','belleza','foco','energia']
      badge       → etiqueta corta opcional ('Más vendido', 'Nuevo'…)
      resumen     → una línea, beneficio concreto
-     stock       → true | false
+     stock       → true | false | null (desconocido)
+     verificado  → indicadores por campo; activar solo con evidencia del proveedor
 
    PRECIOS — relevamiento de mercado Paraguay, septiembre 2026.
    Fuentes: suplementosasuncion.com.py (gama económica/media) y
@@ -50,7 +51,7 @@ window.PS_CATALOG = [
     objetivos: ['masa', 'definicion'],
     badge: 'Más vendido',
     resumen: '27 g de proteína por scoop, sin lactosa y con carga glucémica mínima.',
-    stock: true,
+    stock: null,
   },
   {
     id: 'whey-concentrada-5lb',
@@ -63,7 +64,7 @@ window.PS_CATALOG = [
     objetivos: ['masa'],
     badge: '',
     resumen: 'El mejor costo por gramo de proteína para volumen sostenido.',
-    stock: true,
+    stock: null,
   },
   {
     id: 'proteina-vegana',
@@ -76,7 +77,7 @@ window.PS_CATALOG = [
     objetivos: ['definicion', 'masa'],
     badge: '',
     resumen: 'Perfil de aminoácidos completo, sin lácteos ni gluten. Digestión liviana.',
-    stock: true,
+    stock: null,
   },
   {
     id: 'colageno-hidrolizado',
@@ -89,7 +90,7 @@ window.PS_CATALOG = [
     objetivos: ['belleza'],
     badge: 'Belleza & longevidad',
     resumen: 'Péptidos tipo I y III para piel, cabello, uñas y articulaciones.',
-    stock: true,
+    stock: null,
   },
 
   /* ---------------- DEPORTIVOS ---------------- */
@@ -104,7 +105,7 @@ window.PS_CATALOG = [
     objetivos: ['masa', 'foco', 'energia'],
     badge: 'Base de todo',
     resumen: 'El suplemento con más evidencia: fuerza, masa magra y función cognitiva.',
-    stock: true,
+    stock: null,
   },
   {
     id: 'pre-entreno',
@@ -117,7 +118,7 @@ window.PS_CATALOG = [
     objetivos: ['energia', 'foco'],
     badge: '',
     resumen: 'Cafeína, beta-alanina y citrulina. Cero carbohidratos, apto keto.',
-    stock: true,
+    stock: null,
   },
   {
     id: 'eaa-bcaa',
@@ -130,7 +131,7 @@ window.PS_CATALOG = [
     objetivos: ['definicion', 'masa'],
     badge: '',
     resumen: 'Protege masa muscular durante el ayuno y los déficits calóricos.',
-    stock: true,
+    stock: null,
   },
   {
     id: 'glutamina',
@@ -143,7 +144,7 @@ window.PS_CATALOG = [
     objetivos: ['definicion'],
     badge: '',
     resumen: 'Recuperación muscular e integridad intestinal en entrenamientos exigentes.',
-    stock: true,
+    stock: null,
   },
 
   /* ---------------- KETO / LOW CARB ---------------- */
@@ -158,7 +159,7 @@ window.PS_CATALOG = [
     objetivos: ['energia', 'foco'],
     badge: 'Keto esencial',
     resumen: 'Energía cetónica inmediata sin picos de insulina. Ideal en el café matinal.',
-    stock: true,
+    stock: null,
   },
   {
     id: 'barras-keto',
@@ -171,7 +172,7 @@ window.PS_CATALOG = [
     objetivos: ['definicion'],
     badge: '',
     resumen: 'Snack real para cortar el hambre sin romper la cetosis.',
-    stock: true,
+    stock: null,
   },
   {
     id: 'sustituto-comida',
@@ -184,7 +185,7 @@ window.PS_CATALOG = [
     objetivos: ['definicion'],
     badge: '',
     resumen: 'Comida completa en 400 kcal: proteína, grasas buenas y fibra.',
-    stock: true,
+    stock: null,
   },
   {
     id: 'endulzante-monkfruit',
@@ -197,7 +198,7 @@ window.PS_CATALOG = [
     objetivos: ['definicion'],
     badge: '',
     resumen: 'Cero índice glucémico, sin regusto. Reemplazo directo del azúcar.',
-    stock: true,
+    stock: null,
   },
 
   /* ---------------- LONGEVIDAD / NOOTRÓPICOS ---------------- */
@@ -212,7 +213,7 @@ window.PS_CATALOG = [
     objetivos: ['foco', 'belleza'],
     badge: 'Neuroplasticidad',
     resumen: 'DHA de alta concentración: membrana neuronal, memoria y antiinflamación.',
-    stock: true,
+    stock: null,
   },
   {
     id: 'magnesio-glicinato',
@@ -225,7 +226,7 @@ window.PS_CATALOG = [
     objetivos: ['foco', 'energia'],
     badge: '',
     resumen: 'Sueño profundo y recuperación nerviosa. La forma que sí se absorbe.',
-    stock: true,
+    stock: null,
   },
   {
     id: 'vitamina-d3-k2',
@@ -238,7 +239,7 @@ window.PS_CATALOG = [
     objetivos: ['belleza', 'energia'],
     badge: '',
     resumen: 'Hueso, inmunidad y testosterona. El déficit más común y más barato de corregir.',
-    stock: true,
+    stock: null,
   },
   {
     id: 'nootropico-focus',
@@ -251,7 +252,7 @@ window.PS_CATALOG = [
     objetivos: ['foco'],
     badge: 'Nuevo',
     resumen: 'Concentración sostenida sin ansiedad ni bajón posterior.',
-    stock: true,
+    stock: null,
   },
 ];
 
@@ -280,6 +281,8 @@ const PS_ASESORIA_POR_PRODUCTO = {
 window.PS_CATALOG = window.PS_CATALOG.map((producto) => ({
   ...producto,
   imagen: producto.imagen || '',
+  sabor: '',
+  verificado: { marca: false, formato: false, sabor: false, stock: false, imagen: false },
   ...(PS_ASESORIA_POR_PRODUCTO[producto.id] || {}),
 }));
 

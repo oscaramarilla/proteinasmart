@@ -1,4 +1,4 @@
-import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/+esm';
+
 
 /**
  * Convierte un producto de Supabase al contrato del catalogo local.
@@ -17,7 +17,8 @@ function adaptarProducto(producto) {
     objetivos: Array.isArray(producto.objetivos) ? producto.objetivos : [],
     disciplinas: Array.isArray(producto.disciplinas) ? producto.disciplinas : [],
     imagen: producto.imagen || '',
-    stock: producto.stock !== false,
+    stock: typeof producto.stock === 'boolean' ? producto.stock : null,
+    verificado: producto.verificado || {},
   };
 }
 
@@ -30,6 +31,7 @@ async function cargarCatalogoRemoto() {
   if (!supabaseConfig.url || !supabaseConfig.anonKey) return null;
 
   try {
+    const { createClient } = await import('https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/+esm');
     const supabase = createClient(supabaseConfig.url, supabaseConfig.anonKey);
     const { data, error } = await supabase
       .from('productos')
