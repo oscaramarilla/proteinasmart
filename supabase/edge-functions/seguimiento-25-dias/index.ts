@@ -10,8 +10,8 @@ import { createClient } from 'npm:@supabase/supabase-js@2';
 
 interface Pedido {
   id: string;
-  cliente_nombre: string | null;
-  telefono: string | null;
+  customer_name: string | null;
+  phone: string | null;
   total: number;
   items_json: unknown;
 }
@@ -114,12 +114,16 @@ serve(async (req) => {
   const desde = new Date(ahora - (DIAS_VENTANA + 1) * MS_POR_DIA);
   const hasta = new Date(ahora - (DIAS_VENTANA -   1) * MS_POR_DIA);
 
+  // Repuntado a orders: pedidos_whatsapp quedo deprecada (ver
+  // supabase/migrations/20260908_metodos_entrega.sql). Solo se cambia la
+  // tabla/columnas aca -- los errores de sintaxis preexistentes de este
+  // archivo (parentesis desbalanceados mas abajo) NO se tocan en esta tarea.
   const { data: pedidos, error } = await supabase
-    .from('pedidos_whatsapp')
-    .select('id, cliente_nombre, telefono, total, items_json')
+    .from('orders')
+    .select('id, customer_name, phone, total, items_json')
     .eq('seguimiento_25dias_enviado', false)
-    .gte('fecha_pedido', desde.toISOString())
-    .lte('fecha_pedido', hasta.toISOString())
+    .gte('created_at', desde.toISOString())
+    .lte('created_at', hasta.toISOString())
     .limit(500);
 
   if (error) {
@@ -133,8 +137,8 @@ serve(async (req) => {
   let pendientes = 0;
 
   for (const pedido of (pedidos || []))) {
-    const telefono = normalizarTelefono(pedido.telefono;
-    const sinTelefonoCliente = !telefono || esTelefonoNegocio(pedido.telefono;
+    const telefono = normalizarTelefono(pedido.phone;
+    const sinTelefonoCliente = !telefono || esTelefonoNegocio(pedido.phone;
     const mensaje = construirMensaje(pedido.items_json;
 
     // Modo seguro: solo reporta sin tocar nada (el pedido sigue elegible..
@@ -162,7 +166,7 @@ serve(async (req) => {
 
     // Idempotencia: cada pedido se procesa una sola vez..
     await supabase
-      .from('pedidos_whatsapp')
+      .from('orders')
       .update({
         seguimiento_25dias_enviado: true,
         seguimiento_enviado_en: new Date().toISOString(),

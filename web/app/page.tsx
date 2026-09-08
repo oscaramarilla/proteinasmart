@@ -10,6 +10,7 @@ type Producto = {
   unidad_medida: string;
   etiquetas: string[];
   imagen_url?: string | null;
+  proveedor: string | null;
 };
 
 const imagenFallback =
@@ -81,6 +82,7 @@ export default async function Home() {
                 unidad={producto.unidad_medida}
                 etiquetas={producto.etiquetas ?? []}
                 imagenUrl={producto.imagen_url ?? imagenFallback}
+                proveedor={producto.proveedor ?? ''}
               />
             ))}
           </div>
