@@ -56,15 +56,15 @@ export default function CheckoutForm({
   if (state.status === 'success') {
     return (
       <div className="rounded-2xl border border-emerald-200 bg-white p-6 text-center shadow-sm">
-        <h2 className="text-2xl font-bold text-slate-900">¡Pedido registrado!</h2>
-        <p className="mt-2 text-slate-600">Confirmá por WhatsApp para coordinar el pago.</p>
+        <h2 className="text-2xl font-bold text-slate-900">¡Reserva registrada!</h2>
+        <p className="mt-2 text-slate-600">Confirmamos disponibilidad y plazo por WhatsApp antes de coordinar el pago.</p>
         <a
           href={state.whatsappUrl}
           target="_blank"
           rel="noopener noreferrer"
           className="mt-6 inline-block rounded-xl bg-[#25D366] px-6 py-3 text-sm font-bold text-slate-950 transition hover:bg-[#20bd5a]"
         >
-          Confirmar por WhatsApp
+          Confirmar reserva por WhatsApp
         </a>
         <div className="mt-4">
           <Link href="/" className="text-sm font-semibold text-emerald-700 hover:underline">
@@ -289,7 +289,7 @@ export default function CheckoutForm({
         disabled={pending}
         className="w-full rounded-xl bg-emerald-700 px-4 py-3 text-sm font-semibold text-white transition hover:bg-emerald-800 disabled:opacity-60"
       >
-        {pending ? 'Enviando...' : 'Confirmar pedido'}
+        {pending ? 'Enviando...' : 'Confirmar reserva'}
       </button>
     </form>
   );

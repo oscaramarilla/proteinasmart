@@ -30,6 +30,9 @@ type ComprasPorProveedor = Record<
   Record<string, CompraConsolidada>
 >;
 
+type InteresProducto = { product_id: string };
+type ProductoInteres = { id: string; nombre: string };
+
 async function obtenerPedidosPendientes(): Promise<Pedido[]> {
   // Join a delivery_details: orders es la tabla viva (pedidos_whatsapp
   // quedó deprecada, ver supabase/migrations/20260908_metodos_entrega.sql).
@@ -109,6 +112,23 @@ function formatearCantidad(cantidad: number) {
   }).format(cantidad);
 }
 
+async function obtenerRankingIntereses() {
+  const [intereses, productos] = await Promise.all([
+    supabaseAdminRequest<InteresProducto[]>('product_interest?select=product_id'),
+    supabaseAdminRequest<ProductoInteres[]>('productos?select=id,nombre'),
+  ]);
+  const nombres = new Map(productos.map((producto) => [producto.id, producto.nombre]));
+  const conteos = new Map<string, number>();
+  intereses.forEach(({ product_id }) => conteos.set(product_id, (conteos.get(product_id) ?? 0) + 1));
+
+  return Array.from(conteos.entries())
+    .map(([productId, cantidad]) => ({
+      nombre: nombres.get(productId) ?? 'Producto eliminado',
+      cantidad,
+    }))
+    .sort((a, b) => b.cantidad - a.cantidad);
+}
+
 export async function marcarComoComprado(formData: FormData) {
   'use server';
 
@@ -153,7 +173,10 @@ export async function marcarComoComprado(formData: FormData) {
 }
 
 export default async function DashboardComprasPage() {
-  const pedidos = await obtenerPedidosPendientes();
+  const [pedidos, rankingIntereses] = await Promise.all([
+    obtenerPedidosPendientes(),
+    obtenerRankingIntereses(),
+  ]);
   const compras = consolidarCompras(pedidos);
 
   return (
@@ -175,6 +198,23 @@ export default async function DashboardComprasPage() {
             Consolidado de productos pendientes para preparar las compras a proveedores mayoristas.
           </p>
         </header>
+
+        <section className="mb-8 rounded-2xl border border-emerald-200 bg-emerald-50 p-5">
+          <h2 className="text-lg font-bold text-emerald-950">Interés liviano por producto</h2>
+          <p className="mt-1 text-sm text-emerald-900/70">Ranking de personas que pidieron aviso cuando llegue.</p>
+          <div className="mt-4 grid gap-2 sm:grid-cols-2 lg:grid-cols-3">
+            {rankingIntereses.length === 0 ? (
+              <p className="text-sm text-emerald-900/70">Todavía no hay señales registradas.</p>
+            ) : (
+              rankingIntereses.map((item) => (
+                <div key={item.nombre} className="flex items-center justify-between rounded-lg bg-white px-3 py-2 text-sm">
+                  <span className="font-medium text-slate-800">{item.nombre}</span>
+                  <strong className="text-emerald-700">{item.cantidad}</strong>
+                </div>
+              ))
+            )}
+          </div>
+        </section>
 
         <section className="overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm">
           <div className="overflow-x-auto">

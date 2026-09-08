@@ -1,5 +1,6 @@
 import { revalidatePath } from 'next/cache';
 import { supabaseAdminRequest } from '../../../lib/supabaseAdmin';
+import { ManualInvoiceIssuer } from '../../../lib/invoicing/ManualInvoiceIssuer';
 
 export const dynamic = 'force-dynamic';
 
@@ -44,7 +45,7 @@ async function obtenerOrdenesPorFacturar(): Promise<
   // Con el LEFT JOIN por defecto de PostgREST (sin !inner), la orden
   // aparece igual, con invoices en null/[].
   const ordenes = await supabaseAdminRequest<OrdenFacturable[]>(
-    'orders?select=id,customer_name,phone,total,shipping_method_code,estado,fiscal_document_type,fiscal_document_number,fiscal_business_name,created_at,invoices(id,status,numero,timbrado,issued_at,issued_by)&estado=neq.cancelado&order=created_at.asc',
+    'orders?select=id,customer_name,phone,total,shipping_method_code,estado,fiscal_document_type,fiscal_document_number,fiscal_business_name,created_at,invoices(id,status,numero,timbrado,issued_at,issued_by)&estado=in.(confirmado,entregado)&order=created_at.asc',
   );
 
   return ordenes
@@ -83,6 +84,13 @@ export async function marcarFacturaEmitida(formData: FormData) {
     return;
   }
 
+  const ordenes = await supabaseAdminRequest<{ estado: string }[]>(
+    `orders?select=estado&id=eq.${encodeURIComponent(orderId)}`,
+  );
+  if (!['confirmado', 'entregado'].includes(ordenes[0]?.estado ?? '')) {
+    return;
+  }
+
   const datosEmision = {
     status: 'issued',
     numero: numero.trim(),
@@ -106,6 +114,33 @@ export async function marcarFacturaEmitida(formData: FormData) {
       headers: { Prefer: 'return=minimal' },
       body: JSON.stringify({ order_id: orderId, mode: 'manual', ...datosEmision }),
     });
+  }
+
+  revalidatePath('/admin/facturas');
+}
+
+export async function confirmarOrden(formData: FormData) {
+  'use server';
+
+  const orderId = formData.get('orderId');
+  if (typeof orderId !== 'string' || !orderId) return;
+
+  const ordenes = await supabaseAdminRequest<{ id: string; estado: string }[]>(
+    `orders?select=id,estado&id=eq.${encodeURIComponent(orderId)}`,
+  );
+  if (ordenes[0]?.estado !== 'pendiente') return;
+
+  await supabaseAdminRequest(`orders?id=eq.${encodeURIComponent(orderId)}`, {
+    method: 'PATCH',
+    headers: { Prefer: 'return=minimal' },
+    body: JSON.stringify({ estado: 'confirmado' }),
+  });
+
+  const facturas = await supabaseAdminRequest<{ id: string }[]>(
+    `invoices?select=id&order_id=eq.${encodeURIComponent(orderId)}`,
+  );
+  if (facturas.length === 0) {
+    await new ManualInvoiceIssuer().issue(orderId);
   }
 
   revalidatePath('/admin/facturas');
@@ -271,6 +306,17 @@ export default async function FacturasPendientesPage() {
                               Marcar emitida
                             </button>
                           </form>
+                          {orden.estado === 'pendiente' && (
+                            <form action={confirmarOrden}>
+                              <input type="hidden" name="orderId" value={orden.id} />
+                              <button
+                                type="submit"
+                                className="rounded-lg border border-emerald-700 px-3 py-1 text-sm font-semibold text-emerald-700 transition hover:bg-emerald-50 active:scale-[0.98]"
+                              >
+                                Confirmar reserva y crear factura
+                              </button>
+                            </form>
+                          )}
                           <form action={anularFactura}>
                             <input type="hidden" name="orderId" value={orden.id} />
                             <input type="hidden" name="invoiceId" value={factura?.id ?? ''} />
