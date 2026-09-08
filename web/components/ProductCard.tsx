@@ -2,6 +2,8 @@
 
 import Image from 'next/image';
 import { useCartStore } from '../lib/useCartStore';
+import { PREVENTA_DIAS_PLAZO } from '../lib/preventa';
+import ProductInterestForm from './ProductInterestForm';
 
 type ProductCardProps = {
   id: string;
@@ -54,7 +56,7 @@ export default function ProductCard({
         />
 
         {etiquetas.length > 0 && (
-          <div className="absolute inset-x-3 top-3 flex flex-wrap gap-2">
+          <div className="absolute inset-x-3 top-3 flex max-w-[calc(100%-1.5rem)] flex-wrap gap-2">
             {etiquetas.map((etiqueta) => (
               <span
                 key={etiqueta}
@@ -77,13 +79,17 @@ export default function ProductCard({
           {precioFormateado} <span className="text-base font-semibold text-slate-600">Gs</span>
         </p>
 
-        <button
-          type="button"
-          onClick={() => agregarItem({ id, nombre, precio, unidad, imagenUrl, proveedor })}
-          className="mt-auto w-full rounded-xl bg-emerald-700 px-4 py-3 text-sm font-semibold text-white transition duration-150 hover:bg-emerald-800 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-600 focus-visible:ring-offset-2 active:scale-[0.98]"
-        >
-          Agregar al carrito
-        </button>
+              <button
+                type="button"
+                onClick={() => agregarItem({ id, nombre, precio, unidad, imagenUrl, proveedor })}
+                className="mt-auto w-full rounded-xl bg-emerald-700 px-4 py-3 text-sm font-semibold text-white transition duration-150 hover:bg-emerald-800 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-600 focus-visible:ring-offset-2 active:scale-[0.98]"
+              >
+                Reservar
+              </button>
+              <p className="mt-3 text-xs leading-5 text-slate-500">
+                Traemos bajo pedido. Plazo estimado {PREVENTA_DIAS_PLAZO} días desde la confirmación.
+              </p>
+              <ProductInterestForm productId={id} />
       </div>
     </article>
   );

@@ -11,7 +11,6 @@ import {
   type ShippingMethodCode,
 } from '../../lib/checkoutEntrega';
 import { generarCheckoutWhatsApp } from '../../lib/generarCheckoutWhatsApp';
-import { ManualInvoiceIssuer } from '../../lib/invoicing/ManualInvoiceIssuer';
 import type { CartItem } from '../../lib/useCartStore';
 
 export type CheckoutState = {
@@ -176,13 +175,8 @@ export async function procesarCheckout(
       }),
     });
 
-    // La venta vale más que el registro: si falla la factura pendiente,
-    // la orden ya está guardada y el checkout no falla por esto.
-    try {
-      await new ManualInvoiceIssuer().issue(orderId);
-    } catch (error) {
-      console.error('No se pudo crear la factura pendiente para la orden', orderId, error);
-    }
+    // Una reserva permanece pendiente: la factura manual se crea únicamente
+    // cuando administración confirma la orden.
   }
 
   let empresaNombre = '';
