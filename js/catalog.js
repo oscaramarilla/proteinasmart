@@ -48,8 +48,8 @@ window.PS_CATALOG = [
     precio: 330000,
     precioAntes: 0,
     objetivos: ['masa', 'definicion'],
-    badge: 'Más vendido',
-    resumen: '27 g de proteína por scoop, sin lactosa y con carga glucémica mínima.',
+    badge: '',
+    resumen: 'Consultá la composición y la etiqueta del fabricante antes de elegir.',
     stock: true,
   },
   {
@@ -62,7 +62,7 @@ window.PS_CATALOG = [
     precioAntes: 0,
     objetivos: ['masa'],
     badge: '',
-    resumen: 'El mejor costo por gramo de proteína para volumen sostenido.',
+    resumen: 'Consultá la composición y la etiqueta del fabricante antes de elegir.',
     stock: true,
   },
   {
@@ -75,7 +75,7 @@ window.PS_CATALOG = [
     precioAntes: 0,
     objetivos: ['definicion', 'masa'],
     badge: '',
-    resumen: 'Perfil de aminoácidos completo, sin lácteos ni gluten. Digestión liviana.',
+    resumen: 'Consultá la composición y la etiqueta del fabricante antes de elegir.',
     stock: true,
   },
   {
@@ -85,10 +85,10 @@ window.PS_CATALOG = [
     categoria: 'proteinas',
     formato: '300 g · 30 servicios',
     precio: 215000,
-    precioAntes: 255000,
+    precioAntes: 0,
     objetivos: ['belleza'],
     badge: 'Belleza & longevidad',
-    resumen: 'Péptidos tipo I y III para piel, cabello, uñas y articulaciones.',
+    resumen: 'Consultá la composición y la etiqueta del fabricante antes de elegir.',
     stock: true,
   },
 
@@ -103,7 +103,7 @@ window.PS_CATALOG = [
     precioAntes: 0,
     objetivos: ['masa', 'foco', 'energia'],
     badge: 'Base de todo',
-    resumen: 'El suplemento con más evidencia: fuerza, masa magra y función cognitiva.',
+    resumen: 'Consultá la composición y la etiqueta del fabricante antes de elegir.',
     stock: true,
   },
   {
@@ -116,7 +116,7 @@ window.PS_CATALOG = [
     precioAntes: 0,
     objetivos: ['energia', 'foco'],
     badge: '',
-    resumen: 'Cafeína, beta-alanina y citrulina. Cero carbohidratos, apto keto.',
+    resumen: 'Consultá la composición y la etiqueta del fabricante antes de elegir.',
     stock: true,
   },
   {
@@ -129,7 +129,7 @@ window.PS_CATALOG = [
     precioAntes: 0,
     objetivos: ['definicion', 'masa'],
     badge: '',
-    resumen: 'Protege masa muscular durante el ayuno y los déficits calóricos.',
+    resumen: 'Consultá la composición y la etiqueta del fabricante antes de elegir.',
     stock: true,
   },
   {
@@ -142,7 +142,7 @@ window.PS_CATALOG = [
     precioAntes: 0,
     objetivos: ['definicion'],
     badge: '',
-    resumen: 'Recuperación muscular e integridad intestinal en entrenamientos exigentes.',
+    resumen: 'Consultá la composición y la etiqueta del fabricante antes de elegir.',
     stock: true,
   },
 
@@ -157,7 +157,7 @@ window.PS_CATALOG = [
     precioAntes: 0,
     objetivos: ['energia', 'foco'],
     badge: 'Keto esencial',
-    resumen: 'Energía cetónica inmediata sin picos de insulina. Ideal en el café matinal.',
+    resumen: 'Consultá la composición y la etiqueta del fabricante antes de elegir.',
     stock: true,
   },
   {
@@ -170,7 +170,7 @@ window.PS_CATALOG = [
     precioAntes: 0,
     objetivos: ['definicion'],
     badge: '',
-    resumen: 'Snack real para cortar el hambre sin romper la cetosis.',
+    resumen: 'Consultá la composición y la etiqueta del fabricante antes de elegir.',
     stock: true,
   },
   {
@@ -183,7 +183,7 @@ window.PS_CATALOG = [
     precioAntes: 0,
     objetivos: ['definicion'],
     badge: '',
-    resumen: 'Comida completa en 400 kcal: proteína, grasas buenas y fibra.',
+    resumen: 'Consultá la composición y la etiqueta del fabricante antes de elegir.',
     stock: true,
   },
   {
@@ -196,7 +196,7 @@ window.PS_CATALOG = [
     precioAntes: 0,
     objetivos: ['definicion'],
     badge: '',
-    resumen: 'Cero índice glucémico, sin regusto. Reemplazo directo del azúcar.',
+    resumen: 'Consultá la composición y la etiqueta del fabricante antes de elegir.',
     stock: true,
   },
 
@@ -211,7 +211,7 @@ window.PS_CATALOG = [
     precioAntes: 0,
     objetivos: ['foco', 'belleza'],
     badge: 'Neuroplasticidad',
-    resumen: 'DHA de alta concentración: membrana neuronal, memoria y antiinflamación.',
+    resumen: 'Consultá la composición y la etiqueta del fabricante antes de elegir.',
     stock: true,
   },
   {
@@ -224,7 +224,7 @@ window.PS_CATALOG = [
     precioAntes: 0,
     objetivos: ['foco', 'energia'],
     badge: '',
-    resumen: 'Sueño profundo y recuperación nerviosa. La forma que sí se absorbe.',
+    resumen: 'Consultá la composición y la etiqueta del fabricante antes de elegir.',
     stock: true,
   },
   {
@@ -237,7 +237,7 @@ window.PS_CATALOG = [
     precioAntes: 0,
     objetivos: ['belleza', 'energia'],
     badge: '',
-    resumen: 'Hueso, inmunidad y testosterona. El déficit más común y más barato de corregir.',
+    resumen: 'Consultá la composición y la etiqueta del fabricante antes de elegir.',
     stock: true,
   },
   {
@@ -250,7 +250,7 @@ window.PS_CATALOG = [
     precioAntes: 0,
     objetivos: ['foco'],
     badge: 'Nuevo',
-    resumen: 'Concentración sostenida sin ansiedad ni bajón posterior.',
+    resumen: 'Consultá la composición y la etiqueta del fabricante antes de elegir.',
     stock: true,
   },
 ];
@@ -278,6 +278,11 @@ const PS_ASESORIA_POR_PRODUCTO = {
 };
 
 window.PS_CATALOG = window.PS_CATALOG.map((producto) => ({
+  disponibilidad: 'sin-confirmar',
+  precioActualizado: '',
+  fabricante: '',
+  sabor: '',
+  etiquetaNutricional: '',
   ...producto,
   imagen: producto.imagen || '',
   ...(PS_ASESORIA_POR_PRODUCTO[producto.id] || {}),

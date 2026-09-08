@@ -76,6 +76,7 @@
       case 'ELIMINAR':
         return estado.filter((item) => item.id !== accion.id);
       case 'ACTUALIZAR_CANTIDAD':
+        if (!Number.isSafeInteger(accion.cantidad)) return estado;
         return accion.cantidad <= 0
           ? estado.filter((item) => item.id !== accion.id)
           : estado.map((item) => item.id === accion.id

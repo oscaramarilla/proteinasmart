@@ -24,8 +24,8 @@ window.PS_CONFIG = {
 
   operacion: {
     // Se muestran en la barra de confianza y en el FAQ
-    envioAsuncion: 'Envío en el día en Asunción y Gran Asunción',
-    envioInterior: 'Envío al interior por encomienda (24–72 h)',
+    envioAsuncion: 'Asunción y Gran Asunción: costo y plazo según dirección y stock',
+    envioInterior: 'Interior por encomienda: costo y plazo según destino y transportista',
     pagos: 'Transferencia bancaria, Tigo Money, Personal Pay y efectivo',
     facturacion: 'Factura legal con RUC en todos los pedidos',
     horario: 'Lunes a sábado, 08:00 a 19:00',

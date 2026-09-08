@@ -17,7 +17,10 @@ function adaptarProducto(producto) {
     objetivos: Array.isArray(producto.objetivos) ? producto.objetivos : [],
     disciplinas: Array.isArray(producto.disciplinas) ? producto.disciplinas : [],
     imagen: producto.imagen || '',
-    stock: producto.stock !== false,
+    stock: producto.stock,
+    disponibilidad: producto.disponibilidad || (producto.stock === false ? 'agotado' : 'sin-confirmar'),
+    precioActualizado: producto.precioActualizado || producto.precio_actualizado || '',
+    etiquetaNutricional: producto.etiquetaNutricional || producto.etiqueta_nutricional || '',
   };
 }
 

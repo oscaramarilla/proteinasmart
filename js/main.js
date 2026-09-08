@@ -162,25 +162,35 @@
     window.history.replaceState({}, '', window.location.pathname + (query ? '?' + query : '') + window.location.hash);
   }
 
-  function cardHTML(p) {
+  function escapeHTML(value) {
+    return String(value == null ? '' : value).replace(/[&<>"']/g, (c) =>
+      ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[c]);
+  }
+
+  function cardHTML(producto) {
+    const p = { ...producto };
+    ['id', 'nombre', 'marca', 'formato', 'resumen', 'badge', 'categoria', 'sabor', 'fabricante', 'etiquetaNutricional'].forEach((key) => {
+      p[key] = escapeHTML(p[key]);
+    });
     const antes =
       p.precioAntes && p.precioAntes > p.precio
         ? '<span class="price-was">' + money(p.precioAntes) + '</span>'
         : '';
     const badge = p.badge ? '<span class="card-badge">' + p.badge + '</span>' : '';
     const marca = p.marca ? '<span class="card-brand">' + p.marca + '</span>' : '';
-    const agotado = p.stock === false;
+    const agotado = p.disponibilidad === 'agotado' || p.stock === false;
+    const disponibilidad = agotado ? 'Sin stock' : p.disponibilidad === 'bajo-pedido' ? 'Bajo pedido · plazo a confirmar' : p.disponibilidad === 'disponible' ? 'Disponible' : 'Disponibilidad sin confirmar';
     const disciplinas = Array.isArray(p.disciplinas) && p.disciplinas.length
-      ? p.disciplinas
+      ? p.disciplinas.filter((id) => DISCIPLINAS.some((d) => d.id === id))
       : disciplinasDe(p);
     const disciplinaBadge = disciplinas[0]
       ? '<span class="discipline-badge discipline-' + disciplinas[0] + '">' + disciplinas[0].replace('-', ' ') + '</span>'
       : '';
 
-    const imagen = p.imagen || '';
+    const imagen = /^(https?:\/\/|\.?\.?\/|images\/)/i.test(p.imagen || '') ? escapeHTML(p.imagen) : '';
     const imagenHTML = imagen
-      ? '<div class="card-image"><img src="' + imagen + '" alt="" loading="lazy" /></div>'
-      : '<div class="card-image card-image-fallback" aria-hidden="true"><span>Proteína<br><strong>Smart</strong></span></div>';
+      ? '<div class="card-image"><img src="' + imagen + '" alt="Envase de ' + p.nombre + '" loading="lazy" /></div>'
+      : '<div class="card-image card-image-fallback"><span>Foto del envase<br><strong>pendiente</strong></span></div>';
 
     return (
       '<article class="product-card reveal' + (agotado ? ' is-out' : '') + '" data-cat="' + p.categoria + '">' +
@@ -192,6 +202,15 @@
       '<span class="card-format">' + p.formato + '</span>' +
       '</div>' +
       '<p class="card-sum">' + p.resumen + '</p>' +
+      '<p class="card-availability">' + disponibilidad + '</p>' +
+      '<details class="product-details"><summary>Ver ficha del producto</summary><dl>' +
+      '<dt>Fabricante</dt><dd>' + (p.fabricante || p.marca || 'Por confirmar') + '</dd>' +
+      '<dt>Presentación de referencia</dt><dd>' + p.formato + '</dd>' +
+      '<dt>Sabor</dt><dd>' + (p.sabor || 'Por confirmar') + '</dd>' +
+      '<dt>Etiqueta nutricional</dt><dd>' + (p.etiquetaNutricional || 'Solicitá la etiqueta del envase antes de comprar.') + '</dd>' +
+      '</dl></details>' +
+      '<small class="price-date">' + (p.precioActualizado && /^\d{4}-\d{2}-\d{2}$/.test(p.precioActualizado)
+        ? 'Precio actualizado: ' + escapeHTML(p.precioActualizado) : 'Precio de referencia · actualización pendiente') + '</small>' +
       '<div class="card-foot">' +
       '<div class="card-price">' + antes + '<strong>' + money(p.precio) + '</strong></div>' +
       (agotado
@@ -303,194 +322,73 @@
         const contenedor = img.closest('.card-image');
         if (!contenedor) return;
         contenedor.classList.add('card-image-fallback');
-        contenedor.innerHTML = '<span>Proteína<br><strong>Smart</strong></span>';
+        contenedor.innerHTML = '<span>Foto del envase<br><strong>pendiente</strong></span>';
       },
       true
     );
   }
 
-  /**
-   * Detecta el protocolo de venta que corresponde al carrito(Regla de Venta del Dossier).
-   * Nunca devuelve null: todo pedido propone protocolo con complemento, dosis,
-   * momento del dia y duracion minima — asi el ticket promedio sube con el upsell natural.
-   * @param {Array<Object>} items Items del carrito.
-   * @returns {{ nombre: string, complemento: string, uso: string }}
-   */
-  function detectarProtocolo(items) {
-    const normalizar = (s) =>
-      s.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '');
-    const ids = items.map((item) => normalizar(String(item.id || '')));
-    const nombres = items.map((item) => normalizar(item.nombre || ''));
-    const tiene = (clave) =>
-      ids.some((id) => id.indexOf(clave) !== -1) || nombres.some((n) => n.indexOf(clave) !== -1);
-
-    // 1) Whey + Creatina → Ganar masa(ejemplo del Roadmap: Whey Isolate + Creatina..
-    if (tiene('creatina') && (tiene('whey') || tiene('proteina'))) {
-      return {
-        nombre: 'Ganar masa (Whey + Creatina)',
-        complemento: 'EAA: protege la masa durante el déficit calórico',
-        uso: 'Creatina: 5 g al día (ideal post-entreno); Whey post-entreno o desayuno.Mínimo 30 días.',
-      };
-    }
-
-    // 2) Colágeno → Belleza & longevidad(regla obligatoria de protocolo..
-    if (tiene('colageno')) {
-      return {
-        nombre: 'Belleza & longevidad (Colágeno + Vitamina C)',
-        complemento: 'Omega 3 + Vitamina D3+K2: piel, pelo, articulaciones y hueso',
-        uso: 'Colágeno en ayunas o post-entreno, diario.. Mínimo 30 días continuos.',
-      };
-    }
-
-    // 3) Omega 3 + Magnesio → Foco y claridad mental
-    if (tiene('omega') && tiene('magnesio')) {
-
-
-      return {
-        nombre: 'Foco y claridad mental(Omega 3 + Magnesio Glicinato)',
-        complemento: 'Nootrópico Focus o Creatina: concentración sostenida sin bajón',
-        uso: 'Omega 3 con la comida principal; magnesio de noche.Mínimo 30 días.',
-      };
-    }
-
-    // 4) MCT + D3+K2 → Energía sostenida
-    if (tiene('mct') && tiene('vitamina')) {
-
-      return {
-        nombre: 'Energía sostenida (MCT + Vitamina D3+K2)',
-        complemento: 'Pre-entreno sin azúcar: energía sin picos de insulina',
-        uso: 'MCT en la mañana (café bulletproof); D3+K2 con la comida principal.Mínimo 30 días.',
-      };
-    }
-
-    // 5) Proteína + EAA → Bajar grasa / Definir
-    if ((tiene('whey') || tiene('proteina')) && tiene('eaa')) {
-
-      return {
-        nombre: 'Bajar grasa / Definir(Proteína + EAA)',
-        complemento: 'MCT o Sustituto de Comida Low Carb: saciedad sin carbos',
-        uso: 'Proteína en desayuno y post-entreno; EAA en ayuno o cardio.Mínimo 30 días.',
-      };
-    }
-
-    // 6) Keto / Low carb cuando el carrito ya es de esa disciplina
-    if (tiene('barras') || tiene('sustituto') || tiene('endulzante')) {
-
-      return {
-        nombre: 'Keto / Low carb',
-        complemento: 'Aceite MCT o Proteína Vegetal: saciedad y energía cetónica',
-        uso: 'Snack/sustituto como comida principal; MCT en el café matinal.Mínimo 30 días.',
-      };
-    }
-
-    // 7) MCT solo → Energía sostenida
-    if (tiene('mct')) {
-
-      return {
-        nombre: 'Energía sostenida(Aceite MCT + Vitamina D3+K2)',
-        complemento: 'Vitamina D3+K2: absorción, inmunidad y energía celular',
-        uso: 'MCT en la mañana(15 ml en el café); D3+K2 con la comida principal.Mínimo 30 días.',
-      };
-    }
-
-    // 8) Omega 3, Magnesio o Nootrópico solos → Foco y claridad
-    if (tiene('omega') || tiene('magnesio') || tiene('nootropico')) {
-
-      return {
-        nombre: 'Foco y claridad mental(Omega 3 + Magnesio Glicinato)',
-        complemento: 'El otro del par + Nootrópico Focus: sinergia neuronal',
-        uso: 'Omega 3 con comida; magnesio o nootrópico de noche.Mínimo 30 días.',
-      };
-    }
-
-    // 9) Creatina sola → Ganar masa(se propone la Whey..
-    if (tiene('creatina')) {
-
-      return {
-        nombre: 'Ganar masa(Creatina + Whey)',
-        complemento: 'Whey Protein: la proteína que sostiene la síntesis muscular',
-        uso: 'Creatina 5 g diarios + proteína post-entreno o desayuno.Mínimo 30 días.',
-      };
-    }
-
-    // 10) Whey o Proteína sola → Ganar masa(se propone la Creatina — ejemplo del Roadmap.)
-    if (tiene('whey') || tiene('proteina')) {
-
-      return {
-        nombre: 'Ganar masa(Whey + Creatina)',
-        complemento: 'Creatina Monohidratada: el suplemento con más evidencia para fuerza y masa magra',
-        uso: 'Whey post-entreno o desayuno; creatina 5 g diarios.Mínimo 30 días.',
-      };
-    }
-
-    // 11) EAA solo → Bajar grasa(se propone la base proteica..
-    if (tiene('eaa')) {
-
-      return {
-        nombre: 'Bajar grasa / Definir(EAA + Proteína)',
-        complemento: 'Whey Isolate o Proteína Vegetal:la base proteica del protocolo',
-        uso: 'EAA en ayuno o durante el cardio; proteína post-entreno.Mínimo 30 días.',
-      };
-    }
-
-    // 12) Cualquier otro combo → asesoría personalizada(protocolo a medida..
-    return {
-      nombre: 'Asesoría personalizada(protocolo según tu objetivo)',
-      complemento: 'Te confirmamos el complemento exacto y su dosis para tu caso',
-      uso: 'Dosis, momento del día y duración mínima(30 días)personalizados.',
-    };
-  }
-
-  /**
-   * Construye el checkout multi-producto con protocolo y asesoría de uso..
-   * Aplica la Regla de Venta: nunca un producto suelto sin su protocolo sugerido..
-   * @param {Array<Object>} items Items del carrito..
-   * @param {number} importe Total entero en guaraníes..
-   * @returns {string} URL de WhatsApp..
-   */
+  // El mensaje representa una consulta, no una venta pagada ni una indicación clínica.
   function waCarrito(items, importe) {
-    const lineas = items.map((item) => '- ' + item.cantidad + 'x ' + item.nombre + ' (' + item.formato + ')');
-    const protocolo = detectarProtocolo(items);
-    const complemento = protocolo.complemento;
-    const uso = protocolo.uso;
-    const mensaje = [
-      'Hola ProteínaSmart 👋 Quiero confirmar mi pedido:',
-      'Protocolo: *' + protocolo.nombre + '*',
-      'Producto base + complemento:',
+    const lineas = items.map((item) => '- ' + item.cantidad + 'x ' + item.nombre +
+      ' (' + item.formato + ') · ' + money(item.precio) + ' c/u · ' + money(item.precio * item.cantidad));
+    return waLink([
+      'Hola ProteínaSmart 👋 Quiero consultar esta selección:',
       ...lineas,
-      'Complemento sugerido: ' + complemento + '.',
-      'Guía de uso:', uso,
-      'Duración mínima del protocolo: 30 días.',
-      'Precio total: ' + money(importe) + '.',
-      '¿Podemos coordinar la asesoría y el envío?',
-      'Los suplementos no son medicamentos ni reemplazan una alimentación variada o el consejo de un profesional de la salud.',
-    ].join('\n');
-    return waLink(mensaje);
+      'Subtotal de productos (referencial): ' + money(importe) + '.',
+      items.some((item) => !item.precio) ? 'Hay productos sin precio; el subtotal es parcial.' : '',
+      'Envío: a cotizar según dirección. No incluido en el subtotal.',
+      'Total final: pendiente de confirmar precio, stock y envío.',
+      '¿Me confirmás fabricante, presentación, sabor, etiqueta nutricional, disponibilidad, forma de pago y plazo de entrega antes de pagar?'
+    ].filter(Boolean).join('\n'));
   }
 
-  /**
-   * Renderiza la barra flotante y sus acciones desde el estado global.
-   * @param {Object} state Estado público del carrito.
-   * @returns {void}
-   */
   function renderCarrito(state) {
     let bar = $('#cartBar');
     if (!state.items.length) {
       if (bar) bar.remove();
       return;
     }
+    const abierto = bar && !!$('details[open]', bar);
     if (!bar) {
       bar = document.createElement('aside');
       bar.id = 'cartBar';
       bar.className = 'cart-bar';
-      bar.setAttribute('role', 'status');
-      bar.setAttribute('aria-live', 'polite');
+      bar.setAttribute('aria-label', 'Tu carrito');
       document.body.appendChild(bar);
     }
     const cantidad = state.items.reduce((sum, item) => sum + item.cantidad, 0);
-    bar.innerHTML = '<div class="cart-summary"><span class="cart-kicker">Tu selección está lista</span><span><strong>' + cantidad + '</strong> producto(s) · <strong>' + money(state.total) + '</strong></span><small class="cart-ethics">Confirmamos stock, forma de pago y envío por WhatsApp.</small></div>' +
-      '<button class="btn btn-primary btn-sm" type="button" data-cart-checkout>Pedir por WhatsApp</button>';
+    bar.innerHTML = '<details class="cart-details"' + (abierto ? ' open' : '') + '>' +
+      '<summary>Revisar carrito · ' + cantidad + ' producto(s) · ' + money(state.total) + '</summary>' +
+      '<ul class="cart-items">' + state.items.map((item) =>
+        '<li><div><strong>' + escapeHTML(item.nombre) + '</strong><small>' + escapeHTML(item.formato) +
+        ' · ' + money(item.precio) + ' c/u</small></div><div class="cart-controls">' +
+        '<label>Cantidad <input type="number" min="1" step="1" value="' + item.cantidad +
+        '" data-cart-quantity="' + escapeHTML(item.id) + '" aria-label="Cantidad de ' + escapeHTML(item.nombre) + '"></label>' +
+        '<span>' + money(item.precio * item.cantidad) + '</span>' +
+        '<button type="button" class="btn btn-ghost btn-sm" data-cart-remove="' + escapeHTML(item.id) +
+        '" aria-label="Quitar ' + escapeHTML(item.nombre) + '">Quitar</button></div></li>'
+      ).join('') + '</ul></details>' +
+      '<div class="cart-summary" aria-live="polite"><span>Subtotal referencial: <strong>' + money(state.total) +
+      '</strong></span><small class="cart-ethics">' +
+      (state.items.some((item) => !item.precio) ? 'Subtotal parcial: hay productos sin precio. ' : '') +
+      'Envío a cotizar. Total final pendiente de confirmación.</small></div>' +
+      '<button class="btn btn-primary btn-sm" type="button" data-cart-checkout>Consultar por WhatsApp</button>';
   }
+
+  document.addEventListener('change', (event) => {
+    const input = /** @type {HTMLInputElement} */ (event.target);
+    if (!input.matches('[data-cart-quantity]') || !window.PS_CART) return;
+    const cantidad = Number(input.value);
+    if (!Number.isSafeInteger(cantidad) || cantidad < 1) {
+      input.value = String(window.PS_CART.getState().items.find((item) => item.id === input.dataset.cartQuantity).cantidad);
+      return;
+    }
+    const id = input.dataset.cartQuantity;
+    window.PS_CART.dispatch({ type: 'ACTUALIZAR_CANTIDAD', id, cantidad });
+    const replacement = $$('[data-cart-quantity]').find((el) => el.dataset.cartQuantity === id);
+    if (replacement) replacement.focus();
+  });
 
   if (window.PS_CART) {
     window.PS_CART.subscribe(renderCarrito);
@@ -498,10 +396,17 @@
   }
 
   document.addEventListener('click', (event) => {
+    const remove = (/** @type {HTMLElement} */ (event.target)).closest('[data-cart-remove]');
+    if (remove && window.PS_CART) {
+      window.PS_CART.dispatch({ type: 'ELIMINAR', id: remove.getAttribute('data-cart-remove') });
+      const siguiente = $('[data-cart-remove]') || $('[data-cart-add]');
+      if (siguiente) siguiente.focus();
+      return;
+    }
     const add = (/** @type {HTMLElement | null} */ ((/** @type {Element} */ (event.target)).closest('[data-cart-add]')));
     if (add && window.PS_CART) {
       const producto = CATALOG.find((item) => item.id === add.dataset.cartAdd);
-      if (producto) {
+      if (producto && producto.stock !== false && producto.disponibilidad !== 'agotado') {
         window.PS_CART.dispatch({ type: 'AGREGAR', producto });
         add.classList.add('is-added');
         add.textContent = 'Agregado ✓';
@@ -516,10 +421,11 @@
     if (checkout && window.PS_CART) {
       const state = window.PS_CART.getState();
       window.open(waCarrito(state.items, state.total), '_blank', 'noopener');
-      window.dispatchEvent(new CustomEvent('ps:pedido', {
+      track('consulta_carrito_whatsapp', { cantidad: state.items.reduce((sum, item) => sum + item.cantidad, 0), subtotal: state.total });
+      window.dispatchEvent(new CustomEvent('ps:consulta', {
         detail: { items: state.items, total: state.total },
       }));
-      window.PS_CART.dispatch({ type: 'LIMPIAR' });
+
     }
   });
 

@@ -221,3 +221,22 @@ MIT.
 Infraestructura digital por **[AYCweb](https://aycweb.com)**
 
 </div>
+
+
+## Revisión comercial del catálogo
+
+El sitio estático de la raíz muestra precios referenciales y disponibilidad sin confirmar cuando falta información comercial. Los datos se editan por producto en `js/catalog.js`; los valores declarados en el producto prevalecen sobre los predeterminados:
+
+- `imagen`: ruta local o URL HTTPS de una foto real del envase.
+- `fabricante`, `marca`, `sabor`, `formato`: datos verificados con el proveedor.
+- `etiquetaNutricional`: transcripción de la etiqueta del producto concreto.
+- `disponibilidad`: `disponible`, `bajo-pedido`, `agotado` o `sin-confirmar`. `stock: false` también bloquea agregar el producto.
+- `precioActualizado`: fecha real de verificación, en formato `AAAA-MM-DD`; vacío muestra actualización pendiente.
+
+Supabase también admite `precio_actualizado` y `etiqueta_nutricional`. No se infiere disponibilidad a partir de campos ausentes. Las tarifas por zona y los horarios límite siguen pendientes de información del negocio; actualizar los textos de `js/config.js` y sus equivalentes estáticos/FAQ en `index.html` cuando se confirmen.
+
+Abrir WhatsApp prepara una consulta, conserva el carrito y emite `ps:consulta` / `consulta_carrito_whatsapp`; no emite `ps:pedido` ni registra una venta confirmada en `pedidos_whatsapp`. El registro de pagos y seguimiento requiere una confirmación real posterior. Los scripts de seguimiento existentes no se activaron.
+
+Validación: `node --test tests/cart-checkout.cjs`. Revisión de tipos, con las dependencias de `web` instaladas: `node web/node_modules/typescript/bin/tsc -p jsconfig.json`.
+
+Pendientes comerciales: seleccionar los cinco productos prioritarios según demanda, stock y margen; obtener fotos y etiquetas reales; confirmar precios, zonas, tarifas y plazos. La revisión de indexación y solicitud de rastreo en Search Console requieren acceso a la propiedad. Estos cambios locales no publican el sitio.

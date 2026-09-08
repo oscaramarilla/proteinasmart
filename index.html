@@ -67,17 +67,17 @@
       {
         "@type": "Question",
         "name": "¿Cómo compro en ProteínaSmart?",
-        "acceptedAnswer": { "@type": "Answer", "text": "Elegís el producto en el catálogo, tocás 'Pedir por WhatsApp' y el mensaje se arma solo. Confirmamos stock, forma de pago y envío en la misma conversación." }
+        "acceptedAnswer": { "@type": "Answer", "text": "Agregás productos al carrito, revisás cantidades y tocás 'Consultar por WhatsApp'. El total con envío se confirma antes de pagar." }
       },
       {
         "@type": "Question",
         "name": "¿Hacen envíos al interior del país?",
-        "acceptedAnswer": { "@type": "Answer", "text": "Sí. En Asunción y Gran Asunción entregamos en el día. Al interior enviamos por encomienda, con entrega estimada de 24 a 72 horas." }
+        "acceptedAnswer": { "@type": "Answer", "text": "El costo y el plazo se confirman según dirección, stock y transportista antes del pago. No hay un horario límite publicado para entrega en el día." }
       },
       {
         "@type": "Question",
         "name": "¿Qué proteína me conviene si quiero bajar grasa?",
-        "acceptedAnswer": { "@type": "Answer", "text": "Una proteína aislada o vegetal, baja en carbohidratos, combinada con un plan low carb. Podés usar el selector por objetivo del sitio o pedir asesoramiento gratuito por WhatsApp." }
+        "acceptedAnswer": { "@type": "Answer", "text": "El selector ayuda a explorar el catálogo. Podemos comparar etiquetas y precios; un profesional de salud puede evaluar tus necesidades nutricionales individuales." }
       },
       {
         "@type": "Question",
@@ -135,8 +135,8 @@
           <span class="stat-label">Categorías con criterio</span>
         </div>
         <div class="stat">
-          <span class="stat-num" data-target="24" data-suffix=" h">0</span>
-          <span class="stat-label">Entrega en Gran Asunción</span>
+          <span class="mini-num">A coordinar</span>
+          <span class="stat-label">Entrega según zona y stock</span>
         </div>
         <div class="stat">
           <span class="stat-num" data-target="100" data-suffix="%">0</span>
@@ -153,47 +153,11 @@
 
   <!-- ============ BARRA DE CONFIANZA ============ -->
   <div class="trust-bar">
-    <div class="trust-item"><span>🚚</span><p data-cfg="envio-asuncion">Envío en el día en Asunción y Gran Asunción</p></div>
+    <div class="trust-item"><span>🚚</span><p data-cfg="envio-asuncion">Asunción y Gran Asunción: costo y plazo según dirección y stock</p></div>
     <div class="trust-item"><span>📦</span><p data-cfg="envio-interior">Envío al interior por encomienda</p></div>
     <div class="trust-item"><span>💳</span><p data-cfg="pagos">Transferencia, Tigo Money, Personal Pay y efectivo</p></div>
     <div class="trust-item"><span>🧾</span><p data-cfg="facturacion">Factura legal con RUC</p></div>
   </div>
-
-  <!-- ============ FILOSOFÍA ============ -->
-  <section class="section" id="filosofia">
-    <div class="section-head reveal">
-      <span class="kicker">La tesis</span>
-      <h2>Cuatro disciplinas, un mismo criterio de compra</h2>
-      <p>No vendemos "el suplemento de moda". Vendemos lo que resiste el cruce entre metabolismo,
-      composición corporal, hábito sostenible y función cerebral.</p>
-    </div>
-    <div class="pillar-grid">
-      <div class="pillar-card reveal">
-        <span class="pillar-icon">🥑</span>
-        <h3>Cetogénica</h3>
-        <p>Usar la grasa como combustible principal. Buscamos productos con carga glucémica mínima
-        que no rompan la cetosis ni disparen insulina.</p>
-      </div>
-      <div class="pillar-card reveal">
-        <span class="pillar-icon">📉</span>
-        <h3>Low carb</h3>
-        <p>Menos azúcar, más saciedad. Proteína de alta calidad y grasas buenas para controlar el
-        apetito sin pasar hambre ni perder músculo.</p>
-      </div>
-      <div class="pillar-card reveal">
-        <span class="pillar-icon">🔁</span>
-        <h3>Healthy habits</h3>
-        <p>Lo que se sostiene gana. Priorizamos formatos simples, sabores tomables y protocolos
-        que entran en tu semana real, no en una semana ideal.</p>
-      </div>
-      <div class="pillar-card reveal">
-        <span class="pillar-icon">🧠</span>
-        <h3>Neuroplasticidad</h3>
-        <p>El cerebro también se entrena y se nutre. Omega 3, magnesio, colina y creatina son
-        infraestructura para foco, memoria y estado de ánimo.</p>
-      </div>
-    </div>
-  </section>
 
   <!-- ============ SELECTOR POR OBJETIVO ============ -->
   <section class="section alt" id="objetivo">
@@ -212,6 +176,15 @@
       <h2>Proteínas, deportivos, keto y longevidad</h2>
       <p>Precios de referencia en guaraníes. Confirmamos stock y precio final por WhatsApp antes de cerrar el pedido.</p>
     </div>
+
+    <details class="commercial-conditions">
+      <summary>Entrega, pago y confirmación del pedido</summary>
+      <p data-cfg="envio-asuncion">Asunción y Gran Asunción: costo y plazo según dirección y stock</p>
+      <p data-cfg="envio-interior">Interior por encomienda: costo y plazo según destino y transportista</p>
+      <p>El envío no está incluido en los precios del catálogo. Solicitá el costo y el total final antes de pagar. No hay un horario límite publicado para entrega en el día.</p>
+      <p>Los productos bajo pedido requieren confirmar disponibilidad y plazo con el proveedor. Si un artículo se agota, acordamos con vos si preferís esperar, quitarlo o elegir otra opción antes de pagar.</p>
+      <p>Medios de pago: <span data-cfg="pagos">Transferencia, Tigo Money, Personal Pay y efectivo</span>.</p>
+    </details>
 
     <div class="filters" id="catalogFilters"></div>
     <div class="filters discipline-filters" id="disciplineFilters" aria-label="Filtrar por disciplina"></div>
@@ -239,17 +212,50 @@
       <div class="step reveal">
         <span class="step-num">01</span>
         <h3>Elegís tu producto</h3>
-        <p>Filtrás por objetivo o categoría y tocás "Pedir por WhatsApp". El mensaje ya va armado con el producto y el precio.</p>
+        <p>Agregás productos al carrito, revisás cantidades y preparás la consulta por WhatsApp con el detalle y el subtotal.</p>
       </div>
       <div class="step reveal">
         <span class="step-num">02</span>
         <h3>Confirmamos y te asesoramos</h3>
-        <p>Verificamos stock, te decimos cómo tomarlo y ajustamos la combinación si tu objetivo pide otra cosa.</p>
+        <p>Confirmamos fabricante, presentación, sabor, etiqueta, stock y precio. Si falta un artículo, consultamos con vos antes de sustituirlo.</p>
       </div>
       <div class="step reveal">
         <span class="step-num">03</span>
         <h3>Pagás y recibís</h3>
-        <p>Transferencia, billetera o efectivo. Entrega en el día en Gran Asunción y encomienda al interior, con factura legal.</p>
+        <p>Confirmá el total con envío y el plazo antes de pagar. Transferencia, billetera o efectivo, con factura legal.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ FILOSOFÍA ============ -->
+  <section class="section" id="filosofia">
+    <div class="section-head reveal">
+      <span class="kicker">La tesis</span>
+      <h2>Cuatro disciplinas, un mismo criterio de compra</h2>
+      <p>No vendemos "el suplemento de moda". Vendemos lo que resiste el cruce entre metabolismo,
+      composición corporal, hábito sostenible y función cerebral.</p>
+    </div>
+    <div class="pillar-grid">
+      <div class="pillar-card reveal">
+        <span class="pillar-icon">🥑</span>
+        <h3>Cetogénica</h3>
+        <p>Revisá carbohidratos, ingredientes y tamaño de porción en la etiqueta. La categoría no garantiza mantener la cetosis.</p>
+      </div>
+      <div class="pillar-card reveal">
+        <span class="pillar-icon">📉</span>
+        <h3>Low carb</h3>
+        <p>Compará el contenido de carbohidratos por porción. La elección depende de tu alimentación y necesidades individuales.</p>
+      </div>
+      <div class="pillar-card reveal">
+        <span class="pillar-icon">🔁</span>
+        <h3>Healthy habits</h3>
+        <p>Lo que se sostiene gana. Priorizamos formatos simples, sabores tomables y protocolos
+        que entran en tu semana real, no en una semana ideal.</p>
+      </div>
+      <div class="pillar-card reveal">
+        <span class="pillar-icon">🧠</span>
+        <h3>Neuroplasticidad</h3>
+        <p>La evidencia depende del ingrediente y del contexto. Esta categoría no implica una mejora garantizada de memoria, foco o estado de ánimo.</p>
       </div>
     </div>
   </section>
@@ -262,11 +268,11 @@
         <h2>Un marketplace con criterio, no una góndola más</h2>
         <p class="lead">
           La mayoría de las tiendas de suplementos vende catálogo. Nosotros vendemos decisiones:
-          qué tomar, cuándo, con qué combinarlo y — sobre todo — qué no necesitás comprar.
+          información sobre marcas, composición, etiquetas y precios para que puedas comparar antes de comprar.
         </p>
         <ul class="feature-list">
-          <li><strong>Selección curada.</strong> Cada producto entra al catálogo porque tiene evidencia y un uso claro.</li>
-          <li><strong>Asesoramiento incluido.</strong> Te ayudamos a armar el protocolo antes de que gastes.</li>
+          <li><strong>Selección curada.</strong> Compará la composición y la presentación del producto antes de elegir.</li>
+          <li><strong>Asesoramiento incluido.</strong> Te ayudamos a entender la etiqueta y las opciones disponibles antes de que gastes.</li>
           <li><strong>Productos originales.</strong> Trazabilidad de origen y vencimiento en cada lote.</li>
           <li><strong>Operación formal.</strong> Factura legal con RUC <span data-cfg="ruc">4499507-5</span>.</li>
           <li><strong>Trato directo.</strong> Hablás con <span data-cfg="responsable">Oscar Amarilla</span>, no con un bot de call center.</li>
@@ -282,7 +288,7 @@
         <div class="mini-metrics">
           <div class="mini"><span class="mini-num">4</span><span>Categorías</span></div>
           <div class="mini"><span class="mini-num">100%</span><span>Original</span></div>
-          <div class="mini"><span class="mini-num">24h</span><span>Entrega GA</span></div>
+          <div class="mini"><span class="mini-num">A coordinar</span><span>Entrega según zona</span></div>
         </div>
       </div>
     </div>
@@ -292,8 +298,8 @@
   <section class="section cta-section" id="asesoria">
     <div class="cta-box reveal">
       <span class="kicker">Asesoría gratuita</span>
-      <h2>Contanos tu objetivo y te armamos el protocolo</h2>
-      <p class="cta-sub">Respondemos con una recomendación concreta: qué tomar, en qué dosis y en qué momento del día. Sin compromiso de compra.</p>
+      <h2>Te ayudamos a comparar productos</h2>
+      <p class="cta-sub">Te orientamos sobre marcas, composición, etiquetas y precios. Las recomendaciones clínicas y las dosis personalizadas corresponden a un profesional de salud. Sin compromiso de compra.</p>
       <form class="cta-form" id="leadForm">
         <input type="text" name="name" placeholder="Tu nombre" required />
         <select name="objetivo" required>
@@ -312,8 +318,8 @@
           <option>3 a 4 entrenamientos por semana</option>
           <option>5 o más entrenamientos por semana</option>
         </select>
-        <textarea name="mensaje" rows="3" placeholder="Contanos algo más (opcional): edad, peso, si ya tomás algo…"></textarea>
-        <button type="submit" class="btn btn-primary btn-large">Quiero mi recomendación</button>
+        <textarea name="mensaje" rows="3" placeholder="Marca, presentación o sabor que buscás (opcional)"></textarea>
+        <button type="submit" class="btn btn-primary btn-large">Quiero comparar productos</button>
       </form>
       <p class="form-note" id="formNote">🔒 Tus datos quedan entre nosotros. Cero spam.</p>
     </div>
@@ -328,19 +334,19 @@
     <div class="faq-list reveal">
       <details>
         <summary>¿Cómo compro en ProteínaSmart?</summary>
-        <p>Elegís el producto en el catálogo y tocás "Pedir por WhatsApp": el mensaje se arma solo con el producto, el formato y el precio. Ahí confirmamos stock, forma de pago y envío.</p>
+        <p>Agregás productos al carrito, revisás cantidades y tocás "Consultar por WhatsApp". El total con envío se confirma antes de pagar.</p>
       </details>
       <details>
         <summary>¿Hacen envíos al interior del país?</summary>
-        <p><span data-cfg="envio-asuncion">Envío en el día en Asunción y Gran Asunción</span>. <span data-cfg="envio-interior">Envío al interior por encomienda (24–72 h)</span>.</p>
+        <p><span data-cfg="envio-asuncion">Asunción y Gran Asunción: costo y plazo según dirección y stock</span>. <span data-cfg="envio-interior">Interior por encomienda: costo y plazo según destino y transportista</span>.</p>
       </details>
       <details>
         <summary>¿Qué proteína me conviene si quiero bajar grasa?</summary>
-        <p>En general, una proteína aislada o vegetal de bajo carbohidrato, sostenida con un plan low carb y suficiente saciedad. Usá el selector por objetivo o escribinos: ajustamos la recomendación a tu nivel de actividad.</p>
+        <p>El selector ayuda a explorar el catálogo. Podemos comparar etiquetas y precios; un profesional de salud puede evaluar tus necesidades nutricionales individuales.</p>
       </details>
       <details>
         <summary>¿La creatina sirve si no soy fisicoculturista?</summary>
-        <p>Sí. Es el suplemento con más evidencia acumulada, y sus efectos no se limitan al músculo: también se estudia por su rol en función cognitiva y energía celular. Es una de las bases de nuestra línea de longevidad.</p>
+        <p>Podemos mostrarte composición, presentación y etiqueta; consultá con un profesional de salud para saber si corresponde en tu caso.</p>
       </details>
       <details>
         <summary>¿Los productos son originales?</summary>
