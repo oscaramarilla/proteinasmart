@@ -67,12 +67,12 @@
       {
         "@type": "Question",
         "name": "¿Cómo compro en ProteínaSmart?",
-        "acceptedAnswer": { "@type": "Answer", "text": "Elegís el producto en el catálogo, tocás 'Pedir por WhatsApp' y el mensaje se arma solo. Confirmamos stock, forma de pago y envío en la misma conversación." }
+        "acceptedAnswer": { "@type": "Answer", "text": "Agregá tus productos y enviá tu pedido por WhatsApp. En el carrito podés ajustar cantidades, eliminar productos y revisar el subtotal. Confirmamos disponibilidad, precio final y envío en la conversación. Abrir WhatsApp no confirma ni paga el pedido." }
       },
       {
         "@type": "Question",
         "name": "¿Hacen envíos al interior del país?",
-        "acceptedAnswer": { "@type": "Answer", "text": "Sí. En Asunción y Gran Asunción entregamos en el día. Al interior enviamos por encomienda, con entrega estimada de 24 a 72 horas." }
+        "acceptedAnswer": { "@type": "Answer", "text": "Sí. Enviamos a Asunción, Gran Asunción y al interior por encomienda. Plazo y costo de envío a confirmar según destino." }
       },
       {
         "@type": "Question",
@@ -98,125 +98,52 @@
       <span class="brand-text">Proteína<strong>Smart</strong></span>
     </a>
     <nav class="nav-links" id="navLinks">
-      <a href="#filosofia">Filosofía</a>
-      <a href="#objetivo">Tu objetivo</a>
       <a href="#catalogo">Catálogo</a>
+      <a href="#objetivo">Tu objetivo</a>
+      <a href="#nosotros">Entregas</a>
       <a href="#asesoria">Asesoría</a>
       <a href="#faq">FAQ</a>
-      <a class="nav-cta" data-wa href="#">Pedir por WhatsApp</a>
+      <button class="btn btn-primary btn-sm" type="button" data-cart-open>Ver carrito <span data-cart-count>0</span></button>
     </nav>
-    <button class="burger" id="burger" aria-label="Abrir menú">
+    <button class="burger" id="burger" aria-label="Abrir menú" aria-expanded="false" aria-controls="navLinks">
       <span></span><span></span><span></span>
     </button>
   </header>
 
-  <!-- ============ HERO ============ -->
-  <section class="hero" id="hero">
+<section class="hero" id="hero">
     <div class="hero-content">
       <!-- El bloque del hero NO usa .reveal a propósito: es el elemento LCP y debe pintarse
            en el primer frame. Solo se animan las métricas, que están debajo del fold. -->
       <span class="eyebrow">Proteína inteligente</span>
-      <h1>
-        Tu marketplace de proteínas para la <span class="gradient-text">salud, la belleza y la longevidad</span>
-      </h1>
-      <p class="hero-sub">
-        Suplementación seleccionada con criterio, no por moda. Cruzamos lo que funciona de la
-        alimentación cetogénica, el enfoque low carb, los hábitos sostenibles y la neuroplasticidad
-        para que cada producto que comprás tenga una razón concreta detrás.
-      </p>
+      <h1>Proteínas y suplementos en Paraguay, <span class="gradient-text">con asesoramiento para elegir bien.</span></h1>
+      <p class="hero-sub">Encontrá opciones para tu objetivo y presupuesto. Entregas en Asunción, Gran Asunción y al interior.</p>
       <div class="hero-cta">
-        <a href="#catalogo" class="btn btn-primary">Ver el catálogo</a>
-        <a class="btn btn-ghost" data-wa href="#">Asesoría gratuita por WhatsApp</a>
+        <a href="#catalogo" class="btn btn-primary">Ver productos</a>
+        <a class="btn btn-ghost" data-wa href="#">Ayudame a elegir</a>
       </div>
 
-      <div class="hero-stats reveal">
-        <div class="stat">
-          <span class="stat-num" data-target="4" data-suffix="">0</span>
-          <span class="stat-label">Categorías con criterio</span>
-        </div>
-        <div class="stat">
-          <span class="stat-num" data-target="24" data-suffix=" h">0</span>
-          <span class="stat-label">Entrega en Gran Asunción</span>
-        </div>
-        <div class="stat">
-          <span class="stat-num" data-target="100" data-suffix="%">0</span>
-          <span class="stat-label">Productos originales</span>
-        </div>
-        <div class="stat">
-          <span class="stat-num" data-target="0" data-suffix=" Gs">0</span>
-          <span class="stat-label">Costo de la asesoría</span>
-        </div>
-      </div>
-    </div>
-    <div class="scroll-hint" aria-hidden="true"><span></span></div>
-  </section>
-
-  <!-- ============ BARRA DE CONFIANZA ============ -->
-  <div class="trust-bar">
-    <div class="trust-item"><span>🚚</span><p data-cfg="envio-asuncion">Envío en el día en Asunción y Gran Asunción</p></div>
-    <div class="trust-item"><span>📦</span><p data-cfg="envio-interior">Envío al interior por encomienda</p></div>
-    <div class="trust-item"><span>💳</span><p data-cfg="pagos">Transferencia, Tigo Money, Personal Pay y efectivo</p></div>
-    <div class="trust-item"><span>🧾</span><p data-cfg="facturacion">Factura legal con RUC</p></div>
-  </div>
-
-  <!-- ============ FILOSOFÍA ============ -->
-  <section class="section" id="filosofia">
-    <div class="section-head reveal">
-      <span class="kicker">La tesis</span>
-      <h2>Cuatro disciplinas, un mismo criterio de compra</h2>
-      <p>No vendemos "el suplemento de moda". Vendemos lo que resiste el cruce entre metabolismo,
-      composición corporal, hábito sostenible y función cerebral.</p>
-    </div>
-    <div class="pillar-grid">
-      <div class="pillar-card reveal">
-        <span class="pillar-icon">🥑</span>
-        <h3>Cetogénica</h3>
-        <p>Usar la grasa como combustible principal. Buscamos productos con carga glucémica mínima
-        que no rompan la cetosis ni disparen insulina.</p>
-      </div>
-      <div class="pillar-card reveal">
-        <span class="pillar-icon">📉</span>
-        <h3>Low carb</h3>
-        <p>Menos azúcar, más saciedad. Proteína de alta calidad y grasas buenas para controlar el
-        apetito sin pasar hambre ni perder músculo.</p>
-      </div>
-      <div class="pillar-card reveal">
-        <span class="pillar-icon">🔁</span>
-        <h3>Healthy habits</h3>
-        <p>Lo que se sostiene gana. Priorizamos formatos simples, sabores tomables y protocolos
-        que entran en tu semana real, no en una semana ideal.</p>
-      </div>
-      <div class="pillar-card reveal">
-        <span class="pillar-icon">🧠</span>
-        <h3>Neuroplasticidad</h3>
-        <p>El cerebro también se entrena y se nutre. Omega 3, magnesio, colina y creatina son
-        infraestructura para foco, memoria y estado de ánimo.</p>
-      </div>
+      <p class="hero-note">Elegí por categoría o por objetivo. Revisá tu selección antes de enviar.</p>
     </div>
   </section>
 
-  <!-- ============ SELECTOR POR OBJETIVO ============ -->
-  <section class="section alt" id="objetivo">
-    <div class="section-head reveal">
-      <span class="kicker">Empezá por acá</span>
-      <h2>¿Cuál es tu objetivo hoy?</h2>
-      <p>Elegí uno y el catálogo se filtra solo. Podés volver a tocarlo para ver todo de nuevo.</p>
-    </div>
-    <div class="goal-grid" id="objetivoGrid"></div>
-  </section>
-
-  <!-- ============ CATÁLOGO ============ -->
-  <section class="section" id="catalogo">
+<section class="section" id="catalogo">
     <div class="section-head reveal">
       <span class="kicker">Catálogo</span>
       <h2>Proteínas, deportivos, keto y longevidad</h2>
       <p>Precios de referencia en guaraníes. Confirmamos stock y precio final por WhatsApp antes de cerrar el pedido.</p>
     </div>
 
-    <div class="filters" id="catalogFilters"></div>
-    <div class="filters discipline-filters" id="disciplineFilters" aria-label="Filtrar por disciplina"></div>
+    <div class="filters" id="catalogFilters" role="group" aria-label="Categoría"></div>
+    <div class="catalog-tools">
+      <label for="catalogGoal">Objetivo</label>
+      <select id="catalogGoal"><option value="">Todos los objetivos</option></select>
+      <button class="chip" type="button" id="clearFilters">Limpiar filtros</button>
+      <p id="catalogCount" role="status" aria-live="polite"></p>
+    </div>
 
+    <p class="purchase-guide">Agregá tus productos y enviá tu pedido por WhatsApp</p>
     <div class="product-grid" id="catalogGrid"></div>
+    <noscript>Activá JavaScript para ver el catálogo y armar tu carrito. También podés llamar al 0985 864 209.</noscript>
 
     <p class="empty-state" id="catalogEmpty" hidden>
       No hay productos con ese filtro todavía.
@@ -229,74 +156,70 @@
     </div>
   </section>
 
-  <!-- ============ CÓMO COMPRAR ============ -->
-  <section class="section alt" id="como-comprar">
+<section class="section alt" id="objetivo">
+    <div class="section-head reveal">
+      <span class="kicker">Empezá por acá</span>
+      <h2>¿Cuál es tu objetivo hoy?</h2>
+      <p>Elegí uno y el catálogo se filtra solo. Podés volver a tocarlo para ver todo de nuevo.</p>
+    </div>
+    <div class="goal-grid" id="objetivoGrid"></div>
+  </section>
+
+<section class="section alt" id="como-comprar">
     <div class="section-head reveal">
       <span class="kicker">Sin fricción</span>
-      <h2>Comprar te lleva tres pasos</h2>
+      <h2>Agregá tus productos y enviá tu pedido por WhatsApp</h2>
     </div>
     <div class="steps">
       <div class="step reveal">
         <span class="step-num">01</span>
-        <h3>Elegís tu producto</h3>
-        <p>Filtrás por objetivo o categoría y tocás "Pedir por WhatsApp". El mensaje ya va armado con el producto y el precio.</p>
+        <h3>Armá tu selección</h3>
+        <p>Filtrá por categoría u objetivo y agregá productos al carrito. Podés ajustar cantidades y eliminar productos antes de continuar.</p>
       </div>
       <div class="step reveal">
         <span class="step-num">02</span>
-        <h3>Confirmamos y te asesoramos</h3>
-        <p>Verificamos stock, te decimos cómo tomarlo y ajustamos la combinación si tu objetivo pide otra cosa.</p>
+        <h3>Revisá y enviá</h3>
+        <p>Revisá el subtotal y abrí WhatsApp con tu selección lista para enviar. El carrito se conserva; abrir WhatsApp no confirma una compra ni un pago.</p>
       </div>
       <div class="step reveal">
         <span class="step-num">03</span>
-        <h3>Pagás y recibís</h3>
-        <p>Transferencia, billetera o efectivo. Entrega en el día en Gran Asunción y encomienda al interior, con factura legal.</p>
+        <h3>Coordiná los detalles</h3>
+        <p>Confirmá disponibilidad, precio final, medio de pago y envío en la conversación. El envío se cotiza según tu ubicación.</p>
       </div>
     </div>
   </section>
 
-  <!-- ============ DIFERENCIALES ============ -->
-  <section class="section" id="nosotros">
-    <div class="split">
-      <div class="split-text reveal">
-        <span class="kicker">Por qué ProteínaSmart</span>
-        <h2>Un marketplace con criterio, no una góndola más</h2>
-        <p class="lead">
-          La mayoría de las tiendas de suplementos vende catálogo. Nosotros vendemos decisiones:
-          qué tomar, cuándo, con qué combinarlo y — sobre todo — qué no necesitás comprar.
-        </p>
-        <ul class="feature-list">
-          <li><strong>Selección curada.</strong> Cada producto entra al catálogo porque tiene evidencia y un uso claro.</li>
-          <li><strong>Asesoramiento incluido.</strong> Te ayudamos a armar el protocolo antes de que gastes.</li>
-          <li><strong>Productos originales.</strong> Trazabilidad de origen y vencimiento en cada lote.</li>
-          <li><strong>Operación formal.</strong> Factura legal con RUC <span data-cfg="ruc">4499507-5</span>.</li>
-          <li><strong>Trato directo.</strong> Hablás con <span data-cfg="responsable">Oscar Amarilla</span>, no con un bot de call center.</li>
-        </ul>
-        <a class="btn btn-primary" data-wa href="#">Hablar con un asesor</a>
-      </div>
-      <div class="split-visual reveal">
-        <div class="orb">
-          <div class="orb-core"></div>
-          <div class="orb-ring r1"></div>
-          <div class="orb-ring r2"></div>
-        </div>
-        <div class="mini-metrics">
-          <div class="mini"><span class="mini-num">4</span><span>Categorías</span></div>
-          <div class="mini"><span class="mini-num">100%</span><span>Original</span></div>
-          <div class="mini"><span class="mini-num">24h</span><span>Entrega GA</span></div>
-        </div>
-      </div>
+<section class="section" id="nosotros">
+    <div class="section-head">
+      <span class="kicker">Confianza y entregas</span>
+      <h2>Los detalles claros antes de confirmar</h2>
+      <p>Consultá disponibilidad, precio final y costo de envío por WhatsApp.</p>
+    </div>
+    <div class="trust-bar">
+    <div class="trust-item"><span>🚚</span><p data-cfg="envio-asuncion">Envíos en Asunción y Gran Asunción: plazo y costo a confirmar</p></div>
+    <div class="trust-item"><span>📦</span><p data-cfg="envio-interior">Envío al interior por encomienda</p></div>
+    <div class="trust-item"><span>💳</span><p data-cfg="pagos">Transferencia, Tigo Money, Personal Pay y efectivo</p></div>
+    <div class="trust-item"><span>🧾</span><p data-cfg="facturacion">Factura legal con RUC</p></div>
+  </div>
+    <ul class="feature-list trust-details">
+      <li><strong>Trato directo.</strong> Contactá a <span data-cfg="responsable">Oscar Amarilla</span>.</li>
+      <li><strong>Facturación.</strong> RUC <span data-cfg="ruc">4499507-5</span>.</li>
+      <li><strong>Antes de comprar.</strong> Consultá marca, etiqueta, lote y vencimiento del producto disponible.</li>
+    </ul>
+    <div class="philosophy-note" id="filosofia">
+      <h3>Elegir con criterio</h3>
+      <p>Priorizamos opciones que encajen en tu objetivo, presupuesto y rutina. Te ayudamos a comparar presentaciones y resolver dudas antes de comprar.</p>
     </div>
   </section>
 
-  <!-- ============ ASESORÍA / LEAD ============ -->
-  <section class="section cta-section" id="asesoria">
+<section class="section cta-section" id="asesoria">
     <div class="cta-box reveal">
       <span class="kicker">Asesoría gratuita</span>
-      <h2>Contanos tu objetivo y te armamos el protocolo</h2>
-      <p class="cta-sub">Respondemos con una recomendación concreta: qué tomar, en qué dosis y en qué momento del día. Sin compromiso de compra.</p>
+      <h2>Contanos tu objetivo y te ayudamos a elegir</h2>
+      <p class="cta-sub">Te ayudamos a comparar opciones según tu objetivo y presupuesto. Sin compromiso de compra.</p>
       <form class="cta-form" id="leadForm">
-        <input type="text" name="name" placeholder="Tu nombre" required />
-        <select name="objetivo" required>
+        <input type="text" name="name" aria-label="Tu nombre" placeholder="Tu nombre" required />
+        <select aria-label="Tu objetivo principal" name="objetivo" required>
           <option value="" disabled selected>Tu objetivo principal</option>
           <option>Ganar masa muscular</option>
           <option>Bajar grasa / definir</option>
@@ -305,22 +228,21 @@
           <option>Energía sostenida</option>
           <option>Alimentación keto / low carb</option>
         </select>
-        <select name="nivel" required>
+        <select aria-label="Nivel de actividad" name="nivel" required>
           <option value="" disabled selected>Nivel de actividad</option>
           <option>Sedentario</option>
           <option>1 a 2 entrenamientos por semana</option>
           <option>3 a 4 entrenamientos por semana</option>
           <option>5 o más entrenamientos por semana</option>
         </select>
-        <textarea name="mensaje" rows="3" placeholder="Contanos algo más (opcional): edad, peso, si ya tomás algo…"></textarea>
+        <textarea aria-label="Información adicional opcional" name="mensaje" rows="3" placeholder="Contanos algo más (opcional): edad, peso, si ya tomás algo…"></textarea>
         <button type="submit" class="btn btn-primary btn-large">Quiero mi recomendación</button>
       </form>
       <p class="form-note" id="formNote">🔒 Tus datos quedan entre nosotros. Cero spam.</p>
     </div>
   </section>
 
-  <!-- ============ FAQ ============ -->
-  <section class="section faq-section" id="faq">
+<section class="section faq-section" id="faq">
     <div class="section-head reveal">
       <span class="kicker">Preguntas frecuentes</span>
       <h2>Lo que más nos consultan</h2>
@@ -328,11 +250,11 @@
     <div class="faq-list reveal">
       <details>
         <summary>¿Cómo compro en ProteínaSmart?</summary>
-        <p>Elegís el producto en el catálogo y tocás "Pedir por WhatsApp": el mensaje se arma solo con el producto, el formato y el precio. Ahí confirmamos stock, forma de pago y envío.</p>
+        <p>Agregá tus productos y enviá tu pedido por WhatsApp. En el carrito podés ajustar cantidades, eliminar productos y revisar el subtotal. Confirmamos disponibilidad, precio final y envío en la conversación. Abrir WhatsApp no confirma ni paga el pedido.</p>
       </details>
       <details>
         <summary>¿Hacen envíos al interior del país?</summary>
-        <p><span data-cfg="envio-asuncion">Envío en el día en Asunción y Gran Asunción</span>. <span data-cfg="envio-interior">Envío al interior por encomienda (24–72 h)</span>.</p>
+        <p><span data-cfg="envio-asuncion">Envíos en Asunción y Gran Asunción: plazo y costo a confirmar</span>. <span data-cfg="envio-interior">Envíos al interior por encomienda: plazo y costo a confirmar</span>.</p>
       </details>
       <details>
         <summary>¿Qué proteína me conviene si quiero bajar grasa?</summary>
@@ -344,7 +266,7 @@
       </details>
       <details>
         <summary>¿Los productos son originales?</summary>
-        <p>Sí. Trabajamos con productos originales y verificamos lote y vencimiento antes de entregar. Si algo llega mal, se cambia.</p>
+        <p>Consultá la marca, procedencia, lote y vencimiento del producto disponible antes de confirmar tu pedido.</p>
       </details>
       <details>
         <summary>¿Emiten factura legal?</summary>
@@ -360,7 +282,7 @@
   <!-- ============ CTA FINAL ============ -->
   <section class="final-cta">
     <h2>Proteína inteligente, decisiones inteligentes.</h2>
-    <p>Escribinos y en cinco minutos sabés exactamente qué comprar y qué no.</p>
+    <p>Escribinos para comparar opciones y resolver tus dudas antes de comprar.</p>
     <a class="btn btn-primary btn-large" data-wa href="#">Escribir por WhatsApp</a>
   </section>
 
@@ -424,7 +346,8 @@
   <script src="js/catalog.js"></script>
   <script src="js/cart.js"></script>
   <script type="module" src="js/data-source.js"></script>
-  <script type="module" src="js/pedidos.js"></script>
+  <script src="js/checkout.js"></script>
+  <script src="js/cart-ui.js"></script>
   <script src="js/main.js"></script>
 </body>
 </html>

@@ -30,6 +30,11 @@ cetogénica, enfoque low carb, hábitos sostenibles y neuroplasticidad.
 
 ## Arquitectura
 
+La primera tanda de mejoras de la tienda publicada está documentada en
+[docs/tienda-primera-tanda.md](docs/tienda-primera-tanda.md), incluyendo recursos pendientes,
+pruebas y preparación de Bancard. El catálogo local contiene referencias pendientes de
+validación del proveedor; no hay fotos individuales de producto verificadas en el repositorio.
+
 Sigue el principio `Configuración define / Dominio decide / Servicios ejecutan / Presentación muestra`:
 
 | Archivo | Rol |
@@ -38,6 +43,8 @@ Sigue el principio `Configuración define / Dominio decide / Servicios ejecutan 
 | `js/catalog.js` | **Datos.** Array de productos + categorías + objetivos. Es el "backend" del catálogo. |
 | `js/main.js` | **Dominio y servicios.** Filtros, render, armado del mensaje de WhatsApp, formulario, tracking. |
 | `js/cart.js` | **Estado del carrito.** Reducer inmutable con persistencia en localStorage y total en guaraníes. |
+| `js/cart-ui.js` | **Carrito visible.** Listado, cantidades, eliminación, subtotal y consulta por WhatsApp. |
+| `js/checkout.js` | **Cotización y proveedores.** Envío separado y Bancard deshabilitado. |
 | `js/data-source.js` | **Fuente híbrida.** Catálogo remoto desde Supabase(CDN ESM) con fallback inmediato al array local. |
 | `index.html` | **Presentación.** Estructura semántica, SEO y datos estructurados(Store + FAQPage). |
 | `css/styles.css` | Identidad visual, animaciones y responsive. |
@@ -80,7 +87,9 @@ Abrí `js/catalog.js` y sumá un objeto al array `PS_CATALOG`:
   badge: 'Más vendido',
   resumen: 'Beneficio concreto en una línea.',
   imagen: '',                      // URL opcional; vacío = fallback tipográfico
-  stock: true,
+  stock: null,                    // null = desconocido; verificar antes de publicar disponibilidad
+  sabor: '',
+  verificado: { marca: false, formato: false, sabor: false, imagen: false, stock: false },
 }
 ```
 
@@ -117,6 +126,11 @@ npx serve .
 ---
 
 ## Automatización: seguimiento a 25 días
+
+**Estado de la tienda de la raíz:** abrir WhatsApp ya no emite `ps:pedido` ni carga
+`js/pedidos.js`. Un clic no demuestra una compra. La infraestructura descrita abajo se
+conserva como referencia, pero requiere una confirmación comercial verificada antes de
+volver a conectarse al recorrido de compra.
 
 La palanca de mayor ROI del negocio (Dossier §6)) automatizada con la infraestructura que ya tenés:
 
@@ -196,7 +210,7 @@ producto cuando el catálogo pase a base de datos.
 
 ## Roadmap
 
-- [x] Imágenes reales de producto con fallback tipográfico
+- [ ] Cargar fotos reales verificadas (soporte de imágenes y fallback disponibles)
 - [x] Landings por disciplina mediante URLSearchParams y rewrites de Vercel
 - [x] Migración híbrida del catálogo a Supabase con fallback local
 - [x] Carrito multi-producto persistente con resumen único a WhatsApp

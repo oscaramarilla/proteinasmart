@@ -24,11 +24,16 @@ window.PS_CONFIG = {
 
   operacion: {
     // Se muestran en la barra de confianza y en el FAQ
-    envioAsuncion: 'Envío en el día en Asunción y Gran Asunción',
-    envioInterior: 'Envío al interior por encomienda (24–72 h)',
+    envioAsuncion: 'Envíos en Asunción y Gran Asunción: plazo y costo a confirmar',
+    envioInterior: 'Envíos al interior por encomienda: plazo y costo a confirmar',
     pagos: 'Transferencia bancaria, Tigo Money, Personal Pay y efectivo',
     facturacion: 'Factura legal con RUC en todos los pedidos',
     horario: 'Lunes a sábado, 08:00 a 19:00',
+  },
+
+  checkout: {
+    shippingFee: null, // PYG; null = Envío a confirmar. 0 solo con tarifa verificada.
+    bancard: { enabled: false }, // Sin SDK, endpoint ni credenciales en el cliente.
   },
 
   // Mensaje base del checkout por WhatsApp

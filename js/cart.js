@@ -6,6 +6,8 @@
   'use strict';
 
   const STORAGE_KEY = 'proteinasmart:carrito:v1';
+  const MAX_QUANTITY = 99;
+  const quantity = (value) => Math.min(MAX_QUANTITY, Math.max(1, Math.floor(Number(value) || 1)));
 
   /**
    * Normaliza un item externo al contrato interno del carrito.
@@ -18,8 +20,11 @@
       id: String(producto.id),
       nombre: producto.nombre,
       formato: producto.formato || producto.unidad || 'unidad',
-      precio: Number.isInteger(producto.precio) ? producto.precio : 0,
-      cantidad: Math.max(1, Math.floor(Number(cantidad) || 1)),
+      marca: producto.verificado?.marca ? producto.marca || '' : '',
+      sabor: producto.verificado?.sabor ? producto.sabor || '' : '',
+      verificado: { marca: producto.verificado?.marca === true, sabor: producto.verificado?.sabor === true },
+      precio: Number.isSafeInteger(producto.precio) && producto.precio > 0 ? producto.precio : 0,
+      cantidad: quantity(cantidad),
       categoria: producto.categoria || '',
       protocolo: producto.protocolo || producto.categoria || 'Asesoría personalizada',
       complemento: producto.complemento || 'Asesoría de uso personalizada',
@@ -37,7 +42,7 @@
     try {
       const raw = localStorage.getItem(STORAGE_KEY);
       const parsed = raw ? JSON.parse(raw) : [];
-      return Array.isArray(parsed) ? parsed : [];
+      return Array.isArray(parsed) ? parsed.reduce((state, item) => reducer(state, { type: 'AGREGAR', producto: item, cantidad: item?.cantidad }), []) : [];
     } catch (error) {
       return [];
     }
@@ -65,21 +70,23 @@
   function reducer(estado, accion) {
     switch (accion.type) {
       case 'AGREGAR': {
+        if (!accion.producto || typeof accion.producto.id !== 'string' || !accion.producto.id || typeof accion.producto.nombre !== 'string') return estado;
         const item = normalizarItem(accion.producto, accion.cantidad);
         const existe = estado.find((actual) => actual.id === item.id);
         return existe
           ? estado.map((actual) => actual.id === item.id
-            ? { ...actual, cantidad: actual.cantidad + item.cantidad }
+            ? { ...item, cantidad: quantity(actual.cantidad + item.cantidad) }
             : actual)
           : [...estado, item];
       }
       case 'ELIMINAR':
         return estado.filter((item) => item.id !== accion.id);
       case 'ACTUALIZAR_CANTIDAD':
+        if (!Number.isFinite(accion.cantidad)) return estado;
         return accion.cantidad <= 0
           ? estado.filter((item) => item.id !== accion.id)
           : estado.map((item) => item.id === accion.id
-            ? { ...item, cantidad: Math.floor(accion.cantidad) }
+            ? { ...item, cantidad: quantity(accion.cantidad) }
             : item);
       case 'LIMPIAR':
         return [];
@@ -129,5 +136,5 @@
     return () => listeners.delete(listener);
   }
 
-  window.PS_CART = { dispatch, getState, subscribe, reducer, total };
+  window.PS_CART = { dispatch, getState, subscribe, reducer, total, MAX_QUANTITY };
 })();

@@ -15,7 +15,15 @@ interface Window {
     subscribe: (listener: Function) => Function;
     reducer: Function;
     total: Function;
-
+    MAX_QUANTITY: number;
+  };
+  PS_CHECKOUT: {
+    quote: (items: Array<Record<string, any>>) => {
+      currency: string; subtotal: number; hasUnpricedItems: boolean;
+      shippingFee: number | null; shippingLabel: string; total: number | null;
+    };
+    whatsappURL: (items: Array<Record<string, any>>) => string | null;
+    providers: { bancard: { enabled: boolean; createPayment: () => never } };
   };
   dataLayer: unknown[];
   gtag?: any;
