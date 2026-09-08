@@ -298,7 +298,7 @@
     grid.addEventListener(
       'error',
       (e) => {
-        const img = e.target;
+        const img = (/** @type {Element} */ (e.target));
         if (img.tagName !== 'IMG') return;
         const contenedor = img.closest('.card-image');
         if (!contenedor) return;
@@ -498,7 +498,7 @@
   }
 
   document.addEventListener('click', (event) => {
-    const add = event.target.closest('[data-cart-add]');
+    const add = (/** @type {HTMLElement | null} */ ((/** @type {Element} */ (event.target)).closest('[data-cart-add]')));
     if (add && window.PS_CART) {
       const producto = CATALOG.find((item) => item.id === add.dataset.cartAdd);
       if (producto) {
@@ -512,7 +512,7 @@
       }
       return;
     }
-    const checkout = event.target.closest('[data-cart-checkout]');
+    const checkout = (/** @type {HTMLElement | null} */ ((/** @type {Element} */ (event.target)).closest('[data-cart-checkout]')));
     if (checkout && window.PS_CART) {
       const state = window.PS_CART.getState();
       window.open(waCarrito(state.items, state.total), '_blank', 'noopener');
@@ -524,7 +524,8 @@
   });
 
   window.addEventListener('ps:catalogo-remoto', (event) => {
-    CATALOG = event.detail;
+    const detalle = (/** @type {CustomEvent} */ (event)).detail;
+    CATALOG = detalle;
     renderCatalogo();
   });
 
@@ -571,7 +572,8 @@
   if (form) {
     form.addEventListener('submit', async (e) => {
       e.preventDefault();
-      const data = Object.fromEntries(new FormData(form).entries());
+      const data = /** @type {Record<string, FormDataEntryValue>} */ ({});
+      new FormData(form).forEach((valor, clave) => { data[clave] = valor; });
       const btn = form.querySelector('button[type="submit"]');
       const original = btn.textContent;
 
@@ -641,11 +643,11 @@
   }
   if (T.metaPixel) {
     /* eslint-disable */
-    !function(f,b,e,v,n,t,s){if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+    (function(f,b,e,v,n,t,s){if(f.fbq)return;n=f.fbq=function(){n.callMethod?
     n.callMethod.apply(n,arguments):n.queue.push(arguments)};if(!f._fbq)f._fbq=n;
     n.push=n;n.loaded=!0;n.version='2.0';n.queue=[];t=b.createElement(e);t.async=!0;
     t.src=v;s=b.getElementsByTagName(e)[0];s.parentNode.insertBefore(t,s)}(window,
-    document,'script','https://connect.facebook.net/en_US/fbevents.js');
+    document,'script','https://connect.facebook.net/en_US/fbevents.js'));
     fbq('init', T.metaPixel);
     fbq('track', 'PageView');
     /* eslint-enable */
@@ -664,7 +666,7 @@
 
   document.addEventListener('click', (e) => {
     // Pedido de un producto concreto
-    const pedido = e.target.closest('[data-track="pedido"]');
+    const pedido = (/** @type {HTMLElement | null} */ ((/** @type {Element} */ (e.target)).closest('[data-track="pedido"]')));
     if (pedido) {
       const id = pedido.dataset.id;
       track('pedido_whatsapp', { producto: id });
@@ -674,7 +676,7 @@
     }
 
     // Cualquier otro CTA que abre WhatsApp
-    const wa = e.target.closest('[data-wa]');
+    const wa = (/** @type {HTMLElement | null} */ ((/** @type {Element} */ (e.target)).closest('[data-wa]')));
     if (wa) {
       const origen = wa.classList.contains('wa-float')
         ? 'boton_flotante'
