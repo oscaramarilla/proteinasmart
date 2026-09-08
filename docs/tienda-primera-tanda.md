@@ -53,8 +53,8 @@ La próxima integración necesita backend para validar SKU/precios/stock, calcul
 
 ## Verificación reproducible
 
-Ejecutar desde la raíz: `node --test tests/cart.test.cjs` y `python -m http.server 8765 --bind 127.0.0.1`.
+Ejecutar desde la raíz: `node --test tests/cart.test.cjs` y `python -m http.server 8765 --bind 127.0.0.1`. Chequeo JavaScript con la versión del lockfile: `npm exec --yes --package=typescript@5.9.3 -- tsc -p jsconfig.json`.
 
 Pruebas de dominio: altas y cantidades, eliminación, snapshots inmutables, persistencia/recarga, almacenamiento bloqueado/corrupto, producto sin precio, envío desconocido/configurado/cero, límites y proveedor Bancard deshabilitado.
 
-Pruebas Chrome: portada y catálogo de escritorio 1440×900; móvil 390×844; dos productos, +/−, eliminación, vacío, filtros combinados y limpiar. Abrir el enlace de WhatsApp y recargar conservó el carrito; no se envió un mensaje. El clic solo abre una pestaña con la selección preparada.
+Pruebas Chrome: portada y catálogo de escritorio 1440×900; móvil 390×844 y 320×740; dos productos, +/−, eliminación, vacío, filtros combinados y limpiar. Abrir el enlace de WhatsApp y recargar conservó el carrito; no se envió un mensaje. El clic solo abre una pestaña con la selección preparada. Las ocho pruebas de dominio y el chequeo JavaScript con TypeScript 5.9.3 pasan.

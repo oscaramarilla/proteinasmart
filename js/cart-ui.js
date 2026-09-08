@@ -26,7 +26,7 @@
     else {
       const fallback = document.querySelector('#cartBar:not([hidden]) [data-cart-open]') || document.querySelector('#burger');
       const desktop = document.querySelector('#navLinks [data-cart-open]');
-      (fallback.getClientRects().length ? fallback : desktop).focus();
+      (/** @type {HTMLElement} */ (fallback.getClientRects().length ? fallback : desktop)).focus();
     }
   });
   dialog.querySelector('.cart-close').addEventListener('click', close);
@@ -39,7 +39,7 @@
     document.body.classList.toggle('has-cart', count > 0);
     bar.hidden = !count;
     bar.innerHTML = '<div class="cart-summary"><strong>' + count + ' producto(s)</strong><small>Subtotal de referencia: ' + money(quote.subtotal) + (quote.hasUnpricedItems ? ' + precios a confirmar' : '') + '</small></div><button type="button" class="btn btn-primary btn-sm" data-cart-open>Ver carrito</button>';
-    const active = document.activeElement;
+    const active = /** @type {HTMLElement | null} */ (document.activeElement);
     const focusId = active?.dataset?.item;
     const focusAction = active?.dataset?.action;
     dialog.querySelector('#cartItems').innerHTML = state.items.length ? '<ul class="cart-items">' + state.items.map((item) => {
@@ -48,17 +48,17 @@
         '<div class="quantity-controls"><button type="button" data-action="minus" data-item="' + id + '" aria-label="Restar una unidad de ' + name + '"' + (item.cantidad === 1 ? ' disabled' : '') + '>−</button><output aria-label="Cantidad de ' + name + '">' + item.cantidad + '</output><button type="button" data-action="plus" data-item="' + id + '" aria-label="Sumar una unidad de ' + name + '"' + (item.cantidad >= cart.MAX_QUANTITY ? ' disabled' : '') + '>+</button></div><strong>' + (item.precio ? money(item.precio * item.cantidad) : 'A confirmar') + '</strong><button class="remove-item" type="button" data-action="remove" data-item="' + id + '" aria-label="Eliminar ' + name + '">Eliminar</button></div></li>';
     }).join('') + '</ul>' : '<p class="cart-empty">Tu carrito está vacío. Agregá productos del catálogo para preparar tu consulta.</p>';
     dialog.querySelector('#cartTotals').innerHTML = state.items.length ? '<div class="cart-totals"><p><span>' + (quote.hasUnpricedItems ? 'Subtotal con precio conocido' : 'Subtotal de referencia') + '</span><strong>' + money(quote.subtotal) + '</strong></p>' + (quote.hasUnpricedItems ? '<p>Hay productos con precio a confirmar.</p>' : '') + '<p>' + escapeHTML(quote.shippingLabel) + '</p><small>Costo y plazo según destino. ' + (quote.shippingFee === null ? 'El subtotal no incluye envío.' : '') + '</small></div>' : '';
-    const link = dialog.querySelector('#cartCheckout');
+    const link = /** @type {HTMLAnchorElement} */ (dialog.querySelector('#cartCheckout'));
     link.hidden = !count;
     const url = checkout.whatsappURL(state.items);
     if (url) link.href = url; else link.removeAttribute('href');
     if (focusId) {
-      const replacement = Array.from(dialog.querySelectorAll('[data-item]')).find((el) => el.dataset.item === focusId && el.dataset.action === focusAction && !el.disabled);
-      (replacement || dialog.querySelector('.cart-close')).focus();
+      const replacement = Array.from(dialog.querySelectorAll('button[data-item]')).find((el) => (/** @type {HTMLButtonElement} */ (el)).dataset.item === focusId && (/** @type {HTMLButtonElement} */ (el)).dataset.action === focusAction && !(/** @type {HTMLButtonElement} */ (el)).disabled);
+      (/** @type {HTMLButtonElement} */ (replacement || dialog.querySelector('.cart-close'))).focus();
     }
   }
   document.addEventListener('click', (event) => {
-    const opener = event.target.closest('[data-cart-open]');
+    const opener = (/** @type {Element} */ (event.target)).closest('[data-cart-open]');
     if (opener) {
       returnFocus = opener;
       document.querySelector('#navLinks')?.classList.remove('open');
@@ -67,7 +67,7 @@
       dialog.showModal(); document.body.classList.add('cart-open');
       return;
     }
-    const button = event.target.closest('[data-action][data-item]');
+    const button = /** @type {HTMLButtonElement | null} */ ((/** @type {Element} */ (event.target)).closest('[data-action][data-item]'));
     if (!button || !dialog.contains(button)) return;
     const item = cart.getState().items.find((entry) => entry.id === button.dataset.item);
     if (!item) return;
