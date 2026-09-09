@@ -132,9 +132,63 @@
 
 <section class="section" id="catalogo">
     <div class="section-head reveal">
-      <span class="kicker">Catálogo</span>
-      <h2>Proteínas, deportivos, keto y longevidad</h2>
-      <p>Precios de referencia en guaraníes. Confirmamos stock y precio final por WhatsApp antes de cerrar el pedido.</p>
+      <span class="kicker">Escalera de planes</span>
+      <h2>Elegí el nivel que encaja con tu objetivo</h2>
+      <p>Seleccionamos, traemos bajo pedido y te asesoramos para que avances con una decisión clara.</p>
+    </div>
+
+    <div class="plan-ladder" aria-label="Planes ProteínaSmart">
+      <article class="plan-card plan-start reveal">
+        <div class="plan-number">01</div>
+        <span class="plan-tag">Para empezar</span>
+        <h3>Smart Start</h3>
+        <p>Una base simple para ordenar tu alimentación y conocer qué suplemento tiene sentido para vos.</p>
+        <ul>
+          <li>Orientación inicial</li>
+          <li>Una recomendación concreta</li>
+          <li>Compra sin exceso</li>
+        </ul>
+        <a class="btn btn-ghost" data-wa="Hola ProteínaSmart 👋 Quiero conocer el plan Smart Start." href="#">Conocer Smart Start</a>
+      </article>
+
+      <article class="plan-card plan-muscle reveal">
+        <div class="plan-number">02</div>
+        <span class="plan-tag">Base de progreso</span>
+        <h3>Smart Muscle</h3>
+        <p>Proteína y complementos seleccionados para acompañar una rutina de fuerza con criterio.</p>
+        <ul>
+          <li>Proteína como base</li>
+          <li>Complemento recomendado</li>
+          <li>Guía de uso a confirmar</li>
+        </ul>
+        <a class="btn btn-primary" data-wa="Hola ProteínaSmart 👋 Quiero reservar el plan Smart Muscle." href="#">Reservar Smart Muscle</a>
+      </article>
+
+      <article class="plan-card plan-performance reveal">
+        <div class="plan-number">03</div>
+        <span class="plan-tag">Para entrenar mejor</span>
+        <h3>Smart Performance</h3>
+        <p>Una combinación pensada para quienes quieren ordenar proteína, fuerza y rendimiento.</p>
+        <ul>
+          <li>Selección según frecuencia</li>
+          <li>Combinación sin compras de más</li>
+          <li>Reserva y coordinación por WhatsApp</li>
+        </ul>
+        <a class="btn btn-ghost" data-wa="Hola ProteínaSmart 👋 Quiero consultar por el plan Smart Performance." href="#">Consultar plan</a>
+      </article>
+
+      <article class="plan-card plan-90 reveal">
+        <div class="plan-number">04</div>
+        <span class="plan-tag">Seguimiento</span>
+        <h3>Smart 90</h3>
+        <p>Un horizonte de 90 días para construir constancia, revisar tu selección y ajustar el protocolo.</p>
+        <ul>
+          <li>Objetivo y rutina definidos</li>
+          <li>Reposición planificada</li>
+          <li>Asesoría durante el proceso</li>
+        </ul>
+        <a class="btn btn-primary" data-wa="Hola ProteínaSmart 👋 Quiero hablar sobre el plan Smart 90." href="#">Hablar sobre Smart 90</a>
+      </article>
     </div>
 
     <div class="filters" id="catalogFilters" role="group" aria-label="Categoría"></div>
@@ -146,7 +200,7 @@
     </div>
 
     <p class="purchase-guide">Agregá tus productos y enviá tu pedido por WhatsApp</p>
-    <div class="product-grid" id="catalogGrid"></div>
+    <div class="product-grid product-grid-engine" id="catalogGrid" aria-hidden="true"></div>
     <noscript>Activá JavaScript para ver el catálogo y armar tu carrito. También podés llamar al 0985 864 209.</noscript>
 
     <p class="empty-state" id="catalogEmpty" hidden>
