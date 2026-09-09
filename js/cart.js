@@ -16,10 +16,10 @@
   function normalizarItem(producto, cantidad) {
     return {
       id: String(producto.id),
-      nombre: producto.nombre,
-      formato: producto.formato || producto.unidad || 'unidad',
-      precio: Number.isInteger(producto.precio) ? producto.precio : 0,
-      cantidad: Math.max(1, Math.floor(Number(cantidad) || 1)),
+      nombre: String(producto.nombre),
+      formato: String(producto.formato || producto.unidad || 'unidad'),
+      precio: Number.isSafeInteger(producto.precio) && producto.precio >= 0 ? producto.precio : 0,
+      cantidad: Number.isFinite(Number(cantidad)) ? Math.min(999, Math.max(1, Math.floor(Number(cantidad) || 1))) : 1,
       categoria: producto.categoria || '',
       protocolo: producto.protocolo || producto.categoria || 'Asesoría personalizada',
       complemento: producto.complemento || 'Asesoría de uso personalizada',
@@ -37,7 +37,11 @@
     try {
       const raw = localStorage.getItem(STORAGE_KEY);
       const parsed = raw ? JSON.parse(raw) : [];
-      return Array.isArray(parsed) ? parsed : [];
+      if (!Array.isArray(parsed)) return [];
+      return parsed.filter((item) => item && typeof item === 'object' &&
+        (typeof item.id === 'string' || typeof item.id === 'number') &&
+        String(item.id).trim() && typeof item.nombre === 'string' && item.nombre.trim())
+        .reduce((estado, item) => reducer(estado, { type: 'AGREGAR', producto: item, cantidad: item.cantidad }), []);
     } catch (error) {
       return [];
     }
@@ -69,14 +73,14 @@
         const existe = estado.find((actual) => actual.id === item.id);
         return existe
           ? estado.map((actual) => actual.id === item.id
-            ? { ...actual, cantidad: actual.cantidad + item.cantidad }
+            ? { ...item, cantidad: Math.min(999, actual.cantidad + item.cantidad) }
             : actual)
           : [...estado, item];
       }
       case 'ELIMINAR':
         return estado.filter((item) => item.id !== accion.id);
       case 'ACTUALIZAR_CANTIDAD':
-        if (!Number.isSafeInteger(accion.cantidad)) return estado;
+        if (!Number.isSafeInteger(accion.cantidad) || accion.cantidad > 999) return estado;
         return accion.cantidad <= 0
           ? estado.filter((item) => item.id !== accion.id)
           : estado.map((item) => item.id === accion.id
@@ -84,6 +88,11 @@
             : item);
       case 'LIMPIAR':
         return [];
+      case 'SINCRONIZAR_CATALOGO':
+        return estado.map((item) => {
+          const producto = accion.productos.find((p) => String(p.id) === item.id);
+          return producto ? normalizarItem(producto, item.cantidad) : item;
+        });
       default:
         return estado;
     }

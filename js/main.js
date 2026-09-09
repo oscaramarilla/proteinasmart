@@ -126,9 +126,11 @@
   // Estado inicial desde la URL: los filtros son compartibles e indexables
   // (ej.: ?categoria=keto, ?objetivo=foco o ?disciplina=low-carb).
   const paramsIniciales = new URLSearchParams(window.location.search);
-  const categoriaInicial = paramsIniciales.get('categoria');
+  const rutaInicial = window.location.pathname.replace(/^\/|\/$/g, '');
+  const categoriaInicial = paramsIniciales.has('categoria') ? paramsIniciales.get('categoria') : rutaInicial;
   const objetivoInicial = paramsIniciales.get('objetivo');
-  const disciplinaInicial = paramsIniciales.get('disciplina');
+  const disciplinaInicial = paramsIniciales.has('disciplina') ? paramsIniciales.get('disciplina') :
+    (CATEGORIAS.some((c) => c.id === rutaInicial) ? null : rutaInicial);
   let filtroCategoria = CATEGORIAS.some((c) => c.id === categoriaInicial) ? categoriaInicial : 'todos';
   let filtroObjetivo = OBJETIVOS.some((o) => o.id === objetivoInicial) ? objetivoInicial : null;
   let filtroDisciplina = DISCIPLINAS.some((d) => d.id === disciplinaInicial) ? disciplinaInicial : 'todos';
@@ -153,13 +155,43 @@
    * Sincroniza la URL sin recargar para reflejar los filtros activos (categoria, objetivo y disciplina).
    * @returns {void}
    */
+  const metaOriginal = {
+    titulo: document.title,
+    descripcion: $('meta[name="description"]')?.content || '',
+    canonical: $('link[rel="canonical"]')?.href || 'https://www.proteinasmart.com/',
+  };
+  const META_CATEGORIAS = {
+    proteinas: { titulo: 'Proteínas en Paraguay | ProteínaSmart', descripcion: 'Compará whey, proteína vegetal y colágeno en Paraguay. Presentaciones, precios en guaraníes y consulta por WhatsApp antes de comprar.' },
+    deportivos: { titulo: 'Suplementos deportivos en Paraguay | ProteínaSmart', descripcion: 'Explorá creatina, aminoácidos y suplementos deportivos en Paraguay. Compará presentaciones y precios estimados; confirmá stock y entrega por WhatsApp.' },
+    keto: { titulo: 'Keto y low carb en Paraguay | ProteínaSmart', descripcion: 'Catálogo keto y low carb en Paraguay: MCT, snacks y endulzantes. Revisá composición, presentaciones y precios antes de confirmar tu pedido.' },
+    longevidad: { titulo: 'Salud y longevidad en Paraguay | ProteínaSmart', descripcion: 'Compará omega 3, magnesio y vitaminas en Paraguay. Información de producto, precios estimados y orientación para leer etiquetas.' },
+  };
+
+  function actualizarMetadatos() {
+    const meta = META_CATEGORIAS[filtroCategoria];
+    document.title = meta ? meta.titulo : metaOriginal.titulo;
+    const descripcion = meta ? meta.descripcion : metaOriginal.descripcion;
+    const canonical = meta ? new URL('/' + filtroCategoria, metaOriginal.canonical).href : metaOriginal.canonical;
+    const campos = [
+      ['meta[name="description"]', descripcion], ['meta[property="og:description"]', descripcion],
+      ['meta[property="og:title"]', document.title], ['meta[property="og:url"]', canonical],
+    ];
+    campos.forEach(([selector, valor]) => { const el = $(selector); if (el) el.setAttribute('content', valor); });
+    const link = $('link[rel="canonical"]');
+    if (link) link.href = canonical;
+  }
+
   function sincronizarURL() {
-    const params = new URLSearchParams();
+    const params = new URLSearchParams(window.location.search);
+    ['categoria', 'objetivo', 'disciplina'].forEach((key) => params.delete(key));
     if (filtroCategoria !== 'todos') params.set('categoria', filtroCategoria);
     if (filtroObjetivo) params.set('objetivo', filtroObjetivo);
     if (filtroDisciplina !== 'todos') params.set('disciplina', filtroDisciplina);
     const query = params.toString();
-    window.history.replaceState({}, '', window.location.pathname + (query ? '?' + query : '') + window.location.hash);
+    // Una reescritura de Vercel conserva el pathname visible: volver a "todos"
+    // debe quitar también la categoría implícita de /keto, /proteinas, etc.
+    const ruta = META_CATEGORIAS[rutaInicial] || DISCIPLINAS.some((d) => d.id === rutaInicial) ? '/' : window.location.pathname;
+    window.history.replaceState({}, '', ruta + (query ? '?' + query : '') + window.location.hash);
   }
 
   function escapeHTML(value) {
@@ -187,16 +219,17 @@
       ? '<span class="discipline-badge discipline-' + disciplinas[0] + '">' + disciplinas[0].replace('-', ' ') + '</span>'
       : '';
 
-    const imagen = /^(https?:\/\/|\.?\.?\/|images\/)/i.test(p.imagen || '') ? escapeHTML(p.imagen) : '';
+    const imagen = /^(https?:\/\/|\.?\.?\/|images?\/)/i.test(p.imagen || '') ? escapeHTML(p.imagen) : '';
     const imagenHTML = imagen
-      ? '<div class="card-image"><img src="' + imagen + '" alt="Envase de ' + p.nombre + '" loading="lazy" /></div>'
-      : '<div class="card-image card-image-fallback"><span>Foto del envase<br><strong>pendiente</strong></span></div>';
+      ? '<div class="card-image"><img src="' + imagen + '" alt="' + (p.imagenReferencial ? 'Imagen referencial de ' : 'Envase de ') + p.nombre + '" loading="lazy" decoding="async" width="800" height="800" /></div>'
+      : '<div class="card-image card-image-fallback"><span>Proteína<br><strong>Smart</strong><small>Foto no disponible</small></span></div>';
 
     return (
       '<article class="product-card reveal' + (agotado ? ' is-out' : '') + '" data-cat="' + p.categoria + '">' +
       badge +
       disciplinaBadge +
       imagenHTML +
+      (imagen && p.imagenReferencial ? '<small class="card-photo-note">Imagen referencial; presentación por confirmar.</small>' : '') +
       '<div class="card-top">' + marca +
       '<h3>' + p.nombre + '</h3>' +
       '<span class="card-format">' + p.formato + '</span>' +
@@ -215,13 +248,15 @@
       '<div class="card-price">' + antes + '<strong>' + money(p.precio) + '</strong></div>' +
       (agotado
         ? '<span class="btn btn-disabled">Sin stock</span>'
-        : '<button class="btn btn-primary btn-sm" type="button" data-cart-add="' + p.id + '">Agregar al carrito</button>') +
+        : '<button class="btn btn-primary btn-sm" type="button" data-cart-add="' + p.id + '">Añadir al carrito</button>') +
       '</div>' +
+      '<a class="btn btn-ghost btn-sm card-quick" data-track="pedido" data-id="' + p.id + '" href="' + escapeHTML(waProducto(producto)) + '" target="_blank" rel="noopener">Consulta rápida</a>' +
       '</article>'
     );
   }
 
   function renderCatalogo() {
+    actualizarMetadatos();
     if (!grid) return;
     const items = CATALOG.filter((p) => {
       const okCat = filtroCategoria === 'todos' || p.categoria === filtroCategoria;
@@ -294,6 +329,8 @@
           filtroObjetivo = btn.dataset.goal;
         }
         filtroCategoria = 'todos';
+        if ($('#cartGoal')) $('#cartGoal').value = filtroObjetivo || '';
+        actualizarMensajeCarrito();
         if (filtros) {
           $$('.chip', filtros).forEach((b) => b.classList.remove('active'));
           const todos = $('.chip[data-cat="todos"]', filtros);
@@ -307,9 +344,7 @@
     });
   }
 
-  renderFiltros();
-  renderDisciplineFilters();
-  renderCatalogo();
+
 /* ================= FALLBACK VISUAL (404) ================= */
   // Si una imagen falla (404 o red lenta), la tarjeta vuelve sola al
   // diseno tipografico premium sin romper el layout ni mostrar iconos rotos.
@@ -322,88 +357,124 @@
         const contenedor = img.closest('.card-image');
         if (!contenedor) return;
         contenedor.classList.add('card-image-fallback');
-        contenedor.innerHTML = '<span>Foto del envase<br><strong>pendiente</strong></span>';
+        contenedor.innerHTML = '<span>Proteína<br><strong>Smart</strong><small>Foto no disponible</small></span>';
       },
       true
     );
   }
 
-  // El mensaje representa una consulta, no una venta pagada ni una indicación clínica.
-  function waCarrito(items, importe) {
-    const lineas = items.map((item) => '- ' + item.cantidad + 'x ' + item.nombre +
-      ' (' + item.formato + ') · ' + money(item.precio) + ' c/u · ' + money(item.precio * item.cantidad));
+  renderFiltros();
+  renderDisciplineFilters();
+  renderCatalogo();
+  if (filtroCategoria !== 'todos' || filtroDisciplina !== 'todos') {
+    requestAnimationFrame(() => $('#catalogo')?.scrollIntoView({ block: 'start' }));
+  }
+
+  // Un único estado global (PS_CART, en cart.js) conserva compatibilidad con
+  // carritos guardados. La presentación y la compilación comercial viven aquí.
+  const cartDialog = /** @type {HTMLDialogElement} */ ($('#cartDialog'));
+  const cartGoal = /** @type {HTMLSelectElement} */ ($('#cartGoal'));
+  const cartZone = /** @type {HTMLSelectElement} */ ($('#cartZone'));
+  if (cartGoal) {
+    OBJETIVOS.forEach((objetivo) => cartGoal.add(new Option(objetivo.nombre, objetivo.id)));
+    cartGoal.value = filtroObjetivo || '';
+  }
+
+  function waCarrito(items, importe, preferencias = {}) {
+    const lineas = items.map((item, index) => (index + 1) + '. ' + item.cantidad + 'x ' + item.nombre +
+      ' (' + item.formato + ') — ' + money(item.precio * item.cantidad) + ' (' + money(item.precio) + ' c/u)');
     return waLink([
-      'Hola ProteínaSmart 👋 Quiero consultar esta selección:',
-      ...lineas,
-      'Subtotal de productos (referencial): ' + money(importe) + '.',
-      items.some((item) => !item.precio) ? 'Hay productos sin precio; el subtotal es parcial.' : '',
-      'Envío: a cotizar según dirección. No incluido en el subtotal.',
-      'Total final: pendiente de confirmar precio, stock y envío.',
-      '¿Me confirmás fabricante, presentación, sabor, etiqueta nutricional, disponibilidad, forma de pago y plazo de entrega antes de pagar?'
-    ].filter(Boolean).join('\n'));
+      '¡Hola, ProteínaSmart! 🌿',
+      'Quiero consultar e iniciar mi pedido desde la web para el objetivo: ' + (preferencias.objetivo || 'Por definir con el asesor') + ' ✨',
+      '', '📋 MI SELECCIÓN DE PRODUCTOS:', ...lineas,
+      '', '💰 TOTAL ESTIMADO: ' + money(importe),
+      items.some((item) => !item.precio) ? 'Subtotal parcial: hay productos con precio a consultar.' : 'Precios referenciales de productos.',
+      'Envío no incluido. Total final pendiente de confirmar precio, stock y envío.',
+      '', '🚚 DATOS PARA LA ENTREGA:',
+      '• Ciudad/Zona: ' + (preferencias.zona || 'Por confirmar'),
+      '• Método preferido: Envío a domicilio',
+      '', 'Quedo atento a sus indicaciones sobre la dosis, modo de uso y si me recomiendan sumar algún complemento para este protocolo.'
+    ].join('\n'));
   }
 
   function renderCarrito(state) {
-    let bar = $('#cartBar');
-    if (!state.items.length) {
-      if (bar) bar.remove();
-      return;
-    }
-    const abierto = bar && !!$('details[open]', bar);
-    if (!bar) {
-      bar = document.createElement('aside');
-      bar.id = 'cartBar';
-      bar.className = 'cart-bar';
-      bar.setAttribute('aria-label', 'Tu carrito');
-      document.body.appendChild(bar);
-    }
     const cantidad = state.items.reduce((sum, item) => sum + item.cantidad, 0);
-    bar.innerHTML = '<details class="cart-details"' + (abierto ? ' open' : '') + '>' +
-      '<summary>Revisar carrito · ' + cantidad + ' producto(s) · ' + money(state.total) + '</summary>' +
-      '<ul class="cart-items">' + state.items.map((item) =>
-        '<li><div><strong>' + escapeHTML(item.nombre) + '</strong><small>' + escapeHTML(item.formato) +
-        ' · ' + money(item.precio) + ' c/u</small></div><div class="cart-controls">' +
-        '<label>Cantidad <input type="number" min="1" step="1" value="' + item.cantidad +
-        '" data-cart-quantity="' + escapeHTML(item.id) + '" aria-label="Cantidad de ' + escapeHTML(item.nombre) + '"></label>' +
-        '<span>' + money(item.precio * item.cantidad) + '</span>' +
-        '<button type="button" class="btn btn-ghost btn-sm" data-cart-remove="' + escapeHTML(item.id) +
-        '" aria-label="Quitar ' + escapeHTML(item.nombre) + '">Quitar</button></div></li>'
-      ).join('') + '</ul></details>' +
-      '<div class="cart-summary" aria-live="polite"><span>Subtotal referencial: <strong>' + money(state.total) +
-      '</strong></span><small class="cart-ethics">' +
-      (state.items.some((item) => !item.precio) ? 'Subtotal parcial: hay productos sin precio. ' : '') +
-      'Envío a cotizar. Total final pendiente de confirmación.</small></div>' +
-      '<button class="btn btn-primary btn-sm" type="button" data-cart-checkout>Consultar por WhatsApp</button>';
+    $('#cartBar').hidden = cantidad === 0;
+    document.body.classList.toggle('has-cart', cantidad > 0);
+    $('#cartStatus').textContent = cantidad + ' producto(s) · ' + (state.total ? money(state.total) : 'Precio a consultar');
+    $('#cartEmpty').hidden = cantidad > 0;
+    $('#cartItems').innerHTML = state.items.map((item) =>
+      '<li><div class="cart-item-info"><strong>' + escapeHTML(item.nombre) + '</strong><small>' + escapeHTML(item.formato) +
+      ' · ' + money(item.precio) + ' c/u</small></div><div class="cart-controls">' +
+      '<label>Cantidad <input type="number" inputmode="numeric" min="1" max="999" step="1" value="' + item.cantidad +
+      '" data-cart-quantity="' + escapeHTML(item.id) + '" aria-label="Cantidad de ' + escapeHTML(item.nombre) + '"></label>' +
+      '<span>' + money(item.precio * item.cantidad) + '</span>' +
+      '<button type="button" class="btn btn-ghost btn-sm" data-cart-remove="' + escapeHTML(item.id) +
+      '" aria-label="Quitar ' + escapeHTML(item.nombre) + '">Quitar</button></div></li>'
+    ).join('');
+    $('#cartTotal').textContent = state.total ? money(state.total) : (cantidad ? 'A consultar' : 'Gs 0');
+    $('#cartPriceNote').textContent = (state.items.some((item) => !item.precio) ? 'Subtotal parcial: hay productos sin precio. ' : '') +
+      'Envío a cotizar. Total final pendiente de confirmar precio y stock.';
+    actualizarMensajeCarrito();
   }
+
+  function actualizarMensajeCarrito() {
+    if (!window.PS_CART || !$('#cartCheckout')) return;
+    const state = window.PS_CART.getState();
+    const goal = $('#cartGoal');
+    const zona = $('#cartZone');
+    const objetivo = OBJETIVOS.find((o) => o.id === goal?.value)?.nombre || '';
+    const href = waCarrito(state.items, state.total, { objetivo, zona: zona?.value || '' });
+    const checkout = $('#cartCheckout');
+    checkout.hidden = !state.items.length;
+    if (state.items.length) checkout.href = href;
+    else checkout.removeAttribute('href');
+    $('#cartMessage').textContent = state.items.length ? new URL(href).searchParams.get('text') : 'Agregá productos para preparar tu consulta.';
+  }
+
+  cartGoal?.addEventListener('change', actualizarMensajeCarrito);
+  cartZone?.addEventListener('change', actualizarMensajeCarrito);
+  cartDialog?.addEventListener('close', () => {
+    document.body.classList.remove('cart-open');
+    const target = $('#cartBar').hidden ? $('[data-cart-add]') : $('[data-cart-open]');
+    target?.focus();
+  });
 
   document.addEventListener('change', (event) => {
     const input = /** @type {HTMLInputElement} */ (event.target);
     if (!input.matches('[data-cart-quantity]') || !window.PS_CART) return;
     const cantidad = Number(input.value);
-    if (!Number.isSafeInteger(cantidad) || cantidad < 1) {
+    if (!Number.isSafeInteger(cantidad) || cantidad < 1 || cantidad > 999) {
       input.value = String(window.PS_CART.getState().items.find((item) => item.id === input.dataset.cartQuantity).cantidad);
       return;
     }
     const id = input.dataset.cartQuantity;
     window.PS_CART.dispatch({ type: 'ACTUALIZAR_CANTIDAD', id, cantidad });
-    const replacement = $$('[data-cart-quantity]').find((el) => el.dataset.cartQuantity === id);
-    if (replacement) replacement.focus();
+    $$('[data-cart-quantity]').find((el) => el.dataset.cartQuantity === id)?.focus();
   });
 
   if (window.PS_CART) {
+    window.PS_CART.dispatch({ type: 'SINCRONIZAR_CATALOGO', productos: CATALOG });
     window.PS_CART.subscribe(renderCarrito);
     renderCarrito(window.PS_CART.getState());
   }
 
   document.addEventListener('click', (event) => {
-    const remove = (/** @type {HTMLElement} */ (event.target)).closest('[data-cart-remove]');
-    if (remove && window.PS_CART) {
-      window.PS_CART.dispatch({ type: 'ELIMINAR', id: remove.getAttribute('data-cart-remove') });
-      const siguiente = $('[data-cart-remove]') || $('[data-cart-add]');
-      if (siguiente) siguiente.focus();
+    const target = /** @type {HTMLElement} */ (event.target);
+    if (target.closest('[data-cart-open]')) {
+      cartDialog.showModal();
+      document.body.classList.add('cart-open');
       return;
     }
-    const add = (/** @type {HTMLElement | null} */ ((/** @type {Element} */ (event.target)).closest('[data-cart-add]')));
+    if (target.closest('[data-cart-close]')) { cartDialog.close(); return; }
+    const remove = target.closest('[data-cart-remove]');
+    if (remove && window.PS_CART) {
+      window.PS_CART.dispatch({ type: 'ELIMINAR', id: remove.getAttribute('data-cart-remove') });
+      const siguiente = $('[data-cart-remove]') || $('[data-cart-close]');
+      siguiente?.focus();
+      return;
+    }
+    const add = /** @type {HTMLElement} */ (target.closest('[data-cart-add]'));
     if (add && window.PS_CART) {
       const producto = CATALOG.find((item) => item.id === add.dataset.cartAdd);
       if (producto && producto.stock !== false && producto.disponibilidad !== 'agotado') {
@@ -412,26 +483,24 @@
         add.textContent = 'Agregado ✓';
         window.setTimeout(() => {
           add.classList.remove('is-added');
-          add.textContent = 'Agregar al carrito';
+          add.textContent = 'Añadir al carrito';
         }, 1500);
       }
       return;
     }
-    const checkout = (/** @type {HTMLElement | null} */ ((/** @type {Element} */ (event.target)).closest('[data-cart-checkout]')));
-    if (checkout && window.PS_CART) {
+    if (target.closest('[data-cart-checkout]') && window.PS_CART) {
       const state = window.PS_CART.getState();
-      window.open(waCarrito(state.items, state.total), '_blank', 'noopener');
+      if (!state.items.length) { event.preventDefault(); return; }
       track('consulta_carrito_whatsapp', { cantidad: state.items.reduce((sum, item) => sum + item.cantidad, 0), subtotal: state.total });
-      window.dispatchEvent(new CustomEvent('ps:consulta', {
-        detail: { items: state.items, total: state.total },
-      }));
-
+      window.dispatchEvent(new CustomEvent('ps:consulta', { detail: { items: state.items, total: state.total } }));
     }
   });
 
   window.addEventListener('ps:catalogo-remoto', (event) => {
     const detalle = (/** @type {CustomEvent} */ (event)).detail;
+    if (!Array.isArray(detalle) || !detalle.length) return;
     CATALOG = detalle;
+    window.PS_CART?.dispatch({ type: 'SINCRONIZAR_CATALOGO', productos: CATALOG });
     renderCatalogo();
   });
 

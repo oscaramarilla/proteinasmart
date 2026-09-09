@@ -1,15 +1,15 @@
 {
   "$schema": "https://openapi.vercel.sh/vercel.json",
-  "cleanUrls": true,
+  "cleanUrls": false,
   "trailingSlash": false,
   "rewrites": [
-    { "source": "/proteinas", "destination": "/?categoria=proteinas" },
-    { "source": "/deportivos", "destination": "/?categoria=deportivos" },
-    { "source": "/keto", "destination": "/?categoria=keto" },
-    { "source": "/longevidad", "destination": "/?categoria=longevidad" },
-    { "source": "/low-carb", "destination": "/?disciplina=low-carb" },
-    { "source": "/healthy-habits", "destination": "/?disciplina=healthy-habits" },
-    { "source": "/neuroplasticidad", "destination": "/?disciplina=neuroplasticidad" }
+    { "source": "/proteinas", "destination": "/index.html?categoria=proteinas" },
+    { "source": "/deportivos", "destination": "/index.html?categoria=deportivos" },
+    { "source": "/keto", "destination": "/index.html?categoria=keto" },
+    { "source": "/longevidad", "destination": "/index.html?categoria=longevidad" },
+    { "source": "/low-carb", "destination": "/index.html?disciplina=low-carb" },
+    { "source": "/healthy-habits", "destination": "/index.html?disciplina=healthy-habits" },
+    { "source": "/neuroplasticidad", "destination": "/index.html?disciplina=neuroplasticidad" }
   ],
   "headers": [
     {

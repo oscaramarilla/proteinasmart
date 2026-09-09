@@ -381,10 +381,10 @@
       <div class="footer-cols">
         <div>
           <h4>Catálogo</h4>
-          <a href="#catalogo">Proteínas</a>
-          <a href="#catalogo">Suplementos deportivos</a>
-          <a href="#catalogo">Keto / Low carb</a>
-          <a href="#catalogo">Salud &amp; Longevidad</a>
+          <a href="/proteinas">Proteínas</a>
+          <a href="/deportivos">Suplementos deportivos</a>
+          <a href="/keto">Keto / Low carb</a>
+          <a href="/longevidad">Salud &amp; Longevidad</a>
         </div>
         <div>
           <h4>Contacto</h4>
@@ -414,6 +414,38 @@
       </p>
     </div>
   </footer>
+
+  <!-- Carrito persistente: el diálogo nativo gestiona foco, Escape y fondo inerte. -->
+  <aside id="cartBar" class="cart-bar" aria-label="Resumen del carrito" hidden>
+    <p id="cartStatus" aria-live="polite"></p>
+    <button class="btn btn-primary btn-sm" type="button" data-cart-open aria-haspopup="dialog" aria-controls="cartDialog">Revisar carrito</button>
+  </aside>
+  <dialog id="cartDialog" class="cart-dialog" aria-labelledby="cartTitle">
+    <header class="cart-header">
+      <div><span class="kicker">Tu selección</span><h2 id="cartTitle">Revisá tu pedido</h2></div>
+      <button class="btn btn-ghost btn-sm" type="button" data-cart-close aria-label="Cerrar carrito" autofocus>Cerrar</button>
+    </header>
+    <p id="cartEmpty" hidden>Tu carrito está vacío. Elegí productos del catálogo para empezar.</p>
+    <ul class="cart-items" id="cartItems" aria-label="Productos seleccionados"></ul>
+    <div class="cart-preferences">
+      <label for="cartGoal">Objetivo de la consulta</label>
+      <select id="cartGoal"><option value="">Por definir con el asesor</option></select>
+      <label for="cartZone">Ciudad o zona de entrega</label>
+      <select id="cartZone">
+        <option value="">Por confirmar</option>
+        <option>Asunción</option>
+        <option>Gran Asunción</option>
+        <option>Interior del país</option>
+      </select>
+      <p>Método preferido: envío a domicilio. Cobertura y costo a confirmar.</p>
+    </div>
+    <div class="cart-summary" aria-live="polite">
+      <p>Total estimado de productos: <strong id="cartTotal">Gs 0</strong></p>
+      <p id="cartPriceNote" class="cart-ethics"></p>
+    </div>
+    <details class="cart-preview"><summary>Ver mensaje antes de abrir WhatsApp</summary><pre id="cartMessage"></pre></details>
+    <a class="btn btn-primary" id="cartCheckout" data-cart-checkout target="_blank" rel="noopener">Consultar e iniciar pedido</a>
+  </dialog>
 
   <!-- WhatsApp flotante -->
   <a class="wa-float" data-wa href="#" aria-label="Escribir por WhatsApp">

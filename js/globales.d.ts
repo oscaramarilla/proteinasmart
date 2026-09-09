@@ -5,6 +5,7 @@
    ========================================================= */
 
 interface Window {
+  fetchCatalog: () => Promise<Array<Record<string, any>>>;
   PS_CONFIG: Record<string, any>;
   PS_CATALOG: Array<Record<string, any>>;
   PS_CATEGORIAS: Array<{ id: string; nombre: string; icono: string }>;
@@ -27,7 +28,3 @@ interface Window {
 declare function gtag(...args: unknown[]): void;
 declare function fbq(...args: unknown[]): void;
 
-// Import remoto del SDK de Supabase usado por data-source.js.
-declare module 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/+esm' {
-  export function createClient(url: string, key: string, options?: unknown): any;
-}

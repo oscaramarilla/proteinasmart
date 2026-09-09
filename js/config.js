@@ -44,7 +44,12 @@ window.PS_CONFIG = {
     metaPixel: '',  // ej: '1234567890'
   },
 
-  // Opcional: si queda vacío, el catálogo local sigue operando sin downtime.
+  // Catálogo remoto opcional. Usar solo una clave pública anon o publishable,
+  // nunca service_role/secret. Vacíos = catálogo local, sin llamadas de red.
+  supabaseUrl: '',
+  supabaseAnonKey: '',
+
+  // Compatibilidad con configuraciones anteriores; las claves planas prevalecen.
   supabase: {
     url: '',
     anonKey: '',

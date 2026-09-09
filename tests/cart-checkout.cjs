@@ -40,14 +40,41 @@ test('WhatsApp draft contains only selected products and distinguishes shipping'
     { nombre: 'Whey', formato: '2 lb', precio: 330000, cantidad: 1 },
     { nombre: 'Creatina', formato: '300 g', precio: 235000, cantidad: 1 },
   ];
-  const draft = context.waCarrito(items, 565000);
+  const draft = context.waCarrito(items, 565000, { objetivo: 'Ganar masa muscular', zona: 'Asunción' });
+  assert.match(draft, /objetivo: Ganar masa muscular/);
+  assert.match(draft, /Ciudad\/Zona: Asunción/);
+  assert.match(draft, /1\. 1x Whey/);
+  assert.match(context.waCarrito([{ ...items[0], cantidad: 2 }], 660000), /2x Whey.*660000/);
   assert.match(draft, /1x Whey/);
   assert.match(draft, /1x Creatina/);
-  assert.match(draft, /referencial.*565000/);
-  assert.match(draft, /No incluido en el subtotal/);
-  assert.match(draft, /Total final: pendiente/);
+  assert.match(draft, /TOTAL ESTIMADO.*565000/);
+  assert.match(draft, /Envío no incluido/);
+  assert.match(draft, /Total final pendiente/);
   assert.doesNotMatch(draft, /5 g|EAA|30 d/);
-  assert.match(context.waCarrito([{ ...items[0], precio: 0 }], 0), /subtotal es parcial/);
+  assert.match(context.waCarrito([{ ...items[0], precio: 0 }], 0), /Subtotal parcial/);
   assert.ok(!source.includes("new CustomEvent('ps:pedido'"));
   assert.ok(!source.includes("type: 'LIMPIAR'"));
+});
+
+
+test('malformed persisted items cannot break the cart', () => {
+  const saved = JSON.stringify([null, {}, { id: 'invalid' },
+    { id: 'whey', nombre: 'Whey', cantidad: 'bad', precio: -10 },
+    { id: 'whey', nombre: 'Whey', cantidad: 99999, precio: 330000 }]);
+  const context = vm.createContext({ window: {}, localStorage: { getItem: () => saved } });
+  vm.runInContext(read('cart.js'), context);
+  const state = context.window.PS_CART.getState();
+  assert.equal(state.items.length, 1);
+  assert.equal(state.items[0].cantidad, 999);
+  assert.ok(Number.isFinite(state.total));
+});
+
+test('a remote catalog refresh updates cart prices without changing quantities', () => {
+  const context = vm.createContext({ window: {}, localStorage: { getItem: () => '[]', setItem() {} } });
+  vm.runInContext(read('cart.js'), context);
+  const cart = context.window.PS_CART;
+  cart.dispatch({ type: 'AGREGAR', producto: { id: 'whey', nombre: 'Whey', precio: 330000 }, cantidad: 2 });
+  cart.dispatch({ type: 'SINCRONIZAR_CATALOGO', productos: [{ id: 'whey', nombre: 'Whey', precio: 340000 }] });
+  assert.equal(cart.getState().total, 680000);
+  assert.equal(cart.getState().items[0].cantidad, 2);
 });

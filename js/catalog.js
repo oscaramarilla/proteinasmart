@@ -14,6 +14,8 @@
      objetivos   → ['masa','definicion','belleza','foco','energia']
      badge       → etiqueta corta opcional ('Más vendido', 'Nuevo'…)
      resumen     → una línea, beneficio concreto
+     imagen      → ruta del archivo; vacío conserva el diseño tipográfico
+     imagenReferencial → muestra aviso de presentación pendiente de confirmar
      stock       → true | false
 
    PRECIOS — relevamiento de mercado Paraguay, septiembre 2026.
@@ -41,6 +43,8 @@ window.PS_CATALOG = [
   /* ---------------- PROTEÍNAS ---------------- */
   {
     id: 'whey-isolate-2lb',
+    imagen: 'images/wheyptrotein.webp',
+    imagenReferencial: true,
     nombre: 'Whey Protein Isolate',
     marca: '',
     categoria: 'proteinas',
@@ -54,6 +58,7 @@ window.PS_CATALOG = [
   },
   {
     id: 'whey-concentrada-5lb',
+    imagen: '', // El archivo recibido muestra 2 lb; esta ficha es de 5 lb.
     nombre: 'Whey Protein Concentrada',
     marca: '',
     categoria: 'proteinas',
@@ -67,6 +72,8 @@ window.PS_CATALOG = [
   },
   {
     id: 'proteina-vegana',
+    imagen: 'images/proteinavegetal.webp',
+    imagenReferencial: true,
     nombre: 'Proteína Vegetal (arveja + arroz)',
     marca: '',
     categoria: 'proteinas',
@@ -80,6 +87,7 @@ window.PS_CATALOG = [
   },
   {
     id: 'colageno-hidrolizado',
+    imagen: '', // No se recibió una imagen correspondiente a este producto.
     nombre: 'Colágeno Hidrolizado + Vitamina C',
     marca: '',
     categoria: 'proteinas',
@@ -95,6 +103,8 @@ window.PS_CATALOG = [
   /* ---------------- DEPORTIVOS ---------------- */
   {
     id: 'creatina-mono',
+    imagen: 'images/creatinamonohidratada.webp',
+    imagenReferencial: true,
     nombre: 'Creatina Monohidratada Micronizada',
     marca: '',
     categoria: 'deportivos',
@@ -108,6 +118,8 @@ window.PS_CATALOG = [
   },
   {
     id: 'pre-entreno',
+    imagen: 'images/preentrenopowerboost.webp',
+    imagenReferencial: true,
     nombre: 'Pre-Entreno sin azúcar',
     marca: '',
     categoria: 'deportivos',
@@ -121,6 +133,7 @@ window.PS_CATALOG = [
   },
   {
     id: 'eaa-bcaa',
+    imagen: '', // El envase recibido muestra 300 g; esta ficha es de 400 g.
     nombre: 'Aminoácidos Esenciales (EAA)',
     marca: '',
     categoria: 'deportivos',
@@ -134,6 +147,7 @@ window.PS_CATALOG = [
   },
   {
     id: 'glutamina',
+    imagen: '', // La imagen recibida muestra un vencimiento en diciembre de 2025.
     nombre: 'L-Glutamina',
     marca: '',
     categoria: 'deportivos',
@@ -149,6 +163,7 @@ window.PS_CATALOG = [
   /* ---------------- KETO / LOW CARB ---------------- */
   {
     id: 'aceite-mct',
+    imagen: '', // La imagen recibida muestra un vencimiento en diciembre de 2025.
     nombre: 'Aceite MCT C8/C10',
     marca: '',
     categoria: 'keto',
@@ -162,6 +177,7 @@ window.PS_CATALOG = [
   },
   {
     id: 'barras-keto',
+    imagen: '', // El envase muestra 3 g de carbos netos; la ficha declara 2 g.
     nombre: 'Barras Keto (caja x 12)',
     marca: '',
     categoria: 'keto',
@@ -175,6 +191,8 @@ window.PS_CATALOG = [
   },
   {
     id: 'sustituto-comida',
+    imagen: 'images/akmuerzosmart.webp',
+    imagenReferencial: true,
     nombre: 'Sustituto de Comida Low Carb',
     marca: '',
     categoria: 'keto',
@@ -188,6 +206,7 @@ window.PS_CATALOG = [
   },
   {
     id: 'endulzante-monkfruit',
+    imagen: '', // La imagen recibida es de 500 g; esta ficha es de 250 g.
     nombre: 'Endulzante Monk Fruit + Eritritol',
     marca: '',
     categoria: 'keto',
@@ -203,6 +222,8 @@ window.PS_CATALOG = [
   /* ---------------- LONGEVIDAD / NOOTRÓPICOS ---------------- */
   {
     id: 'omega-3',
+    imagen: 'images/omega3.webp',
+    imagenReferencial: true,
     nombre: 'Omega 3 Ultra (EPA/DHA)',
     marca: '',
     categoria: 'longevidad',
@@ -216,6 +237,8 @@ window.PS_CATALOG = [
   },
   {
     id: 'magnesio-glicinato',
+    imagen: 'images/magnesio.webp',
+    imagenReferencial: true,
     nombre: 'Magnesio Glicinato',
     marca: '',
     categoria: 'longevidad',
@@ -229,6 +252,7 @@ window.PS_CATALOG = [
   },
   {
     id: 'vitamina-d3-k2',
+    imagen: '', // La imagen muestra 60 cápsulas y otro precio; la ficha es de 90.
     nombre: 'Vitamina D3 + K2',
     marca: '',
     categoria: 'longevidad',
@@ -242,6 +266,7 @@ window.PS_CATALOG = [
   },
   {
     id: 'nootropico-focus',
+    imagen: '', // La imagen recibida declara otra composición y otro precio.
     nombre: 'Nootrópico Focus (L-teanina + colina)',
     marca: '',
     categoria: 'longevidad',
@@ -305,3 +330,101 @@ window.PS_OBJETIVOS = [
   { id: 'foco', nombre: 'Foco y claridad mental', icono: '🧠' },
   { id: 'energia', nombre: 'Energía sostenida', icono: '⚡' },
 ];
+
+/* Fuente híbrida: el array local se renderiza antes de iniciar esta consulta.
+   REST nativo; el límite de tiempo incluye la descarga y lectura del JSON. */
+(function configurarFuenteCatalogo() {
+  const catalogoLocal = window.PS_CATALOG;
+  const categorias = new Set(window.PS_CATEGORIAS.map(({ id }) => id));
+  const estados = new Set(['disponible', 'bajo-pedido', 'agotado', 'sin-confirmar']);
+  const texto = (valor) => typeof valor === 'string' ? valor.trim() : '';
+  const lista = (valor) => Array.isArray(valor) ? valor.filter((item) => typeof item === 'string') : [];
+
+  /** Normaliza los nombres de columnas del esquema existente, sin inferir stock.
+   * @param {Record<string, any>} producto
+   * @returns {Record<string, any>|null}
+   */
+  function adaptarProducto(producto) {
+    if (!producto || typeof producto !== 'object' || Array.isArray(producto)) return null;
+    const id = typeof producto.id === 'string' ? producto.id.trim()
+      : Number.isSafeInteger(producto.id) ? String(producto.id) : '';
+    const nombre = texto(producto.nombre);
+    const formato = texto(producto.formato) || texto(producto.unidad_medida);
+    const categoria = texto(producto.categoria);
+    const precio = typeof producto.precio === 'string' && /^\d+$/.test(producto.precio)
+      ? Number(producto.precio) : producto.precio;
+    if (!id || !nombre || !formato || !categorias.has(categoria)
+      || !Number.isSafeInteger(precio) || precio < 0) return null;
+
+    return {
+      ...producto,
+      id, nombre, formato, categoria, precio,
+      precioAntes: Number.isSafeInteger(producto.precioAntes) && producto.precioAntes > 0 ? producto.precioAntes : 0,
+      marca: texto(producto.marca),
+      fabricante: texto(producto.fabricante),
+      sabor: texto(producto.sabor),
+      badge: texto(producto.badge),
+      resumen: texto(producto.resumen) || texto(producto.descripcion),
+      imagen: texto(producto.imagen),
+      imagenReferencial: producto.imagenReferencial === true || producto.imagen_referencial === true,
+      objetivos: lista(producto.objetivos),
+      disciplinas: lista(producto.disciplinas),
+      stock: typeof producto.stock === 'boolean' ? producto.stock : undefined,
+      disponibilidad: producto.stock === false ? 'agotado'
+        : estados.has(producto.disponibilidad) ? producto.disponibilidad : 'sin-confirmar',
+      precioActualizado: texto(producto.precioActualizado) || texto(producto.precio_actualizado),
+      etiquetaNutricional: texto(producto.etiquetaNutricional) || texto(producto.etiqueta_nutricional),
+    };
+  }
+
+  /** Devuelve productos remotos válidos o la misma referencia al catálogo local.
+   * No modifica PS_CATALOG: siempre queda disponible como respaldo inmediato.
+   * @returns {Promise<Array<Record<string, any>>>}
+   */
+  window.fetchCatalog = async function fetchCatalog() {
+    const config = window.PS_CONFIG || {};
+    const anterior = config.supabase || {};
+    // Una configuración plana parcial no se mezcla con otro proyecto antiguo.
+    const usarPlanas = Boolean(texto(config.supabaseUrl) || texto(config.supabaseAnonKey));
+    const url = texto(usarPlanas ? config.supabaseUrl : anterior.url);
+    const clave = texto(usarPlanas ? config.supabaseAnonKey : anterior.anonKey);
+    if (!url || !clave || typeof fetch !== 'function') return catalogoLocal;
+
+    let temporizador;
+    try {
+      const endpoint = new URL(url);
+      const esLocal = ['localhost', '127.0.0.1', '[::1]'].includes(endpoint.hostname);
+      if (endpoint.protocol !== 'https:' && !(esLocal && endpoint.protocol === 'http:')) return catalogoLocal;
+      endpoint.pathname = endpoint.pathname.replace(/\/$/, '') + '/rest/v1/productos';
+      endpoint.search = 'select=*&order=nombre.asc';
+      endpoint.hash = '';
+      const controlador = new AbortController();
+      /** @type {Record<string, string>} */
+      const headers = { apikey: clave, Accept: 'application/json' };
+      // Las claves publishable no son JWT; solo las anon usan Bearer.
+      if (!clave.startsWith('sb_publishable_')) headers.Authorization = 'Bearer ' + clave;
+
+      const consulta = (async () => {
+        const respuesta = await fetch(endpoint.href, { headers, signal: controlador.signal });
+        if (!respuesta.ok) throw new Error('Catálogo no disponible');
+        return respuesta.json();
+      })();
+      const limite = new Promise((_, rechazar) => {
+        temporizador = setTimeout(() => {
+          controlador.abort();
+          rechazar(new Error('Tiempo de consulta agotado'));
+        }, 4000);
+      });
+      const filas = await Promise.race([consulta, limite]);
+      if (!Array.isArray(filas) || filas.length === 0) return catalogoLocal;
+      const productos = filas.map(adaptarProducto);
+      if (productos.some((producto) => !producto)
+        || new Set(productos.map((producto) => producto.id)).size !== productos.length) return catalogoLocal;
+      return productos;
+    } catch (_) {
+      return catalogoLocal;
+    } finally {
+      clearTimeout(temporizador);
+    }
+  };
+})();
