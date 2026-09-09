@@ -13,19 +13,30 @@
       shippingLabel: shippingFee === null ? 'Envío a confirmar' : 'Envío: ' + money(shippingFee),
       total: hasUnpricedItems || shippingFee === null ? null : subtotal + shippingFee };
   }
-  function whatsappURL(items) {
+  function whatsappURL(items, preferencias) {
     if (!items.length) return null;
+    const prefs = preferencias || {};
     const summary = quote(items);
-    const lines = items.map((item) => '- ' + item.cantidad + ' × ' + item.nombre +
-      (item.marca ? ' · ' + item.marca : '') + (item.sabor ? ' · ' + item.sabor : '') +
-      (item.formato ? ' (' + item.formato + ')' : '') + ': ' +
-      (item.precio > 0 ? money(item.precio * item.cantidad) : 'Precio a confirmar'));
+    const lineas = items.map((item, index) => (index + 1) + '. ' + item.nombre +
+      (item.formato ? ' (' + item.formato + ')' : '') + ' — ' +
+      (item.precio > 0 ? money(item.precio * item.cantidad) : 'Precio a confirmar') +
+      (item.cantidad > 1 ? ' (x' + item.cantidad + ')' : ''));
     return 'https://wa.me/' + config.contacto.whatsapp + '?text=' + encodeURIComponent([
-      'Hola ProteínaSmart 👋 Quiero consultar este pedido:', ...lines,
-      (summary.hasUnpricedItems ? 'Subtotal de productos con precio: ' : 'Subtotal de referencia: ') + money(summary.subtotal),
-      ...(summary.hasUnpricedItems ? ['Hay productos con precio a confirmar.'] : []),
-      summary.shippingLabel,
-      'Confirmemos disponibilidad, presentaciones, precio final y plazo de entrega antes de comprar.',
+      '¡Hola, ProteínaSmart! 🌿',
+      'Quiero consultar e iniciar mi pedido desde la web para el objetivo: ' +
+        (prefs.objetivo || 'Por definir con el asesor') + ' ✨',
+      '',
+      '📋 MI SELECCIÓN DE PRODUCTOS:', ...lineas,
+      '',
+      '💰 TOTAL ESTIMADO: ' + money(summary.subtotal) +
+        (summary.hasUnpricedItems ? ' (parcial: hay productos con precio a confirmar)' : ''),
+      '',
+      '🚚 DATOS PARA LA ENTREGA:',
+      '• Ciudad/Zona: ' + (prefs.zona || 'Por confirmar'),
+      '• Método preferido: Envío a domicilio',
+      '',
+      'Confirmemos disponibilidad, presentaciones y precio final antes de comprar. ' + summary.shippingLabel + '.',
+      'Quedo atento a sus indicaciones sobre la dosis, modo de uso y si me recomiendan sumar algún complemento para este protocolo.',
     ].join('\n'));
   }
   // Fails closed even if a flag changes. Enable only with a reviewed backend.
