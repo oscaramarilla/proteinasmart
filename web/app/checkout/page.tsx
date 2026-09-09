@@ -44,9 +44,9 @@ export default async function CheckoutPage() {
   return (
     <main className="min-h-screen bg-[#f4f7f2] px-4 py-10 text-slate-950 sm:px-6 lg:px-8">
       <div className="mx-auto max-w-3xl">
-        <h1 className="text-3xl font-bold tracking-tight sm:text-4xl">Finalizar pedido</h1>
+        <h1 className="text-3xl font-bold tracking-tight sm:text-4xl">Reservar preventa</h1>
         <p className="mt-2 text-slate-600">
-          Completá tus datos y elegí cómo querés recibir tu pedido.
+          Completá tus datos para reservar. Confirmamos disponibilidad, precio final y plazo antes de emitir la factura.
         </p>
         <div className="mt-8">
           <CheckoutForm
