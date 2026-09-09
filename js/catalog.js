@@ -292,6 +292,16 @@ const PS_IMAGENES_VERIFICADAS = {
   'sustituto-comida': 'images/akmuerzosmart.webp',
   'omega-3': 'images/omega3.webp',
   'magnesio-glicinato': 'images/magnesio.webp',
+  // Confirmadas por revision manual del negocio (9 sep 2026) pese a la
+  // discrepancia de peso/precio/formula que habia frenado el pase anterior
+  // -- ver images/README.md para el detalle de cada caso.
+  'eaa-bcaa': 'images/aminoacidos.webp',
+  'glutamina': 'images/lglutamina.webp',
+  'aceite-mct': 'images/aceitedecocomct.webp',
+  'barras-keto': 'images/barrasketo.webp',
+  'endulzante-monkfruit': 'images/eritritolyfrutosdelbosque.webp',
+  'vitamina-d3-k2': 'images/vitaminade3yk2.webp',
+  'nootropico-focus': 'images/nootropico.webp',
 };
 
 window.PS_CATALOG = window.PS_CATALOG.map((producto) => {

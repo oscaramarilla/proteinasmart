@@ -147,12 +147,60 @@
     const imagenHTML = imagen
       ? '<div class="card-image"><img src="' + escapeHTML(imagen) + '" alt="' + escapeHTML(p.nombre) + '" loading="lazy" /></div>'
       : '<div class="card-image card-image-fallback"><span>Foto del producto<br><small>pendiente</small></span></div>';
-    return '<article class="product-card' + (agotado ? ' is-out' : '') + '">' + imagenHTML +
+    return '<article id="producto-' + escapeHTML(p.id) + '" class="product-card' + (agotado ? ' is-out' : '') + '">' + imagenHTML +
       '<div class="card-top">' + marca + '<h3>' + escapeHTML(p.nombre) + '</h3>' +
       '<span class="card-format">' + (verified.formato ? 'Presentación: ' : 'Presentación de referencia: ') + escapeHTML(p.formato || 'A confirmar') + '</span>' + sabor + '</div>' +
       '<p class="card-availability">' + disponibilidad + '</p>' +
       '<div class="card-foot"><div class="card-price"><small>Precio de referencia</small><strong>' + money(p.precio) + '</strong></div>' +
       '<button class="btn btn-primary btn-sm" type="button" data-cart-add="' + escapeHTML(p.id) + '"' + (agotado ? ' disabled' : '') + '>' + (agotado ? 'Sin stock' : 'Agregar al carrito') + '</button></div></article>';
+  }
+
+  const SITIO_URL = 'https://www.proteinasmart.com/';
+
+  /**
+   * Arma el JSON-LD Product de un item, tomando los mismos datos que
+   * cardHTML() usa para la tarjeta -- no hay una segunda lista a mano que
+   * se pueda desincronizar cuando cambien precios o se agreguen productos.
+   * @param {Record<string, any>} p Producto de CATALOG.
+   * @returns {Record<string, any>} Nodo Product de schema.org.
+   */
+  function productoSchema(p) {
+    const verified = p.verificado || {};
+    const imagen = verified.imagen && typeof p.imagen === 'string' && /^(https:\/\/|\.?\/?(?:assets|images|img)\/)/.test(p.imagen) ? p.imagen : '';
+    /** @type {Record<string, any>} */
+    const schema = {
+      '@context': 'https://schema.org',
+      '@type': 'Product',
+      name: p.nombre,
+      offers: {
+        '@type': 'Offer',
+        price: p.precio,
+        priceCurrency: 'PYG',
+        url: SITIO_URL + '#producto-' + p.id,
+      },
+    };
+    if (p.resumen) schema.description = p.resumen;
+    if (imagen) schema.image = /^https:\/\//.test(imagen) ? imagen : SITIO_URL + imagen;
+    // stock no verificado (el estado por defecto de todo el catalogo hoy) no
+    // implica ni InStock ni OutOfStock -- se omite availability en vez de
+    // afirmar algo que no se confirmo con el proveedor.
+    if (verified.stock && typeof p.stock === 'boolean') {
+      schema.offers.availability = p.stock ? 'https://schema.org/InStock' : 'https://schema.org/OutOfStock';
+    }
+    return schema;
+  }
+
+  /**
+   * Sincroniza el bloque <script id="productSchema"> con el CATALOG actual.
+   * Se llama despues de cada render (carga inicial y catalogo remoto) para
+   * que los datos estructurados nunca queden desactualizados respecto a lo
+   * que se ve en pantalla.
+   * @returns {void}
+   */
+  function renderSchemaProductos() {
+    const script = $('#productSchema');
+    if (!script) return;
+    script.textContent = JSON.stringify(CATALOG.map(productoSchema));
   }
 
   function renderCatalogo() {
@@ -252,6 +300,7 @@
   syncGoalControls();
   renderFiltros();
   renderCatalogo();
+  renderSchemaProductos();
   actualizarMetadatos();
   // Categoria pedida por URL limpia (/proteinas, ?categoria=... o el
   // legacy ?disciplina=...): desplazar directo al catalogo filtrado.
@@ -290,6 +339,7 @@
     const detalle = (/** @type {CustomEvent} */ (event)).detail;
     CATALOG = detalle;
     renderCatalogo();
+    renderSchemaProductos();
   });
 
   /* ================= DATOS DE CONTACTO EN EL DOM ================= */
