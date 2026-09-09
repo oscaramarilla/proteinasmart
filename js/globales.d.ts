@@ -22,9 +22,13 @@ interface Window {
       currency: string; subtotal: number; hasUnpricedItems: boolean;
       shippingFee: number | null; shippingLabel: string; total: number | null;
     };
-    whatsappURL: (items: Array<Record<string, any>>) => string | null;
+    whatsappURL: (
+      items: Array<Record<string, any>>,
+      preferencias?: { objetivo?: string; zona?: string },
+    ) => string | null;
     providers: { bancard: { enabled: boolean; createPayment: () => never } };
   };
+  fetchCatalog: () => Promise<Array<Record<string, any>>>;
   dataLayer: unknown[];
   gtag?: any;
   fbq?: any;
@@ -34,8 +38,3 @@ interface Window {
 
 declare function gtag(...args: unknown[]): void;
 declare function fbq(...args: unknown[]): void;
-
-// Import remoto del SDK de Supabase usado por data-source.js.
-declare module 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/+esm' {
-  export function createClient(url: string, key: string, options?: unknown): any;
-}

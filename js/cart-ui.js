@@ -10,9 +10,17 @@
   const dialog = document.createElement('dialog');
   dialog.className = 'cart-dialog'; dialog.id = 'cartDialog';
   dialog.setAttribute('aria-labelledby', 'cartTitle');
+  const objetivos = window.PS_OBJETIVOS || [];
   dialog.innerHTML = '<div class="cart-heading"><div><span class="kicker">Tu selección</span><h2 id="cartTitle">Revisá tu carrito</h2></div><button class="cart-close" type="button" aria-label="Cerrar carrito">×</button></div>' +
     '<div id="cartItems"></div><div id="cartTotals"></div>' +
+    '<div class="cart-preferences">' +
+    '<label>Objetivo<select id="cartGoal"><option value="">Por definir con el asesor</option>' +
+    objetivos.map((o) => '<option value="' + escapeHTML(o.nombre) + '">' + escapeHTML(o.nombre) + '</option>').join('') +
+    '</select></label>' +
+    '<label>Ciudad / zona<input type="text" id="cartZone" placeholder="Ej.: Asunción / Gran Asunción" maxlength="80"></label>' +
+    '</div>' +
     '<p class="cart-note">Confirmamos disponibilidad y precio final por WhatsApp. Abrir el enlace no confirma una compra ni realiza un pago. Tu carrito se conserva.</p>' +
+    '<p class="cart-message-preview" id="cartMessage"></p>' +
     '<a class="btn btn-primary cart-checkout" id="cartCheckout" target="_blank" rel="noopener">Enviar pedido por WhatsApp</a>' +
     '<button class="btn btn-ghost" type="button" data-cart-close>Seguir eligiendo</button>';
   const status = document.createElement('p');
@@ -50,8 +58,12 @@
     dialog.querySelector('#cartTotals').innerHTML = state.items.length ? '<div class="cart-totals"><p><span>' + (quote.hasUnpricedItems ? 'Subtotal con precio conocido' : 'Subtotal de referencia') + '</span><strong>' + money(quote.subtotal) + '</strong></p>' + (quote.hasUnpricedItems ? '<p>Hay productos con precio a confirmar.</p>' : '') + '<p>' + escapeHTML(quote.shippingLabel) + '</p><small>Costo y plazo según destino. ' + (quote.shippingFee === null ? 'El subtotal no incluye envío.' : '') + '</small></div>' : '';
     const link = /** @type {HTMLAnchorElement} */ (dialog.querySelector('#cartCheckout'));
     link.hidden = !count;
-    const url = checkout.whatsappURL(state.items);
+    const goal = /** @type {HTMLSelectElement} */ (dialog.querySelector('#cartGoal'));
+    const zone = /** @type {HTMLInputElement} */ (dialog.querySelector('#cartZone'));
+    const url = checkout.whatsappURL(state.items, { objetivo: goal?.value, zona: zone?.value });
     if (url) link.href = url; else link.removeAttribute('href');
+    const preview = dialog.querySelector('#cartMessage');
+    if (preview) preview.textContent = url ? new URL(url).searchParams.get('text') : '';
     if (focusId) {
       const replacement = Array.from(dialog.querySelectorAll('button[data-item]')).find((el) => (/** @type {HTMLButtonElement} */ (el)).dataset.item === focusId && (/** @type {HTMLButtonElement} */ (el)).dataset.action === focusAction && !(/** @type {HTMLButtonElement} */ (el)).disabled);
       (/** @type {HTMLButtonElement} */ (replacement || dialog.querySelector('.cart-close'))).focus();
@@ -75,6 +87,8 @@
     else cart.dispatch({ type: 'ACTUALIZAR_CANTIDAD', id: item.id, cantidad: item.cantidad + (button.dataset.action === 'plus' ? 1 : -1) });
     status.textContent = 'Carrito actualizado. Subtotal de referencia: ' + money(cart.getState().total);
   });
+  dialog.querySelector('#cartGoal').addEventListener('change', () => render(cart.getState()));
+  dialog.querySelector('#cartZone').addEventListener('input', () => render(cart.getState()));
   // No ps:pedido, purchase event, database write or cart reset on link activation.
   cart.subscribe(render); render(cart.getState());
 })();

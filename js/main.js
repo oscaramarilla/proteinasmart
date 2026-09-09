@@ -89,6 +89,40 @@
   let filtroObjetivo = OBJETIVOS.some((o) => o.id === objetivoInicial) ? objetivoInicial : null;
   const escapeHTML = (value) => String(value ?? '').replace(/[&<>"']/g, (char) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[char]));
 
+  // Metadatos originales (categoria 'todos'), capturados antes de tocar el
+  // DOM, para poder restaurarlos al limpiar filtros.
+  const metaDescripcionEl = $('meta[name="description"]');
+  const canonicalEl = $('link[rel="canonical"]');
+  const ogTituloEl = $('meta[property="og:title"]');
+  const ogDescripcionEl = $('meta[property="og:description"]');
+  const ogUrlEl = $('meta[property="og:url"]');
+  const twTituloEl = $('meta[name="twitter:title"]');
+  const twDescripcionEl = $('meta[name="twitter:description"]');
+  const metaOriginal = {
+    title: document.title,
+    description: metaDescripcionEl ? metaDescripcionEl.getAttribute('content') : '',
+  };
+
+  function actualizarMetadatos() {
+    const categoria = CATEGORIAS.find((c) => c.id === filtroCategoria);
+    const canonical = 'https://www.proteinasmart.com/' + (filtroCategoria !== 'todos' ? filtroCategoria : '');
+    const titulo = filtroCategoria === 'todos' || !categoria
+      ? metaOriginal.title
+      : categoria.nombre + ' | ProteínaSmart';
+    const descripcion = filtroCategoria === 'todos' || !categoria
+      ? metaOriginal.description
+      : 'Catálogo de ' + categoria.nombre.toLowerCase() + ' en ProteínaSmart: precios de referencia, ' +
+        'asesoramiento real y despacho desde Asunción, Paraguay.';
+    document.title = titulo;
+    if (metaDescripcionEl) metaDescripcionEl.setAttribute('content', descripcion);
+    if (canonicalEl) canonicalEl.setAttribute('href', canonical);
+    if (ogTituloEl) ogTituloEl.setAttribute('content', titulo);
+    if (ogDescripcionEl) ogDescripcionEl.setAttribute('content', descripcion);
+    if (ogUrlEl) ogUrlEl.setAttribute('content', canonical);
+    if (twTituloEl) twTituloEl.setAttribute('content', titulo);
+    if (twDescripcionEl) twDescripcionEl.setAttribute('content', descripcion);
+  }
+
   function sincronizarURL() {
     const params = new URLSearchParams(window.location.search);
     params.delete('disciplina');
@@ -99,6 +133,7 @@
     const query = params.toString();
     window.history.replaceState({}, '', window.location.pathname + (query ? '?' + query : '') + window.location.hash);
     syncGoalControls();
+    actualizarMetadatos();
   }
 
   function cardHTML(p) {
@@ -217,6 +252,12 @@
   syncGoalControls();
   renderFiltros();
   renderCatalogo();
+  actualizarMetadatos();
+  // Categoria pedida por URL limpia (/proteinas, ?categoria=... o el
+  // legacy ?disciplina=...): desplazar directo al catalogo filtrado.
+  if (filtroCategoria !== 'todos') {
+    requestAnimationFrame(() => $('#catalogo')?.scrollIntoView({ block: 'start' }));
+  }
 /* ================= FALLBACK VISUAL (404) ================= */
   // Si una imagen falla (404 o red lenta), la tarjeta vuelve sola al
   // diseno tipografico premium sin romper el layout ni mostrar iconos rotos.

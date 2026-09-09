@@ -49,7 +49,12 @@ window.PS_CONFIG = {
     metaPixel: '',  // ej: '1234567890'
   },
 
-  // Opcional: si queda vacío, el catálogo local sigue operando sin downtime.
+  // Opcional: si quedan vacías, el catálogo local (PS_CATALOG) sigue
+  // operando sin downtime -- fetchCatalog() cae ahí ante cualquier fallo.
+  supabaseUrl: '',
+  supabaseAnonKey: '', // acepta anon key legacy o publishable key (sb_publishable_...)
+
+  // Forma anidada previa, todavía soportada por fetchCatalog() por compatibilidad.
   supabase: {
     url: '',
     anonKey: '',

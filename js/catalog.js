@@ -278,13 +278,32 @@ const PS_ASESORIA_POR_PRODUCTO = {
   'nootropico-focus': { protocolo: 'Foco y claridad mental', complemento: 'Omega 3 + Magnesio Glicinato' },
 };
 
-window.PS_CATALOG = window.PS_CATALOG.map((producto) => ({
-  ...producto,
-  imagen: producto.imagen || '',
-  sabor: '',
-  verificado: { marca: false, formato: false, sabor: false, stock: false, imagen: false },
-  ...(PS_ASESORIA_POR_PRODUCTO[producto.id] || {}),
-}));
+/* Fotos reales recibidas y auditadas contra la ficha de cada producto (peso,
+   servicios, vencimiento visible en la etiqueta) -- ver images/README.md
+   para el detalle de cada coincidencia y de los 12 productos que quedaron
+   sin imagen por discrepancia con la ficha. Solo estas 7 pasan la
+   verificacion; el resto queda en imagen:'' con verificado.imagen:false y
+   usa el fallback tipografico ya existente en cardHTML/main.js. */
+const PS_IMAGENES_VERIFICADAS = {
+  'whey-isolate-2lb': 'images/wheyptrotein.webp',
+  'proteina-vegana': 'images/proteinavegetal.webp',
+  'creatina-mono': 'images/creatinamonohidratada.webp',
+  'pre-entreno': 'images/preentrenopowerboost.webp',
+  'sustituto-comida': 'images/akmuerzosmart.webp',
+  'omega-3': 'images/omega3.webp',
+  'magnesio-glicinato': 'images/magnesio.webp',
+};
+
+window.PS_CATALOG = window.PS_CATALOG.map((producto) => {
+  const imagenVerificada = PS_IMAGENES_VERIFICADAS[producto.id];
+  return {
+    ...producto,
+    imagen: imagenVerificada || producto.imagen || '',
+    sabor: '',
+    verificado: { marca: false, formato: false, sabor: false, stock: false, imagen: !!imagenVerificada },
+    ...(PS_ASESORIA_POR_PRODUCTO[producto.id] || {}),
+  };
+});
 
 /* Categorías: título y descripción de cada filtro */
 window.PS_CATEGORIAS = [
