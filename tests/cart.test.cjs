@@ -35,7 +35,7 @@ test('WhatsApp quote and reload preserve selection; shipping unknown is not free
   const before = saved();
   const url = new URL(checkout.whatsappURL(cart.getState().items));
   assert.equal(url.pathname, '/595985864209');
-  assert.match(url.searchParams.get('text'), /2 × Proteína & cacao/);
+  assert.match(url.searchParams.get('text'), /1\. Proteína & cacao \(2 lb\) — Gs 660\.000 \(x2\)/);
   assert.match(url.searchParams.get('text'), /Gs 660\.000/);
   assert.match(url.searchParams.get('text'), /Envío a confirmar/);
   assert.equal(checkout.quote(cart.getState().items).total, null);
