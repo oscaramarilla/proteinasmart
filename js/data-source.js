@@ -120,11 +120,36 @@ async function fetchCatalog() {
 window.fetchCatalog = fetchCatalog;
 
 /**
+ * Adelanta DNS/TCP/TLS hacia el origen de la API antes del fetch real.
+ * Sin credenciales configuradas no hay host que resolver -- no hardcodea
+ * ningun dominio de Supabase, solo preconecta al que este definido en
+ * PS_CONFIG en ese momento. No-op fuera de un navegador (tests, SSR).
+ * @param {string} origen Origen (protocolo+host) al que se va a pedir el catalogo.
+ * @returns {void}
+ */
+function agregarPreconnect(origen) {
+  const documento = window.document;
+  if (!documento || !documento.head || documento.head.querySelector('link[href="' + origen + '"]')) return;
+  [
+    { rel: 'preconnect', crossOrigin: '' },
+    { rel: 'dns-prefetch' },
+  ].forEach((atributos) => {
+    const link = documento.createElement('link');
+    link.href = origen;
+    Object.assign(link, atributos);
+    documento.head.appendChild(link);
+  });
+}
+
+/**
  * Publica el catalogo remoto solo cuando fetchCatalog() efectivamente
  * devolvio uno (no el array local por identidad de referencia).
  * @returns {Promise<void>}
  */
 async function iniciarFuenteHibrida() {
+  const credenciales = resolverCredencialesSupabase(window.PS_CONFIG);
+  if (credenciales) agregarPreconnect(new URL(credenciales.url).origin);
+
   const catalogo = await fetchCatalog();
   if (catalogo !== window.PS_CATALOG) {
     window.dispatchEvent(new CustomEvent('ps:catalogo-remoto', { detail: catalogo }));

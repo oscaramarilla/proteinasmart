@@ -13,13 +13,28 @@ const filaRemota = {
 const CREDENCIALES = { supabaseUrl: 'https://example.supabase.co', supabaseAnonKey: 'test-anon-key' };
 const CATALOGO_LOCAL = [{ id: 'local-1', nombre: 'Local' }];
 
+function mockDocument() {
+  const links = [];
+  const head = {
+    querySelector: (selector) => links.find((l) => selector === 'link[href="' + l.href + '"]') ?? null,
+    appendChild: (node) => { links.push(node); return node; },
+  };
+  return {
+    head,
+    links,
+    createElement: () => ({ href: '', rel: '', crossOrigin: undefined }),
+  };
+}
+
 function montar(overrides = {}) {
   const eventos = [];
+  const documento = overrides.document ?? undefined;
   const context = vm.createContext({
     window: {
       PS_CONFIG: overrides.config ?? CREDENCIALES,
       PS_CATALOG: CATALOGO_LOCAL,
       dispatchEvent: (event) => eventos.push(event),
+      document: documento,
     },
     URL, AbortController, setTimeout, clearTimeout,
     CustomEvent: class CustomEvent { constructor(type, opts) { this.type = type; this.detail = opts?.detail; } },
@@ -161,4 +176,36 @@ test('fuente hibrida publica ps:catalogo-remoto solo cuando hay catalogo remoto 
 
 test('no depende de ninguna libreria externa ni import remoto', () => {
   assert.doesNotMatch(source, /import\s|createClient|cdn\.jsdelivr|unpkg\.com/);
+});
+
+test('con credenciales configuradas, preconecta al origen real (sin hardcodear ningun dominio)', async () => {
+  const documento = mockDocument();
+  const { window } = montar({ document: documento });
+  await new Promise((resolve) => setTimeout(resolve, 10));
+  const rels = documento.links.map((l) => l.rel).sort();
+  assert.deepEqual(rels, ['dns-prefetch', 'preconnect']);
+  for (const link of documento.links) assert.equal(link.href, 'https://example.supabase.co');
+  const preconnect = documento.links.find((l) => l.rel === 'preconnect');
+  assert.equal(preconnect.crossOrigin, '');
+});
+
+test('sin credenciales, no agrega ningun link de preconexion', async () => {
+  const documento = mockDocument();
+  montar({ config: {}, document: documento, fetch: () => assert.fail('no deberia pedir red') });
+  await new Promise((resolve) => setTimeout(resolve, 10));
+  assert.equal(documento.links.length, 0);
+});
+
+test('no duplica el preconnect si ya existe uno para ese origen', async () => {
+  const documento = mockDocument();
+  documento.head.appendChild({ rel: 'preconnect', href: 'https://example.supabase.co' });
+  montar({ document: documento });
+  await new Promise((resolve) => setTimeout(resolve, 10));
+  assert.equal(documento.links.length, 1);
+});
+
+test('sin document global (contexto no-navegador), no falla', async () => {
+  const { window } = montar({ document: undefined });
+  await new Promise((resolve) => setTimeout(resolve, 10));
+  assert.equal(await window.fetchCatalog() !== undefined, true);
 });
