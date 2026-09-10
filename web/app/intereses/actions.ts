@@ -1,10 +1,7 @@
 'use server';
 
 import { supabaseAdminRequest } from '../../lib/supabaseAdmin';
-
-type InterestState = { status: 'idle' | 'success' | 'error'; message: string };
-
-export const estadoInicialInteres: InterestState = { status: 'idle', message: '' };
+import type { InterestState } from '../../lib/interesState';
 
 /** Registra una señal liviana de interés sin crear una reserva. */
 export async function registrarInteres(

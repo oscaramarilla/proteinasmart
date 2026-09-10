@@ -1,10 +1,8 @@
 'use client';
 
 import { useActionState } from 'react';
-import {
-  estadoInicialInteres,
-  registrarInteres,
-} from '../app/intereses/actions';
+import { registrarInteres } from '../app/intereses/actions';
+import { estadoInicialInteres } from '../lib/interesState';
 
 type ProductInterestFormProps = { productId: string };
 

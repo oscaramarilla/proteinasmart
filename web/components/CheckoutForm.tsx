@@ -2,7 +2,7 @@
 
 import Link from 'next/link';
 import { useActionState, useEffect, useState } from 'react';
-import { procesarCheckout, estadoInicialCheckout } from '../app/checkout/actions';
+import { procesarCheckout } from '../app/checkout/actions';
 import {
   CAMPOS_REQUERIDOS_POR_METODO,
   ES_METODO_ENCOMIENDA,
@@ -11,6 +11,7 @@ import {
   type CampoEntrega,
   type ShippingMethodCode,
 } from '../lib/checkoutEntrega';
+import { estadoInicialCheckout } from '../lib/checkoutState';
 import { useCartStore } from '../lib/useCartStore';
 
 export type ShippingMethodOption = { code: string; label: string; copy: string | null };
@@ -67,7 +68,7 @@ export default function CheckoutForm({
           Confirmar reserva por WhatsApp
         </a>
         <div className="mt-4">
-          <Link href="/" className="text-sm font-semibold text-emerald-700 hover:underline">
+          <Link href="/catalogo" className="text-sm font-semibold text-emerald-700 hover:underline">
             Volver al catálogo
           </Link>
         </div>
@@ -80,7 +81,7 @@ export default function CheckoutForm({
       <div className="rounded-2xl border border-dashed border-emerald-300 bg-white p-6 text-center">
         <p className="text-slate-600">Tu carrito está vacío.</p>
         <Link
-          href="/"
+          href="/catalogo"
           className="mt-4 inline-block text-sm font-semibold text-emerald-700 hover:underline"
         >
           Ver catálogo

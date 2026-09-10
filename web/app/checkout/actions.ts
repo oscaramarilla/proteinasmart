@@ -10,16 +10,9 @@ import {
   type CampoEntrega,
   type ShippingMethodCode,
 } from '../../lib/checkoutEntrega';
+import type { CheckoutState } from '../../lib/checkoutState';
 import { generarCheckoutWhatsApp } from '../../lib/generarCheckoutWhatsApp';
 import type { CartItem } from '../../lib/useCartStore';
-
-export type CheckoutState = {
-  status: 'idle' | 'error' | 'success';
-  errors: Record<string, string>;
-  whatsappUrl?: string;
-};
-
-export const estadoInicialCheckout: CheckoutState = { status: 'idle', errors: {} };
 
 const ETIQUETAS_METODO: Record<ShippingMethodCode, string> = {
   pickup: 'Retiro en el local',

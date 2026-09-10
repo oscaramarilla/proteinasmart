@@ -24,3 +24,147 @@ body {
   color: var(--foreground);
   font-family: Arial, Helvetica, sans-serif;
 }
+
+/* =========================================================
+   Smart Quiz — paleta oscura del sitio vanilla (ver
+   css/styles.css en la raiz del repo), scopeada a .quiz-shell.
+   El resto de /web (catalogo, checkout, admin) sigue con el
+   tema claro de Tailwind de arriba -- no se toca a proposito.
+   ========================================================= */
+.quiz-shell {
+  --quiz-bg: #07120e;
+  --quiz-green: #2ee88a;
+  --quiz-green-2: #12b96b;
+  --quiz-lime: #b8f26a;
+  --quiz-violet: #8b7cf6;
+  --quiz-sand: #f2c879;
+  --quiz-text: #eefaf3;
+  --quiz-text-dim: #9bb3a8;
+  --quiz-border: rgba(255, 255, 255, 0.1);
+  --quiz-surface: rgba(255, 255, 255, 0.04);
+
+  background: var(--quiz-bg);
+  color: var(--quiz-text);
+  font-family: var(--font-inter), system-ui, sans-serif;
+}
+
+.quiz-progress {
+  height: 4px;
+  border-radius: 999px;
+  background: var(--quiz-surface);
+  overflow: hidden;
+}
+
+.quiz-progress-bar {
+  height: 100%;
+  background: linear-gradient(90deg, var(--quiz-green), var(--quiz-lime));
+  transition: width 0.25s ease;
+}
+
+.quiz-eyebrow {
+  margin-top: 1rem;
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--quiz-text-dim);
+}
+
+.quiz-step {
+  margin-top: 1.5rem;
+}
+
+.quiz-titulo {
+  font-family: var(--font-sora), system-ui, sans-serif;
+  font-size: 1.85rem;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+}
+
+.quiz-subtitulo {
+  margin-top: 0.5rem;
+  color: var(--quiz-text-dim);
+}
+
+.quiz-opciones {
+  margin-top: 1.75rem;
+  display: grid;
+  gap: 0.75rem;
+}
+
+.quiz-opcion {
+  border: 1px solid var(--quiz-border);
+  background: var(--quiz-surface);
+  color: var(--quiz-text);
+  border-radius: 14px;
+  padding: 1rem 1.25rem;
+  text-align: left;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: border-color 0.15s ease, background 0.15s ease;
+}
+
+.quiz-opcion:hover {
+  border-color: var(--quiz-green);
+}
+
+.quiz-opcion-activa {
+  border-color: var(--quiz-green);
+  background: rgba(46, 232, 138, 0.12);
+}
+
+.quiz-label {
+  margin-top: 1.75rem;
+  display: block;
+  font-size: 0.9rem;
+  color: var(--quiz-text-dim);
+}
+
+.quiz-input {
+  margin-top: 0.5rem;
+  width: 100%;
+  border-radius: 12px;
+  border: 1px solid var(--quiz-border);
+  background: var(--quiz-surface);
+  color: var(--quiz-text);
+  padding: 0.75rem 1rem;
+  font-size: 1rem;
+}
+
+.quiz-error {
+  margin-top: 0.75rem;
+  color: var(--quiz-sand);
+  font-size: 0.875rem;
+}
+
+.quiz-nav {
+  margin-top: 2rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.quiz-volver {
+  background: none;
+  border: none;
+  color: var(--quiz-text-dim);
+  font-size: 0.9rem;
+  cursor: pointer;
+}
+
+.quiz-cta {
+  border: none;
+  border-radius: 12px;
+  background: linear-gradient(90deg, var(--quiz-green), var(--quiz-green-2));
+  color: var(--quiz-bg);
+  font-weight: 700;
+  padding: 0.85rem 1.5rem;
+  cursor: pointer;
+}
+
+.quiz-cta:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
