@@ -1,6 +1,13 @@
 @import "tailwindcss";
 
 :root {
+  /* Todas las paginas de /web (catalogo, producto, protocolos, resultado,
+     checkout, admin) estan escritas con la paleta clara de Tailwind
+     (text-slate-900 sobre blanco). Declarar el esquema claro evita que
+     prefers-color-scheme: dark pinte el body de negro y deje el texto
+     ilegible. La unica superficie oscura es .quiz-shell, con su propia
+     paleta mas abajo. */
+  color-scheme: light;
   --background: #ffffff;
   --foreground: #171717;
 }
@@ -10,13 +17,6 @@
   --color-foreground: var(--foreground);
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
 }
 
 body {
