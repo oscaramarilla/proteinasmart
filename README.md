@@ -208,6 +208,19 @@ producto cuando el catálogo pase a base de datos.
 
 ---
 
+## ProteínaSmart 2.0 (app Next.js)
+
+La implementación en curso vive en `web/` y no reemplaza el sitio vanilla de
+la raíz hasta un cutover explícito. Incluye fichas estáticas en
+`/productos/[slug]`, `/como-verificamos` y el flujo `/quiz` →
+`/quiz/resultado`. La arquitectura, modelo de datos, estándar científico,
+analytics y reposición están documentados en `docs/`.
+
+Antes de conectar Supabase, aplicá las migraciones versionadas en orden y
+completá únicamente las variables indicadas en `.env.example`. No hay datos de
+stock, trazabilidad ni nutrición inventados: los campos faltantes se presentan
+como pendientes de confirmar.
+
 ## Roadmap
 
 - [ ] Cargar fotos reales verificadas (soporte de imágenes y fallback disponibles)
