@@ -205,6 +205,11 @@
 
   function renderCatalogo() {
     if (!grid) return;
+    // El grid arranca oculto por CSS (.product-grid-engine + aria-hidden) para
+    // que la escalera de planes sea la portada; al renderizar el catalogo lo
+    // revelamos. Sin esto los productos quedan display:none para siempre.
+    grid.classList.remove('product-grid-engine');
+    grid.removeAttribute('aria-hidden');
     const items = CATALOG.filter((p) => {
       const okCat = filtroCategoria === 'todos' || p.categoria === filtroCategoria;
       const okObj =
