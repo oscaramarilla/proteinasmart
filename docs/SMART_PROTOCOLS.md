@@ -15,7 +15,7 @@ cambia, los protocolos no se tocan.
 | Archivo | Rol |
 |---|---|
 | `web/lib/smart-protocols/types.ts` | Modelo: prioridad, nivel, exclusión, SmartCheck |
-| `web/lib/smart-protocols/definitions.ts` | Contenido editorial de los 4 protocolos |
+| `web/lib/smart-protocols/definitions.ts` | Contenido editorial de los 5 protocolos |
 | `web/lib/smart-protocols/resolve.ts` | Resolver: prioridades → productos + motivos |
 | `web/lib/products.ts` | `ProductRole` y la tabla `productRoles` (relación SKU ↔ rol) |
 | `web/lib/product-eligibility.ts` | Gate de aprobación (precio, stock, formulación, safety) |

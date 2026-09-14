@@ -126,6 +126,23 @@ export default async function ObjetivoLandingPage({ params }: PageProps) {
           </a>
         </div>
 
+        <section className="mt-10 rounded-2xl border border-emerald-200 bg-emerald-50 p-6">
+          <p className="text-sm font-semibold uppercase tracking-[0.16em] text-emerald-700">
+            Precisión milimétrica
+          </p>
+          <h2 className="mt-3 text-2xl font-bold text-emerald-950">¿Querés precisión milimétrica?</h2>
+          <p className="mt-2 leading-7 text-emerald-950/80">
+            Contanos tu objetivo, tu entrenamiento, tu presupuesto y tu contexto. El Smart Quiz te asigna el protocolo
+            exacto, con prioridades base, opcionales y exclusiones explicadas.
+          </p>
+          <Link
+            href="/quiz"
+            className="mt-4 inline-flex rounded-xl bg-emerald-800 px-6 py-3 font-bold text-white transition hover:bg-emerald-900"
+          >
+            Hacé el Smart Quiz oficial
+          </Link>
+        </section>
+
         <p className="mt-10 text-xs leading-6 text-slate-500">{negocio.legal.disclaimer}</p>
 
         <p className="mt-6 text-sm">

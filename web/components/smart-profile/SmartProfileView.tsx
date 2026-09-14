@@ -141,6 +141,9 @@ export default function SmartProfileView({ profile }: { profile: SmartProfile })
           message={buildProfileWhatsAppMessage(profile)}
           hint="El mensaje lleva objetivo, entrenamiento y protocolo. No incluye respuestas de salud."
         />
+        <Link href="/catalogo" className="rounded-xl border border-slate-300 px-5 py-3 font-semibold text-slate-700">
+          Ver opciones en el catálogo
+        </Link>
         <Link
           href={`/protocolos/${protocol.slug}`}
           className="rounded-xl border border-emerald-800 px-5 py-3 font-semibold text-emerald-900"
