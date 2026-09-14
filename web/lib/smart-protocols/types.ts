@@ -13,7 +13,8 @@ export type ProtocolPriorityKey =
   | "EAA"
   | "SATIETY_SUPPORT"
   | "SUGAR_SWAP"
-  | "DAILY_SUPPORT";
+  | "DAILY_SUPPORT"
+  | "COLLAGEN";
 
 export type ProtocolPriority = {
   key: ProtocolPriorityKey;

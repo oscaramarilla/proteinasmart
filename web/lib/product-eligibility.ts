@@ -3,7 +3,7 @@ import { isPriceConfirmed, isStockConfirmed } from "./products.ts";
 import type { Product, ProductFormulation, ProductRole, RecommendationStatus } from "./products.ts";
 import { hasCompleteNutrition, hasVerifiedAuthenticity, hasVerifiedIngredients, isEvidenceUrl, isPastTimestamp } from "./product-validation.ts";
 
-export type ProductPriority = "CREATINE" | "PROTEIN_GAP" | "EAA" | "RECOVERY" | "CONDITIONAL_SUPPORT";
+export type ProductPriority = "CREATINE" | "PROTEIN_GAP" | "EAA" | "RECOVERY" | "CONDITIONAL_SUPPORT" | "COLLAGEN";
 export type RecommendationRole = "PRIMARY" | "OPTIONAL";
 export type ConditionCode = "PROTEIN_GAP_CONFIRMED" | "EAA_CONTEXT_REVIEWED" | "CONDITIONAL_SUPPORT_REVIEWED";
 export type ReviewedRecommendationCondition = {
@@ -48,14 +48,19 @@ export const priorityProductRoles: Record<ProductPriority, readonly ProductRole[
   // prioridades "comida resuelta" y "reemplazo de azúcar" de Smart Cut se
   // evalúan como apoyo condicional. Categoría y formulación siguen filtrando.
   CONDITIONAL_SUPPORT: ["MCT", "OMEGA3", "MAGNESIUM", "VITAMIN_D_K", "MEAL_REPLACEMENT", "LOW_CARB_SNACK", "SWEETENER"],
+  // Prioridad base de Smart Glow: péptidos de colágeno. No hereda las reglas de
+  // proteína completa ni de creatina: es una prioridad semántica propia.
+  COLLAGEN: ["COLLAGEN"],
 };
 const priorityCategories: Record<ProductPriority, readonly Product["category"][]> = {
   CREATINE: ["creatina"], PROTEIN_GAP: ["proteinas"], EAA: ["rendimiento"],
   RECOVERY: ["rendimiento"], CONDITIONAL_SUPPORT: ["keto", "longevidad"],
+  COLLAGEN: ["proteinas"],
 };
 const priorityFormulations: Record<ProductPriority, readonly ProductFormulation["classification"][]> = {
   CREATINE: ["CREATINE_MONOHYDRATE_SINGLE"], PROTEIN_GAP: ["COMPLETE_PROTEIN"],
   EAA: ["EAA"], RECOVERY: ["RECOVERY_AMINO"], CONDITIONAL_SUPPORT: ["OTHER"],
+  COLLAGEN: ["COLLAGEN"],
 };
 export function matchesProductPriority(product: Product, priority: ProductPriority): boolean {
   return (product.roles ?? []).some((role) => priorityProductRoles[priority]?.includes(role));

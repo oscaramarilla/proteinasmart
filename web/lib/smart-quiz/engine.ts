@@ -1,7 +1,7 @@
 export type Goal = "MASS" | "CUT" | "PERFORMANCE" | "LONGEVITY";
 export type Frequency = "LOW" | "MEDIUM" | "HIGH";
 export type BudgetTier = "ESSENTIAL" | "LITE" | "CORE" | "FULL";
-export type SmartStack = "SMART_START" | "SMART_MUSCLE" | "SMART_CUT" | "SMART_40_PLUS";
+export type SmartStack = "SMART_START" | "SMART_MUSCLE" | "SMART_CUT" | "SMART_40_PLUS" | "SMART_GLOW";
 export type SafetyStatus = "OK" | "REVIEW_REQUIRED";
 export type QuizInput = { goal: Goal; frequency: Frequency; trainingMonths: number; structuredRoutine: boolean; budget: number; safetyRedFlag: boolean };
 export type QuizResult = { stack?: SmartStack; tier: BudgetTier; safetyStatus: SafetyStatus; priorities: string[]; optionalProducts: string[]; avoidProducts: string[]; rationale: string };

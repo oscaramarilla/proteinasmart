@@ -1,6 +1,6 @@
 import type { SmartProtocol } from "./types.ts";
 
-// Contenido editorial de los 4 protocolos. Reglas de la casa (AGENTS.md):
+// Contenido editorial de los 5 protocolos. Reglas de la casa (AGENTS.md):
 // voseo, sin promesas de resultado, sin dosis ni lenguaje de tratamiento.
 // Ninguna definición nombra una marca ni un SKU: solo prioridades y roles.
 export const smartProtocols: SmartProtocol[] = [
@@ -306,6 +306,74 @@ export const smartProtocols: SmartProtocol[] = [
       { day: 30, focus: "Revisión", question: "¿Hay algo para revisar con tu médico antes de sostener o cambiar algo?" },
     ],
     whatsappContext: "Estoy viendo el protocolo Smart 40+ y quiero confirmar qué corresponde revisar en mi caso.",
+  },
+  {
+    id: "SMART_GLOW",
+    slug: "smart-glow",
+    name: "Smart Glow",
+    tagline: "Colágeno con criterio para piel, pelo y articulaciones.",
+    goal: "Una base diaria para piel, pelo, uñas y articulaciones, elegida con la etiqueta en la mano y sin promesas de resultado.",
+    forWho: [
+      "Buscás acompañar piel, pelo, uñas o articulaciones con una base simple.",
+      "Preferís un protocolo de una o dos decisiones por día antes que cinco productos juntos.",
+      "Querés saber qué mirar en la composición y en la etiqueta antes de comprar.",
+    ],
+    notForWho: [
+      "Buscás un producto con efecto cosmético prometido: los suplementos no son tratamientos.",
+      "Tenés una condición de salud, medicación, embarazo o lactancia para revisar antes.",
+      "Esperás un cambio visible rápido por sumar más productos.",
+    ],
+    practicalFoundation: [
+      "El colágeno es una proteína: se sostiene con una toma diaria constante, no con la marca más cara.",
+      "La vitamina C es el complemento clásico de su síntesis; la dosis importa solo si la etiqueta la declara.",
+      "Omega 3 y vitamina D3+K2 se suman de a uno, según tu alimentación y tu contexto de salud.",
+    ],
+    priorities: [
+      {
+        key: "COLLAGEN",
+        label: "Colágeno hidrolizado con vitamina C",
+        level: "required",
+        reason: "Es la base del protocolo: una toma diaria sostenida, revisando siempre la composición y la declaración del fabricante.",
+        roles: ["COLLAGEN"],
+        eligibility: "COLLAGEN",
+      },
+      {
+        key: "DAILY_SUPPORT",
+        label: "Apoyo diario (omega 3, D3 + K2)",
+        level: "conditional",
+        condition: "Si tu alimentación no llega a cubrir omega 3 o vitamina D de forma sostenida.",
+        reason: "Se revisa de a uno, con la etiqueta y tu contexto de salud; no se suman ambos juntos por defecto.",
+        roles: ["OMEGA3", "VITAMIN_D_K"],
+        eligibility: "CONDITIONAL_SUPPORT",
+      },
+    ],
+    redundancies: [
+      { roles: ["EAA"], reason: "Sumar aminoácidos esenciales no cumple la función del colágeno ni del apoyo diario de este protocolo." },
+      { roles: ["RECOVERY_AMINO"], reason: "Un aminoácido aislado se superpone con la proteína y no aporta a este objetivo." },
+      { roles: ["PRE_WORKOUT"], reason: "Un estimulante no forma parte de una base de cuidado diario para piel, pelo y articulaciones." },
+      { roles: ["CREATINE"], reason: "La creatina es una decisión de rendimiento; no entra en este protocolo." },
+    ],
+    avoid: [
+      "Promesas de 'borrar arrugas' o antiedad milagrosa.",
+      "Sumar varias cápsulas juntas sin saber qué hace cada una.",
+      "Comprar colágeno por marketing sin mirar composición ni declaración del fabricante.",
+    ],
+    expectations: [
+      "El objetivo es una rutina sostenible y decisiones de compra informadas, no un cambio cosmético prometido.",
+      "Los cambios visibles, si llegan, son lentos y dependen del conjunto: alimentación, descanso y constancia.",
+      "Ningún suplemento reemplaza una consulta médica.",
+    ],
+    commonMistakes: [
+      "Tomar colágeno sin mirar la vitamina C que la fórmula declara.",
+      "Cambiar de producto cada dos semanas sin darle tiempo a nada.",
+      "Creer que sumar más productos acelera un resultado.",
+    ],
+    smartCheck: [
+      { day: 7, focus: "Practicidad", question: "¿Pudiste sostener la toma diaria sin que te complique la rutina?" },
+      { day: 21, focus: "Tolerancia y adherencia", question: "¿Te cayó bien y sigue siendo parte de tu día?" },
+      { day: 30, focus: "Ajuste", question: "¿Conviene sostener el mismo producto, cambiar la presentación o revisar el plan con un profesional?" },
+    ],
+    whatsappContext: "Estoy viendo el protocolo Smart Glow y quiero confirmar qué corresponde revisar en mi caso.",
   },
 ];
 

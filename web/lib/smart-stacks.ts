@@ -21,7 +21,7 @@ export type SmartStackDefinition = {
 const legacyKey: Record<ProtocolPriorityKey, ProductPriority> = {
   PROTEIN_GAP: "PROTEIN_GAP", CREATINE: "CREATINE", EAA: "EAA",
   SATIETY_SUPPORT: "CONDITIONAL_SUPPORT", SUGAR_SWAP: "CONDITIONAL_SUPPORT",
-  DAILY_SUPPORT: "CONDITIONAL_SUPPORT",
+  DAILY_SUPPORT: "CONDITIONAL_SUPPORT", COLLAGEN: "CONDITIONAL_SUPPORT",
 };
 
 const legacyRoles: Record<ProductPriority, ProductRole[]> = {

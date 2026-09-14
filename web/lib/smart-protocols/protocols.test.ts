@@ -37,7 +37,7 @@ const verifiedCreatine: Product = {
 const verifiedGlutamine: Product = { ...verifiedCreatine, id: "glutamina-verificada", slug: "glutamina-verificada", name: "L-Glutamina Verificada", category: "rendimiento", roles: ["RECOVERY_AMINO"] };
 
 test("los slugs publicados de protocolo son estables", () => {
-  assert.deepEqual(smartProtocols.map((protocol) => protocol.slug), ["smart-start", "smart-muscle", "smart-cut", "smart-40"]);
+  assert.deepEqual(smartProtocols.map((protocol) => protocol.slug), ["smart-start", "smart-muscle", "smart-cut", "smart-40", "smart-glow"]);
 });
 
 test("cada prioridad se define por roles, nunca por un SKU", () => {

@@ -6,7 +6,7 @@ import { priorityLevelLabels, smartProtocols } from "../../lib/smart-protocols";
 export const metadata: Metadata = {
   title: "Smart Protocols | ProteínaSmart",
   description:
-    "Cuatro protocolos de suplementación ordenados por prioridad y contexto, no por promesas. Empezá por el Smart Quiz o entrá directo al que te corresponde.",
+    "Cinco protocolos de suplementación ordenados por prioridad y contexto, no por promesas. Empezá por el Smart Quiz o entrá directo al que te corresponde.",
   alternates: { canonical: "/protocolos" },
 };
 
