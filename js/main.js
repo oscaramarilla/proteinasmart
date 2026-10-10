@@ -360,6 +360,8 @@
     '[data-cfg="horario"]': O.horario,
     '[data-cfg="envio-asuncion"]': O.envioAsuncion,
     '[data-cfg="envio-interior"]': O.envioInterior,
+    '[data-cfg="despacho"]': O.despacho,
+    '[data-cfg="encomiendas"]': Array.isArray(O.encomiendas) ? O.encomiendas.join(' · ') : O.encomiendas,
     '[data-cfg="pagos"]': O.pagos,
     '[data-cfg="facturacion"]': O.facturacion,
   };

@@ -1,0 +1,80 @@
+<!doctype html>
+<meta charset="utf-8">
+<title>Sana Life PY — Copy de entrega</title>
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<style>
+  :root { --bg:#fff; --fg:#14181d; --mut:#5b6672; --line:#e3e7ec; --ok:#0f7a4f; --warn:#8a5a00; }
+  @media (prefers-color-scheme: dark) {
+    :root { --bg:#14181d; --fg:#eef1f4; --mut:#9aa6b2; --line:#2a313a; --ok:#4ec08d; --warn:#e0a63a; }
+  }
+  body { background:var(--bg); color:var(--fg); margin:0; padding:24px 16px 64px;
+         font:16px/1.6 system-ui,-apple-system,"Segoe UI",sans-serif; }
+  main { max-width:760px; margin:0 auto; }
+  h1 { font-size:1.5rem; margin:0 0 4px; letter-spacing:-.01em; }
+  h2 { font-size:1.05rem; margin:36px 0 8px; }
+  p.sub { color:var(--mut); margin:0 0 8px; }
+  .block { border:1px solid var(--line); border-radius:10px; padding:16px 18px; margin:12px 0; }
+  .block h3 { margin:0 0 10px; font-size:1rem; }
+  .tag { display:inline-block; font-size:.72rem; font-weight:600; letter-spacing:.04em;
+         text-transform:uppercase; padding:2px 8px; border-radius:99px; border:1px solid var(--line); color:var(--mut); }
+  pre { background:color-mix(in srgb, var(--fg) 5%, transparent); border:1px solid var(--line);
+        border-radius:8px; padding:12px; overflow-x:auto; font-size:.82rem; line-height:1.5; }
+  ul.envio { list-style:none; padding:0; margin:0; }
+  ul.envio li { padding:6px 0 6px 26px; position:relative; }
+  ul.envio li::before { content:"✓"; position:absolute; left:0; color:var(--ok); font-weight:700; }
+  .no { color:var(--warn); }
+  footer { margin-top:40px; padding-top:16px; border-top:1px solid var(--line); color:var(--mut); font-size:.88rem; }
+</style>
+<main>
+  <h1>Sana Life PY — copy de entrega</h1>
+  <p class="sub">Variante elegida: <strong>flete de encomienda absorbido</strong>. El precio publicado cubre la entrega en todo el país.</p>
+
+  <h2>Bloque principal (ficha de producto / página de envíos)</h2>
+  <div class="block">
+    <h3>Envío incluido en todo el país</h3>
+    <ul class="envio">
+      <li><strong>Asunción y Gran Asunción (Departamento Central):</strong> entrega gratis a la puerta de tu casa.</li>
+      <li><strong>Interior del país:</strong> envío por encomienda sin costo adicional, a cualquier ciudad.</li>
+      <li><strong>Despachamos con</strong> Transruta, Paraná Express, La Guaireña, TSI Transportadora San Ignacio, La Misionera y Occidental Express, entre otras.</li>
+      <li><strong>Despacho el mismo día</strong> en pedidos confirmados antes de las 14:00, de lunes a sábado.</li>
+      <li><strong>Seguimiento:</strong> te pasamos el número de guía en cuanto sale tu pedido.</li>
+    </ul>
+    <p class="sub" style="margin-top:12px">El precio que ves es el precio final: ya incluye la entrega.</p>
+  </div>
+  <pre>&lt;h3&gt;Envío incluido en todo el país&lt;/h3&gt;
+&lt;ul&gt;
+  &lt;li&gt;&lt;strong&gt;Asunción y Gran Asunción (Departamento Central):&lt;/strong&gt; entrega gratis a la puerta de tu casa.&lt;/li&gt;
+  &lt;li&gt;&lt;strong&gt;Interior del país:&lt;/strong&gt; envío por encomienda sin costo adicional, a cualquier ciudad.&lt;/li&gt;
+  &lt;li&gt;&lt;strong&gt;Despachamos con&lt;/strong&gt; Transruta, Paraná Express, La Guaireña, TSI Transportadora San Ignacio, La Misionera y Occidental Express, entre otras.&lt;/li&gt;
+  &lt;li&gt;&lt;strong&gt;Despacho el mismo día&lt;/strong&gt; en pedidos confirmados antes de las 14:00, de lunes a sábado.&lt;/li&gt;
+  &lt;li&gt;&lt;strong&gt;Seguimiento:&lt;/strong&gt; te pasamos el número de guía en cuanto sale tu pedido.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;El precio que ves es el precio final: ya incluye la entrega.&lt;/p&gt;</pre>
+
+  <h2>Barra corta (banner / encabezado)</h2>
+  <pre>Envío incluido en todo el país · Gratis a tu puerta en Asunción y Central · Despacho en el día</pre>
+
+  <h2>Versión de una línea (ficha de producto, bajo el precio)</h2>
+  <pre>Precio final con envío incluido a todo el país.</pre>
+
+  <h2>Respuesta para consultas por WhatsApp</h2>
+  <pre>El envío ya está incluido en el precio, no se agrega nada al total.
+En Asunción y Gran Asunción te lo llevamos a tu puerta. Al interior
+lo despachamos por encomienda a tu ciudad, también sin costo, con
+Transruta, Paraná Express, La Guaireña, TSI, La Misionera u
+Occidental Express.
+Si confirmás antes de las 14:00, sale hoy mismo.</pre>
+
+  <h2>Qué se cambió del texto original, y por qué</h2>
+  <div class="block">
+    <p><span class="tag">Corregido</span> <em>“departamento Central”</em> → <strong>“Asunción y Gran Asunción (Departamento Central)”</strong>. Asunción es distrito autónomo: no integra el Departamento Central, y el texto original dejaba afuera el mercado más grande.</p>
+    <p><span class="tag">Corregido</span> <em>“entregamos … en el día”</em> → <strong>“despacho en el día”</strong>. La entrega en el día es imposible por encomienda al interior; el despacho sí lo controlás. Es además la promesa que <code>docs/tienda-primera-tanda.md</code> registra como retirada del sitio por falta de respaldo.</p>
+    <p><span class="tag">Retirado</span> <em class="no">“entregamos resultados”</em>. Con suplementos es una promesa de resultado de salud, prohibida por el compliance de <code>AGENTS.md</code> (los suplementos no son medicamentos).</p>
+    <p><span class="tag">Reemplazado</span> <em class="no">“trabajamos con las mejores empresas”</em> por los nombres reales: Transruta, Paraná Express, La Guaireña, TSI Transportadora San Ignacio, La Misionera y Occidental Express. El superlativo no se puede sostener y no le dice nada al cliente; la lista sí, porque le confirma que su ciudad está cubierta. <strong>Verificar la ortografía comercial de cada una.</strong></p>
+  </div>
+
+  <footer>
+    Precios y catálogo: <code>docs/sana-life-py/catalogo-import.csv</code> ·
+    Decisiones y riesgo de margen: <code>docs/sana-life-py/README.md</code>
+  </footer>
+</main>

@@ -28,7 +28,7 @@ values
   (
     'Whey Protein Isolate',
     '27 g de proteína por scoop, sin lactosa y con carga glucémica mínima.',
-    330000,
+    360000,
     '2 lb · 27 servicios',
     'proteinas',
     array['masa', 'definicion']::text[],
@@ -42,7 +42,7 @@ values
   (
     'Whey Protein Concentrada',
     'El mejor costo por gramo de proteína para volumen sostenido.',
-    450000,
+    480000,
     '5 lb · 68 servicios',
     'proteinas',
     array['masa']::text[],
@@ -56,7 +56,7 @@ values
   (
     'Proteína Vegetal (arveja + arroz)',
     'Perfil de aminoácidos completo, sin lácteos ni gluten. Digestión liviana.',
-    265000,
+    295000,
     '1 kg · 30 servicios',
     'proteinas',
     array['definicion', 'masa']::text[],
@@ -70,7 +70,7 @@ values
   (
     'Colágeno Hidrolizado + Vitamina C',
     'Péptidos tipo I y III para piel, cabello, uñas y articulaciones.',
-    215000,
+    245000,
     '300 g · 30 servicios',
     'proteinas',
     array['belleza']::text[],
@@ -84,7 +84,7 @@ values
   (
     'Creatina Monohidratada Micronizada',
     'El suplemento con más evidencia: fuerza, masa magra y función cognitiva.',
-    235000,
+    265000,
     '300 g · 100 servicios',
     'deportivos',
     array['masa', 'foco', 'energia']::text[],
@@ -98,7 +98,7 @@ values
   (
     'Pre-Entreno sin azúcar',
     'Cafeína, beta-alanina y citrulina. Cero carbohidratos, apto keto.',
-    255000,
+    285000,
     '300 g · 30 servicios',
     'deportivos',
     array['energia', 'foco']::text[],
@@ -112,7 +112,7 @@ values
   (
     'Aminoácidos Esenciales (EAA)',
     'Protege masa muscular durante el ayuno y los déficits calóricos.',
-    185000,
+    215000,
     '400 g · 40 servicios',
     'deportivos',
     array['definicion', 'masa']::text[],
@@ -126,7 +126,7 @@ values
   (
     'L-Glutamina',
     'Recuperación muscular e integridad intestinal en entrenamientos exigentes.',
-    145000,
+    175000,
     '300 g · 60 servicios',
     'deportivos',
     array['definicion']::text[],
@@ -140,7 +140,7 @@ values
   (
     'Aceite MCT C8/C10',
     'Energía cetónica inmediata sin picos de insulina. Ideal en el café matinal.',
-    185000,
+    215000,
     '500 ml',
     'keto',
     array['energia', 'foco']::text[],
@@ -154,7 +154,7 @@ values
   (
     'Barras Keto (caja x 12)',
     'Snack real para cortar el hambre sin romper la cetosis.',
-    145000,
+    169000,
     '12 u · 2 g carbos netos',
     'keto',
     array['definicion']::text[],
@@ -168,7 +168,7 @@ values
   (
     'Sustituto de Comida Low Carb',
     'Comida completa en 400 kcal: proteína, grasas buenas y fibra.',
-    295000,
+    299000,
     '1 kg · 20 servicios',
     'keto',
     array['definicion']::text[],
@@ -182,7 +182,7 @@ values
   (
     'Endulzante Monk Fruit + Eritritol',
     'Cero índice glucémico, sin regusto. Reemplazo directo del azúcar.',
-    89000,
+    99000,
     '250 g',
     'keto',
     array['definicion']::text[],
@@ -196,7 +196,7 @@ values
   (
     'Omega 3 Ultra (EPA/DHA)',
     'DHA de alta concentración: membrana neuronal, memoria y antiinflamación.',
-    169000,
+    199000,
     '120 cápsulas',
     'longevidad',
     array['foco', 'belleza']::text[],
@@ -210,7 +210,7 @@ values
   (
     'Magnesio Glicinato',
     'Sueño profundo y recuperación nerviosa. La forma que sí se absorbe.',
-    165000,
+    195000,
     '120 cápsulas',
     'longevidad',
     array['foco', 'energia']::text[],
@@ -224,7 +224,7 @@ values
   (
     'Vitamina D3 + K2',
     'Hueso, inmunidad y testosterona. El déficit más común y más barato de corregir.',
-    145000,
+    175000,
     '90 cápsulas',
     'longevidad',
     array['belleza', 'energia']::text[],
@@ -238,7 +238,7 @@ values
   (
     'Nootrópico Focus (L-teanina + colina)',
     'Concentración sostenida sin ansiedad ni bajón posterior.',
-    195000,
+    199000,
     '60 cápsulas',
     'longevidad',
     array['foco']::text[],

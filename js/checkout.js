@@ -10,7 +10,8 @@
     const subtotal = window.PS_CART.total(items);
     const hasUnpricedItems = items.some((item) => item.precio <= 0);
     return { currency: 'PYG', subtotal, hasUnpricedItems, shippingFee,
-      shippingLabel: shippingFee === null ? 'Envío a confirmar' : 'Envío: ' + money(shippingFee),
+      shippingLabel: shippingFee === null ? 'Envío a confirmar'
+        : shippingFee === 0 ? 'Envío incluido' : 'Envío: ' + money(shippingFee),
       total: hasUnpricedItems || shippingFee === null ? null : subtotal + shippingFee };
   }
   function whatsappURL(items, preferencias) {

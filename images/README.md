@@ -26,8 +26,8 @@ la fotografía, las etiquetas y la presentación final requieren confirmación d
 | `aceite-mct` | `aceitedecocomct.webp` | Coincide 500 ml. Etiqueta visible con vencimiento en diciembre de 2025 — confirmar lote vigente. |
 | `barras-keto` | `barrasketo.webp` | Etiqueta declara 3 g de carbohidratos netos frente a ficha de 2 g. Vinculada tras revisión manual del negocio (9 sep 2026) pese a la discrepancia. |
 | `endulzante-monkfruit` | `eritritolyfrutosdelbosque.webp` | Envase de 500 g frente a ficha de 250 g (el doble). Vinculada tras revisión manual del negocio (9 sep 2026) pese a la discrepancia. |
-| `vitamina-d3-k2` | `vitaminade3yk2.webp` | Imagen indica 60 cápsulas / Gs 300.000 frente a ficha de 90 / Gs 145.000 — parece otro SKU. Vinculada de todos modos por decisión del negocio (9 sep 2026) tras revisión manual. |
-| `nootropico-focus` | `nootropico.webp` | Otra fórmula (cafeína, bacopa, ginkgo) y precio Gs 350.000 frente a L-teanina + colina / Gs 195.000 — parece otro producto. Vinculada de todos modos por decisión del negocio (9 sep 2026) tras revisión manual. |
+| `vitamina-d3-k2` | `vitaminade3yk2.webp` | Imagen indica 60 cápsulas / Gs 300.000 frente a ficha de 90 / **Gs 175.000** — parece otro SKU. Vinculada de todos modos por decisión del negocio (9 sep 2026) tras revisión manual. **La brecha de precio creció con la revisión de octubre de 2026** (ver abajo). |
+| `nootropico-focus` | `nootropico.webp` | Otra fórmula (cafeína, bacopa, ginkgo) y precio Gs 350.000 frente a L-teanina + colina / **Gs 199.000** — parece otro producto. Vinculada de todos modos por decisión del negocio (9 sep 2026) tras revisión manual. **La brecha de precio creció con la revisión de octubre de 2026** (ver abajo). |
 
 Estas catorce imágenes WebP pesan entre 17 KB y 75 KB cada una. Los dos
 productos restantes mantienen `imagen: ''` y el diseño tipográfico:
@@ -47,6 +47,29 @@ completa, no solo en peso o vencimiento visible. El negocio las revisó
 manualmente y decidió vincularlas igual (9 sep 2026); si se corrige el precio
 o la composición del producto más adelante, revisar si la foto sigue
 correspondiendo.
+
+**Pendiente abierto tras la revisión de precios de octubre de 2026.** Esa
+revisión movió los dos precios en la dirección que agranda la brecha con la
+etiqueta visible en la foto:
+
+| Producto | Precio en la etiqueta de la foto | Precio publicado hoy | Brecha |
+|---|---|---|---|
+| `vitamina-d3-k2` | Gs 300.000 | Gs 175.000 | la foto muestra 71 % más |
+| `nootropico-focus` | Gs 350.000 | Gs 199.000 | la foto muestra 76 % más |
+
+La decisión de septiembre se tomó con brechas menores. Un cliente que lee la
+etiqueta en la foto ve un precio que no es el que va a pagar, y en el sentido
+que invita a la disputa en el checkout ("¿por qué me cobran distinto?"). Queda
+a decisión del negocio: conseguir la foto real del SKU que se vende, o volver
+estas dos al fallback tipográfico hasta tenerla. No se cambió nada por cuenta
+propia porque la decisión de vincularlas fue explícita del negocio.
+
+**Sin archivo disponible:** `colageno-hidrolizado` sigue sin ninguna foto
+recibida. `whey-concentrada-5lb` tiene `wheyconcetrate.webp` en la carpeta,
+pero el envase es de 2 lb / 28 servicios contra una ficha de 5 lb / 68 — a
+Gs 480.000 la discrepancia cae justo sobre el atributo que explica el precio,
+así que no se vinculó. Si el producto que realmente se vende es el de 2 lb,
+corregir formato y precio en `js/catalog.js` y la foto pasa a servir.
 
 ## Convención para futuras imágenes
 

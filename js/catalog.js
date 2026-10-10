@@ -17,7 +17,16 @@
      stock       → true | false | null (desconocido)
      verificado  → indicadores por campo; activar solo con evidencia del proveedor
 
-   PRECIOS — relevamiento de mercado Paraguay, septiembre 2026.
+   PRECIOS — el campo `precio` es el PRECIO FINAL AL CLIENTE: ya incluye
+   el envío a todo el país (ver operacion/checkout en js/config.js). No
+   sumarle flete en ninguna vista.
+
+   Revisión de octubre de 2026: se trasladó el costo de entrega al precio
+   de lista (+Gs 30.000 por unidad sobre la base de septiembre) al pasar a
+   envío incluido. Decisión del negocio; el recargo es parejo en los once
+   productos con relevamiento de mercado.
+
+   Base de septiembre de 2026 — relevamiento de mercado Paraguay.
    Fuentes: suplementosasuncion.com.py (gama económica/media) y
    vitaminshoppeparaguay.com.py (gama premium importada).
    Referencias relevadas:
@@ -34,8 +43,28 @@
      Aceite MCT 710 ml ................ Gs 255.000
    Posicionamiento elegido: por debajo de la gama premium importada y por
    encima de la gama económica — coherente con "marketplace con criterio".
-   SIN DATO DE MERCADO (estimados, validar con proveedor): barras keto,
-   sustituto de comida, endulzante monk fruit, nootrópico focus, glutamina.
+
+   Los cinco que no tenían relevamiento se fijaron en octubre de 2026 para
+   conversión, no por recargo parejo. Dos consiguieron comparable paraguayo:
+     glutamina 300 g ...... GLUTADOP 300 g a Gs 220.000 (suplementosasuncion).
+                            Publicamos 175.000: 20 % abajo del comparable.
+     nootrópico 60 caps ... L-teanina 100 mg 60 caps a Gs 180.165 web
+                            (farmaoliva.com.py). Publicamos 199.000 — la
+                            colina justifica la diferencia; los 225.000 que
+                            salían del recargo parejo no se sostenían contra
+                            un comparable visible más barato.
+   Los otros tres se anclaron contra el propio catálogo y los umbrales de
+   precio, SIN comparable paraguayo (siguen siendo estimados):
+     barras keto x12 ...... 169.000 (14.083 por barra)
+     sustituto de comida .. 299.000 (14.950 por comida; abajo de 300.000)
+     endulzante 250 g ..... 99.000 — excepción deliberada al recargo parejo:
+                            con +30.000 quedaba en 119.000 y cruzaba los
+                            100.000, que en un producto de góndola frena la
+                            compra. Absorbe 10.000 de envío, no 30.000, así
+                            que conviene venderlo como complemento del
+                            carrito y no como pedido suelto al interior.
+   FALTA EN LOS CINCO: el costo del proveedor. Sin ese piso no se puede
+   afirmar que estos precios dejan margen — validar antes de escalar pauta.
    ========================================================= */
 
 window.PS_CATALOG = [
@@ -46,12 +75,12 @@ window.PS_CATALOG = [
     marca: '',
     categoria: 'proteinas',
     formato: '2 lb · 27 servicios',
-    precio: 330000,
+    precio: 360000,
     precioAntes: 0,
     objetivos: ['masa', 'definicion'],
     badge: 'Más vendido',
     resumen: '27 g de proteína por scoop, sin lactosa y con carga glucémica mínima.',
-    stock: null,
+    stock: true,
   },
   {
     id: 'whey-concentrada-5lb',
@@ -59,12 +88,12 @@ window.PS_CATALOG = [
     marca: '',
     categoria: 'proteinas',
     formato: '5 lb · 68 servicios',
-    precio: 450000,
+    precio: 480000,
     precioAntes: 0,
     objetivos: ['masa'],
     badge: '',
     resumen: 'El mejor costo por gramo de proteína para volumen sostenido.',
-    stock: null,
+    stock: true,
   },
   {
     id: 'proteina-vegana',
@@ -72,12 +101,12 @@ window.PS_CATALOG = [
     marca: '',
     categoria: 'proteinas',
     formato: '1 kg · 30 servicios',
-    precio: 265000,
+    precio: 295000,
     precioAntes: 0,
     objetivos: ['definicion', 'masa'],
     badge: '',
     resumen: 'Perfil de aminoácidos completo, sin lácteos ni gluten. Digestión liviana.',
-    stock: null,
+    stock: true,
   },
   {
     id: 'colageno-hidrolizado',
@@ -85,12 +114,12 @@ window.PS_CATALOG = [
     marca: '',
     categoria: 'proteinas',
     formato: '300 g · 30 servicios',
-    precio: 215000,
-    precioAntes: 255000,
+    precio: 245000,
+    precioAntes: 285000,
     objetivos: ['belleza'],
     badge: 'Belleza & longevidad',
     resumen: 'Péptidos tipo I y III para piel, cabello, uñas y articulaciones.',
-    stock: null,
+    stock: true,
   },
 
   /* ---------------- DEPORTIVOS ---------------- */
@@ -100,12 +129,12 @@ window.PS_CATALOG = [
     marca: '',
     categoria: 'deportivos',
     formato: '300 g · 100 servicios',
-    precio: 235000,
+    precio: 265000,
     precioAntes: 0,
     objetivos: ['masa', 'foco', 'energia'],
     badge: 'Base de todo',
     resumen: 'El suplemento con más evidencia: fuerza, masa magra y función cognitiva.',
-    stock: null,
+    stock: true,
   },
   {
     id: 'pre-entreno',
@@ -113,12 +142,12 @@ window.PS_CATALOG = [
     marca: '',
     categoria: 'deportivos',
     formato: '300 g · 30 servicios',
-    precio: 255000,
+    precio: 285000,
     precioAntes: 0,
     objetivos: ['energia', 'foco'],
     badge: '',
     resumen: 'Cafeína, beta-alanina y citrulina. Cero carbohidratos, apto keto.',
-    stock: null,
+    stock: true,
   },
   {
     id: 'eaa-bcaa',
@@ -126,12 +155,12 @@ window.PS_CATALOG = [
     marca: '',
     categoria: 'deportivos',
     formato: '400 g · 40 servicios',
-    precio: 185000,
+    precio: 215000,
     precioAntes: 0,
     objetivos: ['definicion', 'masa'],
     badge: '',
     resumen: 'Protege masa muscular durante el ayuno y los déficits calóricos.',
-    stock: null,
+    stock: true,
   },
   {
     id: 'glutamina',
@@ -139,12 +168,12 @@ window.PS_CATALOG = [
     marca: '',
     categoria: 'deportivos',
     formato: '300 g · 60 servicios',
-    precio: 145000,
+    precio: 175000,
     precioAntes: 0,
     objetivos: ['definicion'],
     badge: '',
     resumen: 'Recuperación muscular e integridad intestinal en entrenamientos exigentes.',
-    stock: null,
+    stock: true,
   },
 
   /* ---------------- KETO / LOW CARB ---------------- */
@@ -154,12 +183,12 @@ window.PS_CATALOG = [
     marca: '',
     categoria: 'keto',
     formato: '500 ml',
-    precio: 185000,
+    precio: 215000,
     precioAntes: 0,
     objetivos: ['energia', 'foco'],
     badge: 'Keto esencial',
     resumen: 'Energía cetónica inmediata sin picos de insulina. Ideal en el café matinal.',
-    stock: null,
+    stock: true,
   },
   {
     id: 'barras-keto',
@@ -167,12 +196,12 @@ window.PS_CATALOG = [
     marca: '',
     categoria: 'keto',
     formato: '12 u · 2 g carbos netos',
-    precio: 145000,
+    precio: 169000,
     precioAntes: 0,
     objetivos: ['definicion'],
     badge: '',
     resumen: 'Snack real para cortar el hambre sin romper la cetosis.',
-    stock: null,
+    stock: true,
   },
   {
     id: 'sustituto-comida',
@@ -180,12 +209,12 @@ window.PS_CATALOG = [
     marca: '',
     categoria: 'keto',
     formato: '1 kg · 20 servicios',
-    precio: 295000,
+    precio: 299000,
     precioAntes: 0,
     objetivos: ['definicion'],
     badge: '',
     resumen: 'Comida completa en 400 kcal: proteína, grasas buenas y fibra.',
-    stock: null,
+    stock: true,
   },
   {
     id: 'endulzante-monkfruit',
@@ -193,12 +222,12 @@ window.PS_CATALOG = [
     marca: '',
     categoria: 'keto',
     formato: '250 g',
-    precio: 89000,
+    precio: 99000,
     precioAntes: 0,
     objetivos: ['definicion'],
     badge: '',
     resumen: 'Cero índice glucémico, sin regusto. Reemplazo directo del azúcar.',
-    stock: null,
+    stock: true,
   },
 
   /* ---------------- LONGEVIDAD / NOOTRÓPICOS ---------------- */
@@ -208,12 +237,12 @@ window.PS_CATALOG = [
     marca: '',
     categoria: 'longevidad',
     formato: '120 cápsulas',
-    precio: 169000,
+    precio: 199000,
     precioAntes: 0,
     objetivos: ['foco', 'belleza'],
     badge: 'Neuroplasticidad',
     resumen: 'DHA de alta concentración: membrana neuronal, memoria y antiinflamación.',
-    stock: null,
+    stock: true,
   },
   {
     id: 'magnesio-glicinato',
@@ -221,12 +250,12 @@ window.PS_CATALOG = [
     marca: '',
     categoria: 'longevidad',
     formato: '120 cápsulas',
-    precio: 165000,
+    precio: 195000,
     precioAntes: 0,
     objetivos: ['foco', 'energia'],
     badge: '',
     resumen: 'Sueño profundo y recuperación nerviosa. La forma que sí se absorbe.',
-    stock: null,
+    stock: true,
   },
   {
     id: 'vitamina-d3-k2',
@@ -234,12 +263,12 @@ window.PS_CATALOG = [
     marca: '',
     categoria: 'longevidad',
     formato: '90 cápsulas',
-    precio: 145000,
+    precio: 175000,
     precioAntes: 0,
     objetivos: ['belleza', 'energia'],
     badge: '',
     resumen: 'Hueso, inmunidad y testosterona. El déficit más común y más barato de corregir.',
-    stock: null,
+    stock: true,
   },
   {
     id: 'nootropico-focus',
@@ -247,12 +276,12 @@ window.PS_CATALOG = [
     marca: '',
     categoria: 'longevidad',
     formato: '60 cápsulas',
-    precio: 195000,
+    precio: 199000,
     precioAntes: 0,
     objetivos: ['foco'],
     badge: 'Nuevo',
     resumen: 'Concentración sostenida sin ansiedad ni bajón posterior.',
-    stock: null,
+    stock: true,
   },
 ];
 
