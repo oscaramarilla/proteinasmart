@@ -27,16 +27,16 @@
 </style>
 <main>
   <h1>Sana Life PY — copy de entrega</h1>
-  <p class="sub">Bloques listos para pegar en la tienda. <strong>Elegí una sola variante de encomienda (A o B).</strong></p>
+  <p class="sub">Variante elegida: <strong>flete de encomienda absorbido</strong>. El precio publicado cubre la entrega en todo el país.</p>
 
-  <h2>Variante A — flete de encomienda absorbido</h2>
-  <p class="sub">El precio publicado cubre el envío a cualquier punto del país. Copy más fuerte, margen más expuesto.</p>
+  <h2>Bloque principal (ficha de producto / página de envíos)</h2>
   <div class="block">
     <h3>Envío incluido en todo el país</h3>
     <ul class="envio">
       <li><strong>Asunción y Gran Asunción (Departamento Central):</strong> entrega gratis a la puerta de tu casa.</li>
       <li><strong>Interior del país:</strong> envío por encomienda sin costo adicional, a cualquier ciudad.</li>
       <li><strong>Despacho el mismo día</strong> en pedidos confirmados antes de las 14:00, de lunes a sábado.</li>
+      <li><strong>Seguimiento:</strong> te pasamos el número de guía en cuanto sale tu pedido.</li>
     </ul>
     <p class="sub" style="margin-top:12px">El precio que ves es el precio final: ya incluye la entrega.</p>
   </div>
@@ -45,30 +45,21 @@
   &lt;li&gt;&lt;strong&gt;Asunción y Gran Asunción (Departamento Central):&lt;/strong&gt; entrega gratis a la puerta de tu casa.&lt;/li&gt;
   &lt;li&gt;&lt;strong&gt;Interior del país:&lt;/strong&gt; envío por encomienda sin costo adicional, a cualquier ciudad.&lt;/li&gt;
   &lt;li&gt;&lt;strong&gt;Despacho el mismo día&lt;/strong&gt; en pedidos confirmados antes de las 14:00, de lunes a sábado.&lt;/li&gt;
+  &lt;li&gt;&lt;strong&gt;Seguimiento:&lt;/strong&gt; te pasamos el número de guía en cuanto sale tu pedido.&lt;/li&gt;
 &lt;/ul&gt;
 &lt;p&gt;El precio que ves es el precio final: ya incluye la entrega.&lt;/p&gt;</pre>
 
-  <h2>Variante B — flete a cobrar en destino</h2>
-  <p class="sub">Práctica habitual en Paraguay y lo que ya asume el checkout de <code>web/</code>: el total del pedido nunca incluye flete de encomienda.</p>
-  <div class="block">
-    <h3>Cómo te llega tu pedido</h3>
-    <ul class="envio">
-      <li><strong>Asunción y Gran Asunción (Departamento Central):</strong> entrega gratis a la puerta de tu casa.</li>
-      <li><strong>Interior del país:</strong> despachamos por encomienda a cualquier ciudad, sin costo de gestión. El flete lo abonás al retirar.</li>
-      <li><strong>Despacho el mismo día</strong> en pedidos confirmados antes de las 14:00, de lunes a sábado.</li>
-    </ul>
-    <p class="sub" style="margin-top:12px">Te pasamos el número de guía en cuanto sale tu pedido.</p>
-  </div>
-  <pre>&lt;h3&gt;Cómo te llega tu pedido&lt;/h3&gt;
-&lt;ul&gt;
-  &lt;li&gt;&lt;strong&gt;Asunción y Gran Asunción (Departamento Central):&lt;/strong&gt; entrega gratis a la puerta de tu casa.&lt;/li&gt;
-  &lt;li&gt;&lt;strong&gt;Interior del país:&lt;/strong&gt; despachamos por encomienda a cualquier ciudad, sin costo de gestión. El flete lo abonás al retirar.&lt;/li&gt;
-  &lt;li&gt;&lt;strong&gt;Despacho el mismo día&lt;/strong&gt; en pedidos confirmados antes de las 14:00, de lunes a sábado.&lt;/li&gt;
-&lt;/ul&gt;
-&lt;p&gt;Te pasamos el número de guía en cuanto sale tu pedido.&lt;/p&gt;</pre>
-
   <h2>Barra corta (banner / encabezado)</h2>
-  <pre>Envío gratis en Asunción y Gran Asunción · Encomienda a todo el país · Despacho en el día</pre>
+  <pre>Envío incluido en todo el país · Gratis a tu puerta en Asunción y Central · Despacho en el día</pre>
+
+  <h2>Versión de una línea (ficha de producto, bajo el precio)</h2>
+  <pre>Precio final con envío incluido a todo el país.</pre>
+
+  <h2>Respuesta para consultas por WhatsApp</h2>
+  <pre>El envío ya está incluido en el precio, no se agrega nada al total.
+En Asunción y Gran Asunción te lo llevamos a tu puerta. Al interior
+lo despachamos por encomienda a tu ciudad, también sin costo.
+Si confirmás antes de las 14:00, sale hoy mismo.</pre>
 
   <h2>Qué se cambió del texto original, y por qué</h2>
   <div class="block">
@@ -80,6 +71,6 @@
 
   <footer>
     Precios y catálogo: <code>docs/sana-life-py/catalogo-import.csv</code> ·
-    Decisiones pendientes: <code>docs/sana-life-py/README.md</code>
+    Decisiones y riesgo de margen: <code>docs/sana-life-py/README.md</code>
   </footer>
 </main>

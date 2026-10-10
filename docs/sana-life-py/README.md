@@ -32,7 +32,7 @@ revisión por consola. El copy de entrega está en `copy-entrega.html`.
 
 El colágeno es el único con precio tachado: `precioAntes` 255.000 → **285.000**.
 
-## 2. Lo que hay que decidir antes de publicar
+## 2. Decisiones tomadas y riesgos abiertos
 
 ### a) El recargo es por unidad, pero el envío es por pedido
 
@@ -53,19 +53,30 @@ el envío gratis **a nivel pedido**, no por unidad, y poner un piso para el
 interior (ej.: encomienda sin costo desde Gs 300.000 de compra). Así el
 carrito de 4 no paga 4 veces el mismo envío.
 
-### b) ¿Quién paga el flete de encomienda al interior?
+### b) Flete de encomienda: DECIDIDO — variante A, flete absorbido
 
-"Incluido en el servicio de entrega" admite dos lecturas con márgenes muy
-distintos, y hay que elegir una antes de escribir el copy:
+**Decisión del negocio (10 oct 2026):** el precio publicado cubre el flete a
+cualquier punto del país. `copy-entrega.html` publica solo ese bloque.
 
-- **A — flete absorbido:** el precio publicado cubre el flete a cualquier
-  punto del país. Es el copy más fuerte y el riesgo de margen más alto.
-- **B — flete a cobrar en destino:** despachás sin costo de gestión y el
-  cliente retira pagando el flete a la encomienda. Es la práctica habitual
-  en Paraguay y es lo que ya asume el checkout de `web/`
-  (regla: *el total de la orden nunca incluye flete de encomienda*).
+Queda registrado el riesgo que se aceptó con los ojos abiertos: con flete
+absorbido, el pedido de **una unidad barata al interior** pierde plata (el
+endulzante aporta Gs 30.000 de recargo contra un flete que rara vez cuesta
+eso). Es el caso a vigilar, no un impedimento para publicar.
 
-`copy-entrega.html` trae los dos bloques. Publicar solo uno.
+**Métrica a seguir desde el primer mes:** flete realmente pagado por pedido
+contra `30.000 × unidades del pedido`. Si el promedio se pasa, hay dos
+palancas que **no** obligan a retocar los precios ya publicados:
+
+1. Piso de compra para encomienda sin costo al interior (ej. desde
+   Gs 250.000 — con el recargo aplicado, casi todo el catálogo lo alcanza
+   con una sola unidad).
+2. Subir el recargo solo en los SKU livianos y baratos, donde el flete pesa
+   más sobre el ticket.
+
+**Divergencia a tener presente:** esta decisión aplica a Sana Life PY. El
+checkout de `web/` mantiene la regla opuesta (*el total de la orden nunca
+incluye flete de encomienda*). Hoy no hay conflicto porque son canales
+distintos; si alguna vez se unifican, hay que decidir cuál regla gana.
 
 ### c) Asunción no está en el Departamento Central
 
