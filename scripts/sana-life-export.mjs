@@ -4,9 +4,12 @@
      - docs/sana-life-py/catalogo-import.csv  (carga a la tienda)
      - tabla de revisión por consola
 
-   RECARGO: suma fija por unidad, en guaraníes enteros.
-     node scripts/sana-life-export.mjs            # recargo 30000
-     node scripts/sana-life-export.mjs 30000
+   Desde la revisión de octubre de 2026, js/catalog.js ya guarda el PRECIO
+   FINAL con el envío incluido, así que el recargo por defecto es 0 — volver
+   a sumar 30000 acá duplicaría el traslado. El parámetro queda para el caso
+   de querer un margen distinto en este canal.
+     node scripts/sana-life-export.mjs            # sin recargo extra
+     node scripts/sana-life-export.mjs 15000      # 15000 extra por unidad
    ========================================================= */
 import { readFileSync, mkdirSync, writeFileSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
@@ -14,7 +17,7 @@ import { resolve, dirname } from 'node:path';
 import vm from 'node:vm';
 
 const root = fileURLToPath(new URL('../', import.meta.url));
-const RECARGO = Number.parseInt(process.argv[2] ?? '30000', 10);
+const RECARGO = Number.parseInt(process.argv[2] ?? '0', 10);
 if (!Number.isInteger(RECARGO) || RECARGO < 0) {
   throw new Error('El recargo tiene que ser un entero de guaraníes (ej: 30000).');
 }
@@ -23,11 +26,12 @@ if (!Number.isInteger(RECARGO) || RECARGO < 0) {
    publicar rápido, conviene re-subir los archivos a la tienda destino. */
 const IMG_BASE = 'https://www.proteinasmart.com/images/';
 
-/* Precios sin relevamiento de mercado — el comentario de js/catalog.js los
-   marca como estimados pendientes de validar con proveedor. */
+/* Sin comparable paraguayo. En octubre de 2026 glutamina y nootrópico
+   consiguieron uno (ver el comentario de js/catalog.js) y salieron de esta
+   lista; estos tres siguen anclados contra el propio catálogo. En los cinco
+   falta el costo del proveedor. */
 const PRECIO_ESTIMADO = new Set([
   'barras-keto', 'sustituto-comida', 'endulzante-monkfruit',
-  'nootropico-focus', 'glutamina',
 ]);
 
 /* Imágenes cuya etiqueta visible no coincide con la ficha (ver images/README.md).
@@ -68,6 +72,7 @@ const filas = catalogo.map((p) => {
     complemento: p.complemento ?? '',
     objetivos: (p.objetivos ?? []).map((o) => OBJETIVOS[o] ?? o).join(' | '),
     imagen: p.imagen ? IMG_BASE + p.imagen.replace(/^images\//, '') : '',
+    stock: p.stock === true ? 'si' : p.stock === false ? 'no' : 'a confirmar',
     estimado: PRECIO_ESTIMADO.has(p.id),
     precioImpreso: IMAGEN_CON_PRECIO_IMPRESO.has(p.id),
   };
@@ -90,7 +95,7 @@ const csv = [
     f.sku, f.nombre, f.categoria, f.formato,
     f.precioFinal || '', f.antesFinal || '',
     f.resumen, f.protocolo, f.complemento, f.objetivos,
-    f.imagen, 'a confirmar', f.estimado ? 'SI' : 'no',
+    f.imagen, f.stock, f.estimado ? 'SI' : 'no',
   ].map(esc).join(',')),
 ].join('\n') + '\n';
 

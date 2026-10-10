@@ -1,117 +1,122 @@
-# Carga de catálogo en Sana Life PY (encomshop)
+# Catálogo y entrega — precios de octubre de 2026
 
-Fuente única: `js/catalog.js` del repo. Regenerar con:
+Fuente única de precios: `js/catalog.js`. Desde esta revisión, su campo
+`precio` es el **precio final al cliente**: ya lleva el envío adentro.
 
 ```bash
-node scripts/sana-life-export.mjs 30000   # el argumento es el recargo por unidad
+node scripts/sana-life-export.mjs        # regenera catalogo-import.csv
 ```
 
-Salida: `docs/sana-life-py/catalogo-import.csv` (16 productos) y la tabla de
-revisión por consola. El copy de entrega está en `copy-entrega.html`.
+Salida: `catalogo-import.csv` (16 filas, listo para cargar en una tienda) y
+una tabla de revisión por consola. El copy de entrega está en
+`copy-entrega.html`.
 
-## 1. Precios con recargo de Gs 30.000 por unidad
+## 1. Precios publicados
 
-| SKU | Producto | Base | Publicar | Recargo |
+Los once con relevamiento de mercado llevan el traslado parejo de Gs 30.000
+por unidad sobre la base de septiembre. Los cinco que no tenían relevamiento
+se fijaron para conversión, no por recargo parejo.
+
+| SKU | Producto | Base sep. | Publicado | Criterio |
 |---|---|---|---|---|
-| whey-isolate-2lb | Whey Protein Isolate | 330.000 | **360.000** | 9,1 % |
-| whey-concentrada-5lb | Whey Protein Concentrada | 450.000 | **480.000** | 6,7 % |
-| proteina-vegana | Proteína Vegetal (arveja + arroz) | 265.000 | **295.000** | 11,3 % |
-| colageno-hidrolizado | Colágeno Hidrolizado + Vitamina C | 215.000 | **245.000** | 14,0 % |
-| creatina-mono | Creatina Monohidratada Micronizada | 235.000 | **265.000** | 12,8 % |
-| pre-entreno | Pre-Entreno sin azúcar | 255.000 | **285.000** | 11,8 % |
-| eaa-bcaa | Aminoácidos Esenciales (EAA) | 185.000 | **215.000** | 16,2 % |
-| glutamina | L-Glutamina | 145.000 | **175.000** | 20,7 % |
-| aceite-mct | Aceite MCT C8/C10 | 185.000 | **215.000** | 16,2 % |
-| barras-keto | Barras Keto (caja x 12) | 145.000 | **175.000** | 20,7 % |
-| sustituto-comida | Sustituto de Comida Low Carb | 295.000 | **325.000** | 10,2 % |
-| endulzante-monkfruit | Endulzante Monk Fruit + Eritritol | 89.000 | **119.000** | 33,7 % |
-| omega-3 | Omega 3 Ultra (EPA/DHA) | 169.000 | **199.000** | 17,8 % |
-| magnesio-glicinato | Magnesio Glicinato | 165.000 | **195.000** | 18,2 % |
-| vitamina-d3-k2 | Vitamina D3 + K2 | 145.000 | **175.000** | 20,7 % |
-| nootropico-focus | Nootrópico Focus (L-teanina + colina) | 195.000 | **225.000** | 15,4 % |
+| whey-isolate-2lb | Whey Protein Isolate | 330.000 | **360.000** | +30.000 |
+| whey-concentrada-5lb | Whey Protein Concentrada | 450.000 | **480.000** | +30.000 |
+| proteina-vegana | Proteína Vegetal | 265.000 | **295.000** | +30.000 |
+| colageno-hidrolizado | Colágeno + Vit. C | 215.000 | **245.000** | +30.000 (antes 285.000) |
+| creatina-mono | Creatina Monohidratada | 235.000 | **265.000** | +30.000 |
+| pre-entreno | Pre-Entreno sin azúcar | 255.000 | **285.000** | +30.000 |
+| eaa-bcaa | Aminoácidos EAA | 185.000 | **215.000** | +30.000 |
+| glutamina | L-Glutamina | 145.000 | **175.000** | comparable PY 220.000 |
+| aceite-mct | Aceite MCT C8/C10 | 185.000 | **215.000** | +30.000 |
+| barras-keto | Barras Keto x12 | 145.000 | **169.000** | anclaje interno |
+| sustituto-comida | Sustituto de Comida | 295.000 | **299.000** | umbral 300.000 |
+| endulzante-monkfruit | Endulzante Monk Fruit | 89.000 | **99.000** | umbral 100.000 |
+| omega-3 | Omega 3 Ultra | 169.000 | **199.000** | +30.000 |
+| magnesio-glicinato | Magnesio Glicinato | 165.000 | **195.000** | +30.000 |
+| vitamina-d3-k2 | Vitamina D3 + K2 | 145.000 | **175.000** | +30.000 |
+| nootropico-focus | Nootrópico Focus | 195.000 | **199.000** | comparable PY 180.165 |
 
-El colágeno es el único con precio tachado: `precioAntes` 255.000 → **285.000**.
+### Los dos comparables paraguayos que aparecieron
 
-## 2. Decisiones tomadas y riesgos abiertos
+- **Glutamina 300 g** — GLUTADOP 300 g a Gs 220.000 en suplementosasuncion.com.py,
+  mismo formato. Publicar 175.000 deja 20 % de ventaja visible: se mantuvo.
+- **Nootrópico 60 caps** — L-teanina 100 mg 60 caps a Gs 180.165 (precio web
+  de farmaoliva.com.py). El recargo parejo lo dejaba en 225.000, 25 % arriba
+  de un comparable que el cliente encuentra en una búsqueda. Se bajó a
+  199.000: la colina justifica estar arriba del comparable, no un 25 %.
 
-### a) El recargo es por unidad, pero el envío es por pedido
+### Los tres sin comparable
 
-Gs 30.000 fijos por unidad distorsionan en los dos extremos:
+Anclados contra el propio catálogo y los umbrales de precio. Siguen siendo
+estimados (`Precio_a_validar=SI` en el CSV):
 
-- **Carrito de 4 unidades** → cobra Gs 120.000 de envío por **una sola**
-  entrega. Castiga justo el pedido que conviene (ticket alto) y empuja al
-  cliente a comprar de a uno.
-- **Una unidad barata al interior** → el endulzante sube 33,7 % y aporta
-  Gs 30.000 para cubrir un flete que casi nunca cuesta eso.
+- **Barras keto x12 → 169.000** (14.083 por barra).
+- **Sustituto de comida → 299.000** (14.950 por comida). Queda abajo de
+  300.000, y el argumento de venta es que sale menos que almorzar afuera.
+- **Endulzante 250 g → 99.000.** Con +30.000 quedaba en 119.000 y cruzaba los
+  100.000, umbral que en un producto de góndola frena la compra.
 
-El recargo rinde solo si `flete del pedido ≤ 30.000 × unidades del pedido`.
-El caso que pierde plata es el pedido de una unidad al interior.
+**Lo que falta en los cinco: el costo del proveedor.** Sin ese piso no se
+puede afirmar que estos precios dejan margen. Validar antes de poner pauta.
 
-**Recomendación:** mantener el recargo como posicionamiento de precio
-(el catálogo queda "todo incluido", que es el efecto buscado), pero declarar
-el envío gratis **a nivel pedido**, no por unidad, y poner un piso para el
-interior (ej.: encomienda sin costo desde Gs 300.000 de compra). Así el
-carrito de 4 no paga 4 veces el mismo envío.
+## 2. Riesgos abiertos
 
-### b) Flete de encomienda: DECIDIDO — variante A, flete absorbido
+### a) El traslado es por unidad, pero el envío es por pedido
 
-**Decisión del negocio (10 oct 2026):** el precio publicado cubre el flete a
-cualquier punto del país. `copy-entrega.html` publica solo ese bloque.
-
-Queda registrado el riesgo que se aceptó con los ojos abiertos: con flete
-absorbido, el pedido de **una unidad barata al interior** pierde plata (el
-endulzante aporta Gs 30.000 de recargo contra un flete que rara vez cuesta
-eso). Es el caso a vigilar, no un impedimento para publicar.
+Un carrito de 4 unidades aporta Gs 120.000 de entrega por **una sola**
+entrega; un pedido de una unidad barata al interior aporta mucho menos de lo
+que cuesta el flete. El traslado rinde si
+`flete del pedido ≤ 30.000 × unidades del pedido`.
 
 **Métrica a seguir desde el primer mes:** flete realmente pagado por pedido
-contra `30.000 × unidades del pedido`. Si el promedio se pasa, hay dos
-palancas que **no** obligan a retocar los precios ya publicados:
+contra ese número. Dos palancas si se pasa, sin retocar precios publicados:
+piso de compra para encomienda sin costo al interior, o subir el traslado
+solo en los SKU livianos y baratos.
 
-1. Piso de compra para encomienda sin costo al interior (ej. desde
-   Gs 250.000 — con el recargo aplicado, casi todo el catálogo lo alcanza
-   con una sola unidad).
-2. Subir el recargo solo en los SKU livianos y baratos, donde el flete pesa
-   más sobre el ticket.
+El **endulzante a 99.000 absorbe 10.000 de envío, no 30.000**: conviene
+venderlo como complemento del carrito, no como pedido suelto al interior.
 
-**Divergencia a tener presente:** esta decisión aplica a Sana Life PY. El
-checkout de `web/` mantiene la regla opuesta (*el total de la orden nunca
-incluye flete de encomienda*). Hoy no hay conflicto porque son canales
-distintos; si alguna vez se unifican, hay que decidir cuál regla gana.
+### b) Flete absorbido — decidido y ya publicado
 
-### c) Asunción no está en el Departamento Central
+Decisión del negocio (10 oct 2026): el precio cubre el flete a cualquier
+punto del país. Aplicado en `js/config.js` (`checkout.shippingFee: 0`),
+en el copy de `index.html` y en los `shipping_methods` de Supabase.
 
-Asunción es capital y distrito autónomo: administrativamente **no integra**
-el Departamento Central. "Envío gratis en el Departamento Central" deja
-afuera, literalmente, el mercado más grande. El copy dice
-**"Asunción y Gran Asunción (Departamento Central)"**.
+El checkout de `web/` mantiene la regla opuesta (*el total de la orden nunca
+incluye flete de encomienda*) porque su flujo es otro. Si se unifican, hay
+que decidir cuál gana.
 
-### d) Promesas que no se pueden sostener
+### c) Fotos — lo único que quedó sin resolver
 
-- **"Entrega en el día"**: imposible por encomienda al interior, y es la
-  promesa que `docs/tienda-primera-tanda.md` registra como retirada del
-  sitio por falta de respaldo. Lo controlable es el **despacho**:
-  "pedidos confirmados antes de las 14:00 se despachan el mismo día".
-- **"Entregamos resultados"**: con suplementos es una promesa de resultado
-  de salud. `AGENTS.md` lo prohíbe (los suplementos no son medicamentos).
-  Reemplazado por el valor de servicio, que sí es verificable.
-- **"Las mejores empresas"**: superlativo sin respaldo. Cuando definas las
-  encomiendas con las que operás, nombralas: "Enviamos por X, Y y Z" vende
-  más y se puede sostener.
+No se pudo bajar ninguna foto: el contenedor de trabajo no alcanza ningún
+host HTTP. Estado actual:
 
-### e) Precios estimados y fotos que no cierran
+| Producto | Estado |
+|---|---|
+| `colageno-hidrolizado` | sin archivo recibido — fallback tipográfico |
+| `whey-concentrada-5lb` | hay `wheyconcetrate.webp`, pero es 2 lb / 28 servicios contra ficha de 5 lb / 68. A Gs 480.000 la discrepancia cae sobre el atributo que explica el precio: no se vinculó |
+| `vitamina-d3-k2` | foto con Gs 300.000 impresos contra 175.000 publicados |
+| `nootropico-focus` | foto con Gs 350.000 impresos y otra fórmula contra 199.000 publicados |
 
-- **5 precios sin relevamiento** (glutamina, barras keto, sustituto de
-  comida, endulzante, nootrópico): el comentario de `js/catalog.js` los marca
-  como estimados pendientes de proveedor. Sumarles 30.000 arrastra el error.
-  Están marcados `Precio_a_validar=SI` en el CSV.
-- **2 productos sin foto**: whey concentrada 5 lb y colágeno.
-- **2 fotos con precio impreso distinto** al que vas a publicar:
-  `vitaminade3yk2.webp` (etiqueta Gs 300.000 vs. publicar 175.000) y
-  `nootropico.webp` (etiqueta Gs 350.000 y otra fórmula vs. publicar
-  225.000). Publicarlas invita a la disputa en el checkout.
+Las dos últimas están vinculadas por decisión explícita del negocio
+(9 sep 2026) y no se cambiaron por cuenta propia, pero la revisión de precios
+**agrandó** la brecha. Detalle en `images/README.md`.
 
-## 3. Imágenes
+## 3. Empresas de encomienda
+
+Cargadas en `courier_companies` por
+`supabase/migrations/20261010_envio_incluido_y_encomiendas.sql`, y nombradas
+en el sitio desde `operacion.encomiendas` de `js/config.js`:
+
+Transruta · Paraná Express · La Guaireña · TSI Transportadora San Ignacio ·
+La Misionera · Occidental Express
+
+La lista no es exhaustiva: se agregan filas en `courier_companies` sin tocar
+código. **Verificar la ortografía comercial exacta de cada una** — se
+normalizaron acentos y la ñ a partir de los nombres pasados en mayúsculas.
+
+## 4. Imágenes del CSV
 
 El CSV apunta a `https://www.proteinasmart.com/images/...` (hotlink). Sirve
 para publicar rápido; conviene re-subir los archivos al storage de la tienda
-para no depender del deploy de proteinasmart.com.
+destino para no depender del deploy de proteinasmart.com.
