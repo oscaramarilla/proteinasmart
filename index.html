@@ -2,7 +2,7 @@
 <html lang="es">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
   <meta name="theme-color" content="#07120e" />
 
   <title>ProteínaSmart — Proteína inteligente | Marketplace de proteínas y suplementos en Paraguay</title>
@@ -77,7 +77,7 @@
       {
         "@type": "Question",
         "name": "¿Qué proteína me conviene si quiero bajar grasa?",
-        "acceptedAnswer": { "@type": "Answer", "text": "Una proteína aislada o vegetal, baja en carbohidratos, combinada con un plan low carb. Podés usar el selector por objetivo del sitio o pedir asesoramiento gratuito por WhatsApp." }
+        "acceptedAnswer": { "@type": "Answer", "text": "Compará la composición y la etiqueta del fabricante según tus preferencias y el plan indicado por tu profesional. Podemos ayudarte a revisar presentaciones y precios antes de comprar." }
       },
       {
         "@type": "Question",
@@ -93,6 +93,7 @@
   <script type="application/ld+json" id="productSchema"></script>
 </head>
 <body>
+  <a class="skip-link" href="#catalogo">Ir al catálogo</a>
   <div class="scroll-progress" id="scrollProgress"></div>
 
   <!-- ============ NAVBAR ============ -->
@@ -101,42 +102,98 @@
       <span class="brand-mark">◗</span>
       <span class="brand-text">Proteína<strong>Smart</strong></span>
     </a>
-    <nav class="nav-links" id="navLinks">
+    <nav class="nav-links" id="navLinks" aria-label="Navegación principal">
       <a href="#catalogo">Catálogo</a>
       <a href="#objetivo">Tu objetivo</a>
+      <a href="#planes">Planes</a>
       <a href="#nosotros">Entregas</a>
       <a href="#asesoria">Asesoría</a>
       <a href="#faq">FAQ</a>
+      <a class="nav-contact" data-wa href="#">Consultá por WhatsApp ↗</a>
       <button class="btn btn-primary btn-sm" type="button" data-cart-open>Ver carrito <span data-cart-count>0</span></button>
     </nav>
-    <button class="burger" id="burger" aria-label="Abrir menú" aria-expanded="false" aria-controls="navLinks">
+    <button class="header-cart" type="button" data-cart-open aria-label="Abrir carrito">
+      <svg viewBox="0 0 24 24" width="21" height="21" fill="none" stroke="currentColor" stroke-width="1.7" aria-hidden="true"><path d="M5 7h14l1 14H4L5 7Z"/><path d="M8 8V6a4 4 0 0 1 8 0v2"/></svg>
+      <span data-cart-count>0</span>
+    </button>
+    <button type="button" class="burger" id="burger" aria-label="Abrir menú" aria-expanded="false" aria-controls="navLinks">
       <span></span><span></span><span></span>
     </button>
   </header>
 
-<section class="hero" id="hero">
+<main id="contenido">
+  <section class="hero" id="hero">
     <div class="hero-content">
-      <!-- El bloque del hero NO usa .reveal a propósito: es el elemento LCP y debe pintarse
-           en el primer frame. Solo se animan las métricas, que están debajo del fold. -->
-      <span class="eyebrow">Proteína inteligente</span>
-      <h1>Proteínas y suplementos en Paraguay, <span class="gradient-text">con asesoramiento para elegir bien.</span></h1>
-      <p class="hero-sub">Encontrá opciones para tu objetivo y presupuesto. Envío incluido en el precio, a todo el país.</p>
+      <span class="eyebrow"><span aria-hidden="true"></span> Suplementos · Paraguay</span>
+      <h1>Tu objetivo.<br>Tu proteína.<br><span class="gradient-text">Elegí con criterio.</span></h1>
+      <p class="hero-sub">Proteínas y suplementos que encajen en tu rutina. Compará opciones con asesoramiento y envío incluido a todo el país.</p>
       <div class="hero-cta">
-        <a href="#catalogo" class="btn btn-primary">Ver productos</a>
-        <a class="btn btn-ghost" data-wa href="#">Ayudame a elegir</a>
+        <a href="#catalogo" class="btn btn-primary">Explorar catálogo <span aria-hidden="true">↗</span></a>
+        <a class="btn btn-ghost" href="#objetivo">Ayudame a elegir</a>
       </div>
-
-      <p class="hero-note">Elegí por categoría o por objetivo. Revisá tu selección antes de enviar.</p>
+      <p class="hero-note"><span aria-hidden="true">✓</span> Asesoría por WhatsApp <span aria-hidden="true">·</span> Precios en guaraníes</p>
     </div>
+    <aside class="hero-editorial" aria-label="Cómo te acompañamos">
+      <span class="editorial-label">EL MÉTODO SMART</span>
+      <div class="editorial-mark" aria-hidden="true">◗</div>
+      <h2>Menos dudas.<br>Mejores decisiones.</h2>
+      <p>Tu rutina es el punto de partida.</p>
+      <ol><li><span>01</span> Contanos tu objetivo</li><li><span>02</span> Compará tus opciones</li><li><span>03</span> Consultá antes de comprar</li></ol>
+      <a href="#asesoria">Encontrá tu punto de partida <span aria-hidden="true">↗</span></a>
+    </aside>
   </section>
 
 <section class="section" id="catalogo">
-    <div class="section-head reveal">
-      <span class="kicker">Escalera de planes</span>
-      <h2>Elegí el nivel que encaja con tu objetivo</h2>
-      <p>Seleccionamos, traemos bajo pedido y te asesoramos para que avances con una decisión clara.</p>
+    <div class="section-head catalog-heading">
+      <div><span class="kicker">El catálogo</span>
+      <h2>Encontrá lo que va con vos.</h2></div>
+      <p>Compará opciones y armá tu selección. Confirmamos etiqueta, stock y precio antes de cobrar.</p>
+    </div>
+    <div class="catalog-search" role="search" aria-label="Buscar en el catálogo">
+      <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.7" aria-hidden="true"><circle cx="10.5" cy="10.5" r="6.5"/><path d="m16 16 4.5 4.5"/></svg>
+      <label class="sr-only" for="catalogSearch">Buscá un producto o una marca</label>
+      <input type="search" id="catalogSearch" placeholder="Buscá proteína, creatina, colágeno…" autocomplete="off" enterkeyhint="search" aria-controls="catalogGrid" />
+      <button type="button" id="clearSearch" aria-label="Borrar búsqueda" hidden>×</button>
     </div>
 
+    <div class="filters" id="catalogFilters" role="group" aria-label="Categoría"></div>
+    <div class="catalog-tools">
+      <label for="catalogGoal">Objetivo</label>
+      <select id="catalogGoal"><option value="">Todos los objetivos</option></select>
+      <button class="chip" type="button" id="clearFilters">Limpiar filtros</button>
+      <p id="catalogCount" role="status" aria-live="polite"></p>
+    </div>
+
+    <p class="purchase-guide"><span aria-hidden="true">↗</span> Agregá al carrito. Revisá. Consultá por WhatsApp.</p>
+    <div class="product-grid" id="catalogGrid" aria-label="Productos"></div>
+    <noscript>Activá JavaScript para ver el catálogo y armar tu carrito.</noscript>
+
+    <p class="empty-state" id="catalogEmpty" hidden>
+      No encontramos productos con esa búsqueda o filtro.
+      <a data-wa href="#">Escribinos y lo conseguimos</a>.
+    </p>
+
+    <div class="catalog-foot reveal">
+      <p>¿Buscás una marca o un producto que no está en la lista? Lo importamos a pedido.</p>
+      <a class="btn btn-ghost" data-wa="Hola ProteínaSmart 👋 Busco un producto que no está en el catálogo:" href="#">Pedir un producto puntual</a>
+    </div>
+  </section>
+
+<section class="section alt" id="objetivo">
+    <div class="section-head reveal">
+      <span class="kicker">Empezá por acá</span>
+      <h2>¿Cuál es tu objetivo hoy?</h2>
+      <p>Elegí uno y el catálogo se filtra solo. Podés volver a tocarlo para ver todo de nuevo.</p>
+    </div>
+    <div class="goal-grid" id="objetivoGrid"></div>
+  </section>
+
+<section class="section" id="planes">
+    <div class="section-head reveal">
+      <span class="kicker">Acompañamos tu elección</span>
+      <h2>Un plan a tu medida.</h2>
+      <p>Si preferís empezar con orientación, conocé nuestras propuestas y consultá qué incluyen.</p>
+    </div>
     <div class="plan-ladder" aria-label="Planes ProteínaSmart">
       <article class="plan-card plan-start reveal">
         <div class="plan-number">01</div>
@@ -190,37 +247,6 @@
         <a class="btn btn-primary" data-wa="Hola ProteínaSmart 👋 Quiero hablar sobre el plan Smart 90." href="#">Hablar sobre Smart 90</a>
       </article>
     </div>
-
-    <div class="filters" id="catalogFilters" role="group" aria-label="Categoría"></div>
-    <div class="catalog-tools">
-      <label for="catalogGoal">Objetivo</label>
-      <select id="catalogGoal"><option value="">Todos los objetivos</option></select>
-      <button class="chip" type="button" id="clearFilters">Limpiar filtros</button>
-      <p id="catalogCount" role="status" aria-live="polite"></p>
-    </div>
-
-    <p class="purchase-guide">Agregá tus productos y enviá tu pedido por WhatsApp</p>
-    <div class="product-grid product-grid-engine" id="catalogGrid" aria-hidden="true"></div>
-    <noscript>Activá JavaScript para ver el catálogo y armar tu carrito. También podés llamar al 0985 864 209.</noscript>
-
-    <p class="empty-state" id="catalogEmpty" hidden>
-      No hay productos con ese filtro todavía.
-      <a data-wa href="#">Escribinos y lo conseguimos</a>.
-    </p>
-
-    <div class="catalog-foot reveal">
-      <p>¿Buscás una marca o un producto que no está en la lista? Lo importamos a pedido.</p>
-      <a class="btn btn-ghost" data-wa="Hola ProteínaSmart 👋 Busco un producto que no está en el catálogo:" href="#">Pedir un producto puntual</a>
-    </div>
-  </section>
-
-<section class="section alt" id="objetivo">
-    <div class="section-head reveal">
-      <span class="kicker">Empezá por acá</span>
-      <h2>¿Cuál es tu objetivo hoy?</h2>
-      <p>Elegí uno y el catálogo se filtra solo. Podés volver a tocarlo para ver todo de nuevo.</p>
-    </div>
-    <div class="goal-grid" id="objetivoGrid"></div>
   </section>
 
 <section class="section alt" id="como-comprar">
@@ -277,8 +303,10 @@
       <h2>Contanos tu objetivo y te ayudamos a elegir</h2>
       <p class="cta-sub">Te ayudamos a comparar opciones según tu objetivo y presupuesto. Sin compromiso de compra.</p>
       <form class="cta-form" id="leadForm">
-        <input type="text" name="name" aria-label="Tu nombre" placeholder="Tu nombre" required />
-        <select aria-label="Tu objetivo principal" name="objetivo" required>
+        <label for="leadName">Tu nombre</label>
+        <input type="text" id="leadName" name="name" placeholder="¿Cómo te llamás?" autocomplete="given-name" required />
+        <label for="leadGoal">Tu objetivo principal</label>
+        <select id="leadGoal" name="objetivo" required>
           <option value="" disabled selected>Tu objetivo principal</option>
           <option>Ganar masa muscular</option>
           <option>Bajar grasa / definir</option>
@@ -287,17 +315,19 @@
           <option>Energía sostenida</option>
           <option>Alimentación keto / low carb</option>
         </select>
-        <select aria-label="Nivel de actividad" name="nivel" required>
+        <label for="leadActivity">Nivel de actividad</label>
+        <select id="leadActivity" name="nivel" required>
           <option value="" disabled selected>Nivel de actividad</option>
           <option>Sedentario</option>
           <option>1 a 2 entrenamientos por semana</option>
           <option>3 a 4 entrenamientos por semana</option>
           <option>5 o más entrenamientos por semana</option>
         </select>
-        <textarea aria-label="Información adicional opcional" name="mensaje" rows="3" placeholder="Contanos algo más (opcional): edad, peso, si ya tomás algo…"></textarea>
+        <label for="leadMessage">Algo más que quieras contarnos <span>(opcional)</span></label>
+        <textarea id="leadMessage" name="mensaje" rows="3" placeholder="Tu presupuesto, preferencias o productos que buscás…"></textarea>
         <button type="submit" class="btn btn-primary btn-large">Quiero mi recomendación</button>
       </form>
-      <p class="form-note" id="formNote">🔒 Tus datos quedan entre nosotros. Cero spam.</p>
+      <p class="form-note" id="formNote" role="status">Se abre WhatsApp con tu consulta para que la revises y la envíes.</p>
     </div>
   </section>
 
@@ -317,11 +347,11 @@
       </details>
       <details>
         <summary>¿Qué proteína me conviene si quiero bajar grasa?</summary>
-        <p>En general, una proteína aislada o vegetal de bajo carbohidrato, sostenida con un plan low carb y suficiente saciedad. Usá el selector por objetivo o escribinos: ajustamos la recomendación a tu nivel de actividad.</p>
+        <p>Compará la composición y la etiqueta del fabricante según tus preferencias y el plan indicado por tu profesional. Podemos ayudarte a revisar presentaciones y precios antes de comprar.</p>
       </details>
       <details>
-        <summary>¿La creatina sirve si no soy fisicoculturista?</summary>
-        <p>Sí. Es el suplemento con más evidencia acumulada, y sus efectos no se limitan al músculo: también se estudia por su rol en función cognitiva y energía celular. Es una de las bases de nuestra línea de longevidad.</p>
+        <summary>¿Qué reviso antes de elegir creatina?</summary>
+        <p>Consultá la composición, presentación y etiqueta del fabricante, además de la procedencia, el lote y el vencimiento. Si tenés dudas sobre si corresponde a tu situación, consultá con un profesional de la salud.</p>
       </details>
       <details>
         <summary>¿Los productos son originales?</summary>
@@ -344,6 +374,8 @@
     <p>Escribinos para comparar opciones y resolver tus dudas antes de comprar.</p>
     <a class="btn btn-primary btn-large" data-wa href="#">Escribir por WhatsApp</a>
   </section>
+
+  </main>
 
   <!-- ============ FOOTER ============ -->
   <footer class="footer">
