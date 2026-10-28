@@ -43,19 +43,37 @@
 
   const burger = $('#burger');
   const navLinks = $('#navLinks');
+  const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
   if (burger && navLinks) {
-    burger.addEventListener('click', () => {
-      burger.classList.toggle('open');
-      burger.setAttribute('aria-expanded', String(burger.classList.contains('open')));
-      navLinks.classList.toggle('open');
+    const mobileNav = window.matchMedia('(max-width: 900px)');
+    function setMenuOpen(open) {
+      burger.classList.toggle('open', open);
+      navLinks.classList.toggle('open', open);
+      burger.setAttribute('aria-expanded', String(open));
+      burger.setAttribute('aria-label', open ? 'Cerrar menú' : 'Abrir menú');
+    }
+    burger.addEventListener('click', (event) => {
+      const open = mobileNav.matches && !navLinks.classList.contains('open');
+      setMenuOpen(open);
+      if (open && event.detail === 0) $('a, button', navLinks)?.focus();
     });
-    $$('a', navLinks).forEach((a) =>
-      a.addEventListener('click', () => {
-        burger.classList.remove('open');
-        burger.setAttribute('aria-expanded', 'false');
-        navLinks.classList.remove('open');
-      })
-    );
+    document.addEventListener('click', (event) => {
+      const target = /** @type {Element} */ (event.target);
+      if (target.closest('[data-cart-open]') || target.closest('#navLinks a') ||
+          (!navLinks.contains(target) && !burger.contains(target))) setMenuOpen(false);
+    });
+    document.addEventListener('keydown', (event) => {
+      if (event.key === 'Escape' && navLinks.classList.contains('open')) {
+        setMenuOpen(false);
+        burger.focus();
+      }
+    });
+    navLinks.addEventListener('focusout', (event) => {
+      const next = /** @type {FocusEvent} */ (event).relatedTarget;
+      if (next instanceof Node && !navLinks.contains(next) && !burger.contains(next)) setMenuOpen(false);
+    });
+    mobileNav.addEventListener('change', () => setMenuOpen(false));
+    setMenuOpen(false);
   }
 
   /* ================= REVEAL ================= */
@@ -80,6 +98,8 @@
   const grid = $('#catalogGrid');
   const filtros = $('#catalogFilters');
   const emptyState = $('#catalogEmpty');
+  const searchInput = $('#catalogSearch');
+  const clearSearch = $('#clearSearch');
 
   const paramsIniciales = new URLSearchParams(window.location.search);
   const legacy = { keto: 'keto', 'low-carb': 'keto', 'healthy-habits': 'todos', neuroplasticidad: 'longevidad' };
@@ -87,6 +107,8 @@
   const objetivoInicial = paramsIniciales.get('objetivo');
   let filtroCategoria = CATEGORIAS.some((c) => c.id === categoriaInicial) ? categoriaInicial : 'todos';
   let filtroObjetivo = OBJETIVOS.some((o) => o.id === objetivoInicial) ? objetivoInicial : null;
+  let busqueda = '';
+  const normalizarBusqueda = (value) => String(value ?? '').normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase().trim();
   const escapeHTML = (value) => String(value ?? '').replace(/[&<>"']/g, (char) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[char]));
 
   // Metadatos originales (categoria 'todos'), capturados antes de tocar el
@@ -150,6 +172,13 @@
       money(tramo.precio) + '</strong> c/u</p>';
   }
 
+  function fallbackProductoHTML(p) {
+    const categoria = CATEGORIAS.find((c) => c.id === p.categoria);
+    const iniciales = String(p.nombre || 'PS').split(/\s+/).slice(0, 2).map((palabra) => palabra.charAt(0)).join('').toUpperCase();
+    return '<span class="card-category">' + escapeHTML(categoria ? categoria.nombre : 'Suplementos') + '</span>' +
+      '<strong class="card-monogram">' + escapeHTML(iniciales) + '</strong>';
+  }
+
   function cardHTML(p) {
     const verified = p.verificado || {};
     const marca = verified.marca && p.marca ? '<span class="card-brand">' + escapeHTML(p.marca) + '</span>' : '';
@@ -157,17 +186,17 @@
     const agotado = verified.stock && p.stock === false;
     const disponibilidad = verified.stock && typeof p.stock === 'boolean' ? (p.stock ? 'Disponible' : 'Sin stock') : 'Disponibilidad a confirmar';
     // Solo recursos con procedencia verificada; nunca dibujar un envase ficticio.
-    const imagen = verified.imagen && typeof p.imagen === 'string' && /^(https:\/\/|\.?\/?(?:assets|images|img)\/)/.test(p.imagen) ? p.imagen : '';
+    const imagen = verified.imagen && typeof p.imagen === 'string' && /^(https:\/\/|images\/)/.test(p.imagen) ? p.imagen : '';
     const imagenHTML = imagen
-      ? '<div class="card-image"><img src="' + escapeHTML(imagen) + '" alt="' + escapeHTML(p.nombre) + '" loading="lazy" /></div>'
-      : '<div class="card-image card-image-fallback"><span>Foto del producto<br><small>pendiente</small></span></div>';
+      ? '<div class="card-image" data-category="' + escapeHTML(p.categoria) + '"><img src="' + escapeHTML(imagen) + '" alt="' + escapeHTML(p.nombre) + '" loading="lazy" decoding="async" width="800" height="800" /></div>'
+      : '<div class="card-image card-image-fallback" data-category="' + escapeHTML(p.categoria) + '" aria-hidden="true">' + fallbackProductoHTML(p) + '</div>';
     return '<article id="producto-' + escapeHTML(p.id) + '" class="product-card' + (agotado ? ' is-out' : '') + '">' + imagenHTML +
       '<div class="card-top">' + marca + '<h3>' + escapeHTML(p.nombre) + '</h3>' +
       '<span class="card-format">' + (verified.formato ? 'Presentación: ' : 'Presentación de referencia: ') + escapeHTML(p.formato || 'A confirmar') + '</span>' + sabor + '</div>' +
       '<p class="card-availability">' + disponibilidad + '</p>' +
       tramoHTML(p) +
       '<div class="card-foot"><div class="card-price"><small>Precio de referencia</small><strong>' + money(p.precio) + '</strong></div>' +
-      '<button class="btn btn-primary btn-sm" type="button" data-cart-add="' + escapeHTML(p.id) + '"' + (agotado ? ' disabled' : '') + '>' + (agotado ? 'Sin stock' : 'Agregar al carrito') + '</button></div></article>';
+      '<button class="btn btn-primary btn-sm" type="button" data-cart-add="' + escapeHTML(p.id) + '" aria-label="' + escapeHTML(agotado ? p.nombre + ': sin stock' : 'Agregar ' + p.nombre + ' al carrito') + '"' + (agotado ? ' disabled' : '') + '>' + (agotado ? 'Sin stock' : 'Agregar') + '</button></div></article>';
   }
 
   const SITIO_URL = 'https://www.proteinasmart.com/';
@@ -181,7 +210,7 @@
    */
   function productoSchema(p) {
     const verified = p.verificado || {};
-    const imagen = verified.imagen && typeof p.imagen === 'string' && /^(https:\/\/|\.?\/?(?:assets|images|img)\/)/.test(p.imagen) ? p.imagen : '';
+    const imagen = verified.imagen && typeof p.imagen === 'string' && /^(https:\/\/|images\/)/.test(p.imagen) ? p.imagen : '';
     /** @type {Record<string, any>} */
     const schema = {
       '@context': 'https://schema.org',
@@ -249,41 +278,48 @@
 
   function renderCatalogo() {
     if (!grid) return;
-    // El grid arranca oculto por CSS (.product-grid-engine + aria-hidden) para
-    // que la escalera de planes sea la portada; al renderizar el catalogo lo
-    // revelamos. Sin esto los productos quedan display:none para siempre.
-    grid.classList.remove('product-grid-engine');
-    grid.removeAttribute('aria-hidden');
+    const terminos = normalizarBusqueda(busqueda).split(/\s+/).filter(Boolean);
     const items = CATALOG.filter((p) => {
       const okCat = filtroCategoria === 'todos' || p.categoria === filtroCategoria;
       const okObj =
         !filtroObjetivo || (p.objetivos || []).indexOf(filtroObjetivo) !== -1;
-      return okCat && okObj;
+      const categoria = CATEGORIAS.find((c) => c.id === p.categoria);
+      const texto = normalizarBusqueda([p.nombre, p.marca, p.formato, p.categoria, categoria?.nombre].filter(Boolean).join(' '));
+      return okCat && okObj && terminos.every((termino) => texto.includes(termino));
     });
 
     grid.innerHTML = items.map(cardHTML).join('');
-    $('#catalogCount').textContent = items.length + ' productos';
+    const count = $('#catalogCount');
+    if (count) count.textContent = items.length + (items.length === 1 ? ' producto' : ' productos') +
+      (filtroCategoria !== 'todos' || filtroObjetivo || terminos.length ? ' de ' + CATALOG.length : '');
     if (emptyState) emptyState.hidden = items.length > 0;
     observeReveals(grid);
     // sin animación diferida en re-render: se muestran de una
     requestAnimationFrame(() => $$('.product-card', grid).forEach((c) => c.classList.add('visible')));
   }
 
+  function syncCategoryControls() {
+    if (!filtros) return;
+    $$('.chip', filtros).forEach((button) => {
+      const active = button.dataset.cat === filtroCategoria;
+      button.classList.toggle('active', active);
+      button.setAttribute('aria-pressed', String(active));
+    });
+  }
+
   function renderFiltros() {
     if (!filtros) return;
     filtros.innerHTML = CATEGORIAS.map(
       (c) =>
-        '<button class="chip' + (c.id === filtroCategoria ? ' active' : '') + '" data-cat="' +
-        c.id + '" aria-pressed="' + (c.id === filtroCategoria) + '"><span>' + c.icono + '</span>' + c.nombre + '</button>'
+        '<button type="button" class="chip" data-cat="' + escapeHTML(c.id) +
+        '" aria-pressed="false"><span aria-hidden="true">' + escapeHTML(c.icono) + '</span>' + escapeHTML(c.nombre) + '</button>'
     ).join('');
-
+    syncCategoryControls();
     $$('.chip', filtros).forEach((btn) => {
       btn.addEventListener('click', () => {
-        $$('.chip', filtros).forEach((b) => b.classList.remove('active'));
-        btn.classList.add('active');
         filtroCategoria = btn.dataset.cat;
         sincronizarURL();
-        renderFiltros();
+        syncCategoryControls();
         renderCatalogo();
       });
     });
@@ -302,7 +338,7 @@
     ).join('');
 
     $$('.goal-card', objetivosWrap).forEach((btn) => {
-      btn.addEventListener('click', () => {
+      btn.addEventListener('click', (event) => {
         const isActive = btn.classList.contains('active');
         $$('.goal-card', objetivosWrap).forEach((b) => b.classList.remove('active'));
         if (isActive) {
@@ -312,22 +348,18 @@
           filtroObjetivo = btn.dataset.goal;
         }
         filtroCategoria = 'todos';
-        if (filtros) {
-          $$('.chip', filtros).forEach((b) => b.classList.remove('active'));
-          const todos = $('.chip[data-cat="todos"]', filtros);
-          if (todos) todos.classList.add('active');
-        }
         sincronizarURL();
-        renderFiltros();
+        syncCategoryControls();
         renderCatalogo();
         const dest = $('#catalogo');
-        if (dest) dest.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        if (event.detail === 0) searchInput?.focus({ preventScroll: true });
+        if (dest) dest.scrollIntoView({ behavior: reducedMotion.matches ? 'instant' : 'smooth', block: 'start' });
       });
     });
   }
 
   const goalSelect = $('#catalogGoal');
-  goalSelect.innerHTML += OBJETIVOS.map((o) => '<option value="' + o.id + '">' + o.nombre + '</option>').join('');
+  if (goalSelect) goalSelect.innerHTML += OBJETIVOS.map((o) => '<option value="' + escapeHTML(o.id) + '">' + escapeHTML(o.nombre) + '</option>').join('');
   function syncGoalControls() {
     const select = $('#catalogGoal');
     if (select) select.value = filtroObjetivo || '';
@@ -337,15 +369,32 @@
       button.setAttribute('aria-pressed', String(active));
     });
   }
-  goalSelect.addEventListener('change', () => {
+  goalSelect?.addEventListener('change', () => {
     filtroObjetivo = goalSelect.value || null;
     sincronizarURL();
     renderCatalogo();
   });
-  $('#clearFilters').addEventListener('click', () => {
-    filtroCategoria = 'todos'; filtroObjetivo = null;
-    sincronizarURL(); renderFiltros(); renderCatalogo();
+  function syncSearchControls() {
+    if (searchInput) searchInput.value = busqueda;
+    if (clearSearch) clearSearch.hidden = !busqueda;
+  }
+  searchInput?.addEventListener('input', () => {
+    busqueda = searchInput.value;
+    if (clearSearch) clearSearch.hidden = !busqueda;
+    renderCatalogo();
   });
+  clearSearch?.addEventListener('click', () => {
+    busqueda = '';
+    syncSearchControls();
+    renderCatalogo();
+    searchInput?.focus();
+  });
+  $('#clearFilters')?.addEventListener('click', () => {
+    filtroCategoria = 'todos'; filtroObjetivo = null; busqueda = '';
+    syncSearchControls();
+    sincronizarURL(); syncCategoryControls(); renderCatalogo();
+  });
+  syncSearchControls();
   syncGoalControls();
   renderFiltros();
   renderCatalogo();
@@ -355,7 +404,7 @@
   // Categoria pedida por URL limpia (/proteinas, ?categoria=... o el
   // legacy ?disciplina=...): desplazar directo al catalogo filtrado.
   if (filtroCategoria !== 'todos') {
-    requestAnimationFrame(() => $('#catalogo')?.scrollIntoView({ block: 'start' }));
+    requestAnimationFrame(() => $('#catalogo')?.scrollIntoView({ behavior: reducedMotion.matches ? 'instant' : 'auto', block: 'start' }));
   }
 /* ================= FALLBACK VISUAL (404) ================= */
   // Si una imagen falla (404 o red lenta), la tarjeta vuelve sola al
@@ -368,13 +417,17 @@
         if (img.tagName !== 'IMG') return;
         const contenedor = img.closest('.card-image');
         if (!contenedor) return;
+        const card = contenedor.closest('.product-card');
+        const producto = CATALOG.find((item) => 'producto-' + item.id === card?.id);
         contenedor.classList.add('card-image-fallback');
-        contenedor.innerHTML = '<span>Foto del producto<br><small>pendiente</small></span>';
+        contenedor.setAttribute('aria-hidden', 'true');
+        contenedor.innerHTML = fallbackProductoHTML(producto || { nombre: img.getAttribute('alt') || 'PS' });
       },
       true
     );
   }
 
+  const addFeedbackTimers = new WeakMap();
   document.addEventListener('click', (event) => {
     const comboAdd = /** @type {HTMLElement | null} */ ((/** @type {Element} */ (event.target)).closest('[data-combo-add]'));
     if (comboAdd && window.PS_CART) {
@@ -393,7 +446,18 @@
     const producto = CATALOG.find((item) => item.id === add.dataset.cartAdd);
     if (producto && !(producto.verificado?.stock && producto.stock === false)) {
       window.PS_CART.dispatch({ type: 'AGREGAR', producto });
-      $('#cartStatus').textContent = producto.nombre + ' agregado al carrito.';
+      const status = $('#cartStatus');
+      if (status) status.textContent = producto.nombre + ' agregado al carrito.';
+      window.clearTimeout(addFeedbackTimers.get(add));
+      add.classList.add('is-added');
+      add.textContent = '✓ Agregado';
+      add.setAttribute('aria-label', producto.nombre + ' agregado. Agregar otra unidad al carrito');
+      addFeedbackTimers.set(add, window.setTimeout(() => {
+        add.classList.remove('is-added');
+        add.textContent = 'Agregar';
+        add.setAttribute('aria-label', 'Agregar ' + producto.nombre + ' al carrito');
+        addFeedbackTimers.delete(add);
+      }, 1800));
     }
   });
 
