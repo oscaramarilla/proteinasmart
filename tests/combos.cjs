@@ -85,13 +85,26 @@ test('ningun producto declara stock verificado: no hay inventario propio', () =>
   }
 });
 
-test('el combo con co-marca la declara y usa productos de esa marca', () => {
+test('la co-marca solo se anuncia si esa marca es la mayoria del combo', () => {
+  // Anunciar "ProteinaSmart + X" cuando X es uno de tres componentes
+  // enganha: el cliente espera un combo de esa marca. La co-marca exige
+  // que la marca sea mas de la mitad de lo que entra en la caja.
   const conComarca = PS_COMBOS.filter((combo) => combo.coMarca);
-  assert.ok(conComarca.length > 0, 'Smart Feeding tiene que declarar la co-marca');
+  assert.ok(conComarca.length > 0, 'tiene que haber al menos un combo con co-marca');
   for (const combo of conComarca) {
+    const deLaMarca = combo.items.filter((item) => item.marca === combo.coMarca).length;
     assert.ok(
-      combo.items.some((item) => item.marca === combo.coMarca),
-      `${combo.nombre}: anuncia ${combo.coMarca} pero no incluye ningun producto de esa marca`,
+      deLaMarca * 2 > combo.items.length,
+      `${combo.nombre}: anuncia ${combo.coMarca} con solo ${deLaMarca} de ${combo.items.length} productos de esa marca`,
     );
+  }
+});
+
+test('ninguna bajada de combo promete un resultado de salud', () => {
+  // AGENTS.md: los suplementos no son medicamentos. Las bajadas describen
+  // lo que trae la caja, no lo que le hace al cuerpo.
+  const prohibido = /corrig|corregid|cura|trata|previene|elimina|garantiza|resultado asegurado|deficit(s)? (mas )?comun/i;
+  for (const combo of PS_COMBOS) {
+    assert.ok(!prohibido.test(combo.bajada), `${combo.nombre}: la bajada promete un resultado -- "${combo.bajada}"`);
   }
 });

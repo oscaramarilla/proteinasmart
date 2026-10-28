@@ -257,7 +257,10 @@
     if (!grid) return;
     const combos = window.PS_COMBOS || [];
     if (!combos.length) { grid.innerHTML = ''; return; }
-    grid.innerHTML = combos.map((combo) => {
+    // Once combos seguidos son demasiados para decidir. Se muestran los
+    // destacados y el resto queda detras de un boton.
+    const ordenados = [...combos].sort((a, b) => Number(!!b.destacado) - Number(!!a.destacado));
+    grid.innerHTML = ordenados.map((combo) => {
       const coMarca = combo.coMarca
         ? '<span class="combo-comarca">ProteínaSmart + ' + escapeHTML(combo.coMarca) + '</span>'
         : '';
@@ -265,7 +268,7 @@
         '<li>' + escapeHTML(item.nombre) +
         (item.verificado?.marca && item.marca ? ' <em>' + escapeHTML(item.marca) + '</em>' : '') +
         '<span>' + money(item.precio) + '</span></li>').join('');
-      return '<article class="combo-card">' + coMarca +
+      return '<article class="combo-card"' + (combo.destacado ? '' : ' data-combo-resto hidden') + '>' + coMarca +
         '<h3>' + escapeHTML(combo.nombre) + '</h3>' +
         '<p class="combo-bajada">' + escapeHTML(combo.bajada) + '</p>' +
         '<ul class="combo-items">' + lista + '</ul>' +
@@ -274,6 +277,28 @@
         '<button class="btn btn-primary btn-sm" type="button" data-combo-add="' +
         escapeHTML(combo.id) + '">Agregar el combo</button></div></article>';
     }).join('');
+    montarVerTodosCombos(ordenados.filter((combo) => !combo.destacado).length);
+  }
+
+  /**
+   * Boton "ver todos": revela los combos no destacados. Si no hay ninguno
+   * escondido no se dibuja, para no dejar un boton que no hace nada.
+   * @param {number} ocultos Cantidad de combos escondidos.
+   * @returns {void}
+   */
+  function montarVerTodosCombos(ocultos) {
+    const boton = /** @type {HTMLButtonElement | null} */ ($('#combosVerTodos'));
+    if (!boton) return;
+    if (!ocultos) { boton.hidden = true; return; }
+    boton.hidden = false;
+    boton.setAttribute('aria-expanded', 'false');
+    boton.textContent = 'Ver los otros ' + ocultos + ' combos';
+    boton.onclick = () => {
+      const abierto = boton.getAttribute('aria-expanded') === 'true';
+      $$('[data-combo-resto]').forEach((card) => { card.hidden = abierto; });
+      boton.setAttribute('aria-expanded', String(!abierto));
+      boton.textContent = abierto ? 'Ver los otros ' + ocultos + ' combos' : 'Mostrar solo los destacados';
+    };
   }
 
   function renderCatalogo() {

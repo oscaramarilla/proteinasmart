@@ -19,7 +19,7 @@ interface PSCartItem {
 /** Combo publicable: sus items y su precio ya resueltos por catalog.js. */
 interface PSCombo {
   id: string; nombre: string; bajada: string; objetivo: string;
-  coMarca?: string; componentes: string[];
+  coMarca?: string; destacado?: boolean; componentes: string[];
   items: Array<Record<string, any>>; precio: number;
 }
 

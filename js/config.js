@@ -29,7 +29,10 @@ window.PS_CONFIG = {
     // los precios de js/catalog.js, que hoy llevan el envío adentro.
     envioAsuncion: 'Envío gratis a tu puerta en Asunción y Gran Asunción',
     envioInterior: 'Envío incluido al interior por encomienda, a cualquier ciudad del país',
-    despacho: 'Despachamos el mismo día los pedidos confirmados antes de las 14:00, de lunes a sábado',
+    // El catálogo todavía no declara stock verificado en ningún producto, así
+    // que la promesa de despacho no puede ser incondicional: se aclara qué
+    // sale hoy y qué va contra pedido.
+    despacho: 'Lo que está en stock se despacha el mismo día si confirmás antes de las 14:00, de lunes a sábado. Lo que va contra pedido te lo confirmamos antes de cobrarte',
     // Empresas con las que se despacha al interior. La lista operativa y
     // editable vive en Supabase (courier_companies); estas son las que se
     // nombran en el sitio.

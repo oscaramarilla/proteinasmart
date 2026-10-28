@@ -72,7 +72,7 @@
       {
         "@type": "Question",
         "name": "¿Hacen envíos al interior del país?",
-        "acceptedAnswer": { "@type": "Answer", "text": "Sí, y el envío ya está incluido en el precio de cada producto. En Asunción y Gran Asunción entregamos gratis a tu puerta. Al interior despachamos por encomienda a cualquier ciudad del país, sin costo adicional, con Transruta, Paraná Express, La Guaireña, TSI Transportadora San Ignacio, La Misionera y Occidental Express, entre otras. Despachamos el mismo día los pedidos confirmados antes de las 14:00, de lunes a sábado." }
+        "acceptedAnswer": { "@type": "Answer", "text": "Sí, y el envío ya está incluido en el precio de cada producto. En Asunción y Gran Asunción entregamos gratis a tu puerta. Al interior despachamos por encomienda a cualquier ciudad del país, sin costo adicional, con Transruta, Paraná Express, La Guaireña, TSI Transportadora San Ignacio, La Misionera y Occidental Express, entre otras. Lo que está en stock se despacha el mismo día si confirmás antes de las 14:00, de lunes a sábado. Lo que va contra pedido te lo confirmamos antes de cobrarte." }
       },
       {
         "@type": "Question",
@@ -106,7 +106,6 @@
       <a href="#catalogo">Catálogo</a>
       <a href="#combos">Combos</a>
       <a href="#objetivo">Tu objetivo</a>
-      <a href="#planes">Planes</a>
       <a href="#nosotros">Entregas</a>
       <a href="#mayoristas">Mayoristas</a>
       <a href="#asesoria">Asesoría</a>
@@ -188,6 +187,9 @@
       <p>Cada combo junta solo lo que se sostiene junto. El precio es la suma de sus productos — no hay recargo por armarlo.</p>
     </div>
     <div class="combo-grid" id="combosGrid"></div>
+    <div class="combos-foot">
+      <button class="btn btn-ghost" type="button" id="combosVerTodos" aria-controls="combosGrid" hidden></button>
+    </div>
   </section>
 
 <section class="section alt" id="objetivo">
@@ -197,67 +199,6 @@
       <p>Elegí uno y el catálogo se filtra solo. Podés volver a tocarlo para ver todo de nuevo.</p>
     </div>
     <div class="goal-grid" id="objetivoGrid"></div>
-  </section>
-
-<section class="section" id="planes">
-    <div class="section-head reveal">
-      <span class="kicker">Acompañamos tu elección</span>
-      <h2>Un plan a tu medida.</h2>
-      <p>Si preferís empezar con orientación, conocé nuestras propuestas y consultá qué incluyen.</p>
-    </div>
-    <div class="plan-ladder" aria-label="Planes ProteínaSmart">
-      <article class="plan-card plan-start reveal">
-        <div class="plan-number">01</div>
-        <span class="plan-tag">Para empezar</span>
-        <h3>Smart Start</h3>
-        <p>Una base simple para ordenar tu alimentación y conocer qué suplemento tiene sentido para vos.</p>
-        <ul>
-          <li>Orientación inicial</li>
-          <li>Una recomendación concreta</li>
-          <li>Compra sin exceso</li>
-        </ul>
-        <a class="btn btn-ghost" data-wa="Hola ProteínaSmart 👋 Quiero conocer el plan Smart Start." href="#">Conocer Smart Start</a>
-      </article>
-
-      <article class="plan-card plan-muscle reveal">
-        <div class="plan-number">02</div>
-        <span class="plan-tag">Base de progreso</span>
-        <h3>Smart Muscle</h3>
-        <p>Proteína y complementos seleccionados para acompañar una rutina de fuerza con criterio.</p>
-        <ul>
-          <li>Proteína como base</li>
-          <li>Complemento recomendado</li>
-          <li>Guía de uso a confirmar</li>
-        </ul>
-        <a class="btn btn-primary" data-wa="Hola ProteínaSmart 👋 Quiero reservar el plan Smart Muscle." href="#">Reservar Smart Muscle</a>
-      </article>
-
-      <article class="plan-card plan-performance reveal">
-        <div class="plan-number">03</div>
-        <span class="plan-tag">Para entrenar mejor</span>
-        <h3>Smart Performance</h3>
-        <p>Una combinación pensada para quienes quieren ordenar proteína, fuerza y rendimiento.</p>
-        <ul>
-          <li>Selección según frecuencia</li>
-          <li>Combinación sin compras de más</li>
-          <li>Reserva y coordinación por WhatsApp</li>
-        </ul>
-        <a class="btn btn-ghost" data-wa="Hola ProteínaSmart 👋 Quiero consultar por el plan Smart Performance." href="#">Consultar plan</a>
-      </article>
-
-      <article class="plan-card plan-90 reveal">
-        <div class="plan-number">04</div>
-        <span class="plan-tag">Seguimiento</span>
-        <h3>Smart 90</h3>
-        <p>Un horizonte de 90 días para construir constancia, revisar tu selección y ajustar el protocolo.</p>
-        <ul>
-          <li>Objetivo y rutina definidos</li>
-          <li>Reposición planificada</li>
-          <li>Asesoría durante el proceso</li>
-        </ul>
-        <a class="btn btn-primary" data-wa="Hola ProteínaSmart 👋 Quiero hablar sobre el plan Smart 90." href="#">Hablar sobre Smart 90</a>
-      </article>
-    </div>
   </section>
 
 <section class="section alt" id="como-comprar">
@@ -293,7 +234,7 @@
     <div class="trust-bar">
     <div class="trust-item"><span>🚚</span><p data-cfg="envio-asuncion">Envío gratis a tu puerta en Asunción y Gran Asunción</p></div>
     <div class="trust-item"><span>📦</span><p data-cfg="envio-interior">Envío incluido al interior por encomienda, a cualquier ciudad del país</p></div>
-    <div class="trust-item"><span>⏱️</span><p data-cfg="despacho">Despachamos el mismo día los pedidos confirmados antes de las 14:00, de lunes a sábado</p></div>
+    <div class="trust-item"><span>⏱️</span><p data-cfg="despacho">Lo que está en stock se despacha el mismo día si confirmás antes de las 14:00, de lunes a sábado. Lo que va contra pedido te lo confirmamos antes de cobrarte</p></div>
     <div class="trust-item"><span>💳</span><p data-cfg="pagos">Transferencia, Tigo Money, Personal Pay y efectivo</p></div>
     <div class="trust-item"><span>🧾</span><p data-cfg="facturacion">Factura legal con RUC</p></div>
   </div>
@@ -384,7 +325,7 @@
       </details>
       <details>
         <summary>¿Hacen envíos al interior del país?</summary>
-        <p>El envío ya está incluido en el precio de cada producto, no se suma al total. <span data-cfg="envio-asuncion">Envío gratis a tu puerta en Asunción y Gran Asunción</span>. <span data-cfg="envio-interior">Envío incluido al interior por encomienda, a cualquier ciudad del país</span>. Despachamos con <span data-cfg="encomiendas">Transruta · Paraná Express · La Guaireña · TSI Transportadora San Ignacio · La Misionera · Occidental Express</span>, entre otras. <span data-cfg="despacho">Despachamos el mismo día los pedidos confirmados antes de las 14:00, de lunes a sábado</span>.</p>
+        <p>El envío ya está incluido en el precio de cada producto, no se suma al total. <span data-cfg="envio-asuncion">Envío gratis a tu puerta en Asunción y Gran Asunción</span>. <span data-cfg="envio-interior">Envío incluido al interior por encomienda, a cualquier ciudad del país</span>. Despachamos con <span data-cfg="encomiendas">Transruta · Paraná Express · La Guaireña · TSI Transportadora San Ignacio · La Misionera · Occidental Express</span>, entre otras. <span data-cfg="despacho">Lo que está en stock se despacha el mismo día si confirmás antes de las 14:00, de lunes a sábado. Lo que va contra pedido te lo confirmamos antes de cobrarte</span>.</p>
       </details>
       <details>
         <summary>¿Qué proteína me conviene si quiero bajar grasa?</summary>

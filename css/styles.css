@@ -465,3 +465,6 @@ body.cart-open { overflow: hidden; }
 .combo-price { display: flex; flex-direction: column; }
 .combo-price small { color: var(--text-dim); font-size: .72rem; }
 .combo-price strong { font-family: 'Sora', sans-serif; font-size: 1.25rem; color: var(--text); }
+
+/* Pie de la grilla de combos: el boton que revela los no destacados. */
+.combos-foot { display: flex; justify-content: center; margin-top: 1.5rem; }
