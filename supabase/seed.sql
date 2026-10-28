@@ -298,3 +298,88 @@ values
     null, true, 'Keto / Low carb', 'Aceite MCT + Endulzante Monk Fruit',
     array['Keto esencial']::text[]
   );
+
+-- ============================================================
+-- Reventa SANA LIFE PY. Igual que BRASA MONTE, estos declaran `marca`.
+-- PRECIO: el PUBLICADO por Sana Life al 28/10/2026, NO un costo mayorista.
+-- Mientras no haya precio de compra confirmado, se venden sin margen
+-- conocido -- ver docs/sana-life-nichos.md.
+-- Espeja los SKU de js/catalog.js; si cambia uno, cambian los dos.
+-- ============================================================
+insert into public.productos (
+  nombre, descripcion, precio, unidad_medida, categoria, marca,
+  objetivos, disciplinas, imagen, stock, protocolo, complemento, etiquetas
+)
+values
+  (
+    'Multivitamínico Hombre',
+    'Fórmula multivitamínica diaria. Consultá la composición y la etiqueta del fabricante.',
+    250000, 'Opti-Men · 90 cápsulas', 'longevidad', 'Optimum Nutrition',
+    array['energia', 'masa']::text[],
+    array['healthy-habits']::text[],
+    null, true, 'Base diaria', 'Vitamina D3+K2 + Zinc',
+    '{}'::text[]
+  ),
+  (
+    'Multivitamínico Mujer',
+    'Fórmula multivitamínica diaria. Consultá la composición y la etiqueta del fabricante.',
+    180000, 'Opti-Women · 60 cápsulas', 'longevidad', 'Optimum Nutrition',
+    array['energia', 'belleza']::text[],
+    array['healthy-habits']::text[],
+    null, true, 'Base diaria', 'Vitamina C + Zinc',
+    '{}'::text[]
+  ),
+  (
+    'Vitamina C 1000 mg',
+    '1000 mg por cápsula. Consultá la composición y la etiqueta del fabricante.',
+    150000, '100 cápsulas', 'longevidad', 'NOW',
+    array['belleza', 'energia']::text[],
+    array['healthy-habits']::text[],
+    null, true, 'Base diaria', 'Zinc + Vitamina D3+K2',
+    '{}'::text[]
+  ),
+  (
+    'Zinc 50 mg',
+    '50 mg por cápsula. Consultá la composición y la etiqueta del fabricante.',
+    120000, '100 cápsulas', 'longevidad', 'NOW',
+    array['energia', 'belleza']::text[],
+    array['healthy-habits']::text[],
+    null, true, 'Base diaria', 'Vitamina C + Vitamina D3+K2',
+    array['El más accesible']::text[]
+  ),
+  (
+    'Ashwagandha KSM-66',
+    'Extracto KSM-66 de raíz. Consultá la composición y la etiqueta del fabricante.',
+    230000, '60 cápsulas', 'longevidad', 'Horbaach',
+    array['foco', 'energia']::text[],
+    array['healthy-habits']::text[],
+    null, true, 'Descanso y estrés', 'Magnesio Glicinato',
+    array['Nuevo']::text[]
+  ),
+  (
+    'Melena de León en polvo',
+    'Hongo melena de león en polvo. Consultá la composición y la etiqueta del fabricante.',
+    250000, '113 servicios', 'longevidad', 'Nutricost',
+    array['foco']::text[],
+    array['healthy-habits']::text[],
+    null, true, 'Foco y claridad mental', 'Nootrópico Focus + Omega 3',
+    array['Nuevo']::text[]
+  ),
+  (
+    'Whey Protein (gama de entrada)',
+    'Proteína de suero para empezar, al menor costo por envase del catálogo.',
+    270000, 'Wheyshake · 900 g', 'proteinas', 'LanderFit',
+    array['masa', 'definicion']::text[],
+    array['healthy-habits']::text[],
+    null, true, 'Ganar masa', 'Creatina Monohidratada',
+    '{}'::text[]
+  ),
+  (
+    'Creatina Monohidratada (60 servicios)',
+    'Creatina monohidratada en su presentación más accesible.',
+    200000, '60 servicios', 'deportivos', 'Nutrex',
+    array['masa', 'energia']::text[],
+    array['healthy-habits']::text[],
+    null, true, 'Ganar masa', 'Whey Protein',
+    '{}'::text[]
+  );

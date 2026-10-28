@@ -60,16 +60,28 @@ test('un combo con un componente sin precio no se publica', () => {
   assert.ok(!combos.some((combo) => combo.id === 'smart-feeding'), 'smart-feeding deberia caerse');
 });
 
-test('los productos de reventa declaran su marca verificada', () => {
-  const reventa = PS_CATALOG.filter((p) => p.marca === 'BRASA MONTE');
-  assert.ok(reventa.length > 0, 'tiene que haber productos de reventa');
-  for (const producto of reventa) {
-    assert.equal(producto.verificado.marca, true, `${producto.id}: la marca es el dato que se anuncia`);
+test('marca declarada y marca verificada van siempre juntas', () => {
+  // Invariante: los productos de reventa son los unicos con marca, y en
+  // ellos la marca es el dato que se anuncia, asi que va verificada. El
+  // catalogo propio no tiene marca y por lo tanto no la verifica. No se
+  // admite ninguna de las dos combinaciones intermedias.
+  const conMarca = PS_CATALOG.filter((p) => p.marca);
+  assert.ok(conMarca.length > 0, 'tiene que haber productos de reventa');
+  for (const producto of conMarca) {
+    assert.equal(producto.verificado.marca, true, `${producto.id}: declara marca pero no la verifica`);
     assert.ok(producto.precio > 0, `${producto.id}: sin precio`);
   }
-  // El resto del catalogo sigue sin marca verificada: el default no cambio.
-  for (const producto of PS_CATALOG.filter((p) => p.marca !== 'BRASA MONTE')) {
-    assert.equal(producto.verificado.marca, false, `${producto.id}: no deberia tener marca verificada`);
+  for (const producto of PS_CATALOG.filter((p) => !p.marca)) {
+    assert.equal(producto.verificado.marca, false, `${producto.id}: verifica una marca que no declara`);
+  }
+});
+
+test('ningun producto declara stock verificado: no hay inventario propio', () => {
+  // Respalda el invariante de schema-productos.cjs (nunca se publica
+  // availability): si algun dia se activa, que sea una decision explicita
+  // y no un descuido al cargar un producto nuevo.
+  for (const producto of PS_CATALOG) {
+    assert.equal(producto.verificado.stock, false, `${producto.id}: declara stock verificado`);
   }
 });
 
