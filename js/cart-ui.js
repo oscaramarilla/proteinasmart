@@ -40,6 +40,34 @@
   dialog.querySelector('.cart-close').addEventListener('click', close);
   dialog.querySelector('[data-cart-close]').addEventListener('click', close);
   dialog.addEventListener('click', (event) => { if (event.target === dialog) { const rect = dialog.getBoundingClientRect(); if (event.clientX < rect.left || event.clientX > rect.right || event.clientY < rect.top || event.clientY > rect.bottom) close(); } });
+  /**
+   * Empujon al tramo mayorista de un item: confirma el descuento cuando ya
+   * esta activo, y dice cuanto falta cuando no. El calculo sale de PS_CART,
+   * no se deriva aca.
+   * @param {PSCartItem} item Item del carrito.
+   * @returns {string} HTML del aviso, o cadena vacia si el item no tiene tramo.
+   */
+  function tramoItemHTML(item) {
+    if (!item.mayorista) return '';
+    const faltan = cart.faltanParaMayorista(item);
+    if (faltan === 0) return '<small class="cart-wholesale-on">Precio mayorista aplicado</small>';
+    return '<small class="cart-wholesale-off">Agregá ' + faltan +
+      (faltan === 1 ? ' unidad' : ' unidades') + ' y pagás ' + money(item.mayorista.precio) + ' c/u</small>';
+  }
+
+  /**
+   * Linea de ahorro por volumen del carrito. No se muestra si ningun tramo
+   * esta activo, para no mostrar un "ahorro: Gs 0".
+   * @param {Array<PSCartItem>} items Items del carrito.
+   * @returns {string} HTML de la linea de ahorro, o cadena vacia.
+   */
+  function ahorroHTML(items) {
+    const ahorro = cart.ahorroMayorista(items);
+    return ahorro > 0
+      ? '<p class="cart-wholesale-saving"><span>Ahorro por volumen</span><strong>−' + money(ahorro) + '</strong></p>'
+      : '';
+  }
+
   function render(state) {
     const count = state.items.reduce((sum, item) => sum + item.cantidad, 0);
     const quote = checkout.quote(state.items);
@@ -52,10 +80,10 @@
     const focusAction = active?.dataset?.action;
     dialog.querySelector('#cartItems').innerHTML = state.items.length ? '<ul class="cart-items">' + state.items.map((item) => {
       const id = escapeHTML(item.id); const name = escapeHTML(item.nombre);
-      return '<li class="cart-item"><div><h3>' + name + '</h3><p>' + escapeHTML([item.marca, item.formato, item.sabor].filter(Boolean).join(' · ')) + '</p><small>' + (item.precio ? money(item.precio) + ' por unidad · referencia' : 'Precio a confirmar') + '</small></div><div class="cart-item-controls">' +
-        '<div class="quantity-controls"><button type="button" data-action="minus" data-item="' + id + '" aria-label="Restar una unidad de ' + name + '"' + (item.cantidad === 1 ? ' disabled' : '') + '>−</button><output aria-label="Cantidad de ' + name + '">' + item.cantidad + '</output><button type="button" data-action="plus" data-item="' + id + '" aria-label="Sumar una unidad de ' + name + '"' + (item.cantidad >= cart.MAX_QUANTITY ? ' disabled' : '') + '>+</button></div><strong>' + (item.precio ? money(item.precio * item.cantidad) : 'A confirmar') + '</strong><button class="remove-item" type="button" data-action="remove" data-item="' + id + '" aria-label="Eliminar ' + name + '">Eliminar</button></div></li>';
+      return '<li class="cart-item"><div><h3>' + name + '</h3><p>' + escapeHTML([item.marca, item.formato, item.sabor].filter(Boolean).join(' · ')) + '</p><small>' + (item.precio ? money(cart.precioUnitario(item)) + ' por unidad · referencia' : 'Precio a confirmar') + '</small>' + tramoItemHTML(item) + '</div><div class="cart-item-controls">' +
+        '<div class="quantity-controls"><button type="button" data-action="minus" data-item="' + id + '" aria-label="Restar una unidad de ' + name + '"' + (item.cantidad === 1 ? ' disabled' : '') + '>−</button><output aria-label="Cantidad de ' + name + '">' + item.cantidad + '</output><button type="button" data-action="plus" data-item="' + id + '" aria-label="Sumar una unidad de ' + name + '"' + (item.cantidad >= cart.MAX_QUANTITY ? ' disabled' : '') + '>+</button></div><strong>' + (item.precio ? money(cart.precioUnitario(item) * item.cantidad) : 'A confirmar') + '</strong><button class="remove-item" type="button" data-action="remove" data-item="' + id + '" aria-label="Eliminar ' + name + '">Eliminar</button></div></li>';
     }).join('') + '</ul>' : '<p class="cart-empty">Tu carrito está vacío. Agregá productos del catálogo para preparar tu consulta.</p>';
-    dialog.querySelector('#cartTotals').innerHTML = state.items.length ? '<div class="cart-totals"><p><span>' + (quote.hasUnpricedItems ? 'Subtotal con precio conocido' : 'Subtotal de referencia') + '</span><strong>' + money(quote.subtotal) + '</strong></p>' + (quote.hasUnpricedItems ? '<p>Hay productos con precio a confirmar.</p>' : '') + '<p>' + escapeHTML(quote.shippingLabel) + '</p><small>' + (quote.shippingFee === null ? 'Costo y plazo según destino. El subtotal no incluye envío.' : quote.shippingFee === 0 ? 'El precio de cada producto ya incluye el envío a todo el país.' : 'Costo y plazo según destino.') + '</small></div>' : '';
+    dialog.querySelector('#cartTotals').innerHTML = state.items.length ? '<div class="cart-totals"><p><span>' + (quote.hasUnpricedItems ? 'Subtotal con precio conocido' : 'Subtotal de referencia') + '</span><strong>' + money(quote.subtotal) + '</strong></p>' + (quote.hasUnpricedItems ? '<p>Hay productos con precio a confirmar.</p>' : '') + ahorroHTML(state.items) + '<p>' + escapeHTML(quote.shippingLabel) + '</p><small>' + (quote.shippingFee === null ? 'Costo y plazo según destino. El subtotal no incluye envío.' : quote.shippingFee === 0 ? 'El precio de cada producto ya incluye el envío a todo el país.' : 'Costo y plazo según destino.') + '</small></div>' : '';
     const link = /** @type {HTMLAnchorElement} */ (dialog.querySelector('#cartCheckout'));
     link.hidden = !count;
     const goal = /** @type {HTMLSelectElement} */ (dialog.querySelector('#cartGoal'));

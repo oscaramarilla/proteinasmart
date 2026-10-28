@@ -11,6 +11,13 @@
      formato     → presentación (peso, cápsulas, ml)
      precio      → en guaraníes, sin puntos (0 = "consultar")
      precioAntes → opcional, para mostrar precio tachado
+     mayorista   → opcional: { desde: N, precio: P } -- a partir de N unidades
+                   del MISMO producto, cada unidad sale P. El carrito lo
+                   aplica solo si P < precio y 2 <= N <= 99; un tramo que no
+                   ahorra o que no se puede alcanzar se descarta en silencio
+                   (js/cart.js, normalizarMayorista). Dejarlo sin definir
+                   mientras no se conozca el costo del proveedor: un precio
+                   por volumen fijado sin ese piso puede vender bajo costo.
      objetivos   → ['masa','definicion','belleza','foco','energia']
      badge       → etiqueta corta opcional ('Más vendido', 'Nuevo'…)
      resumen     → una línea, beneficio concreto

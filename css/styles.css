@@ -910,3 +910,41 @@ body.cart-open { overflow: hidden; }
   .cart-summary small { font-size: .74rem; }
   .cart-dialog { padding: 1rem; width: calc(100% - 1.5rem); }
 }
+
+/* ===== Precio por volumen (tramo mayorista) ===== */
+/* Vitrina: la tarjeta avisa el precio por volumen sin competir con el precio
+   de lista, que sigue siendo el ancla. */
+.card-wholesale {
+  font-size: .78rem;
+  color: var(--text-dim);
+  border: 1px dashed var(--border-strong);
+  border-radius: 8px;
+  padding: .4rem .6rem;
+  margin-top: .6rem;
+}
+.card-wholesale strong { color: var(--lime); font-weight: 600; }
+
+/* Carrito: un estado confirma el descuento ya aplicado y el otro dice cuanto
+   falta. El segundo es el que mueve el ticket, asi que se destaca. */
+.cart-wholesale-on,
+.cart-wholesale-off { display: block; font-size: .78rem; margin-top: .3rem; }
+.cart-wholesale-on { color: var(--green); }
+.cart-wholesale-off { color: var(--sand); }
+.cart-totals .cart-wholesale-saving strong { color: var(--green); }
+
+/* ===== Canal mayorista ===== */
+.wholesale-grid {
+  display: grid;
+  gap: 1rem;
+  grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
+  margin-top: 1.5rem;
+}
+.wholesale-item {
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 1.1rem;
+  background: var(--surface);
+}
+.wholesale-item h3 { font-size: .95rem; margin-bottom: .4rem; }
+.wholesale-item p { font-size: .85rem; color: var(--text-dim); }
+.wholesale-cta { display: flex; flex-wrap: wrap; gap: .75rem; margin-top: 1.5rem; }

@@ -136,6 +136,20 @@
     actualizarMetadatos();
   }
 
+  /**
+   * Linea de precio por volumen de una tarjeta. Valida el tramo con la misma
+   * regla del carrito (PS_CART.normalizarMayorista) para no mostrar en la
+   * vitrina un descuento que el carrito despues no vaya a aplicar.
+   * @param {Record<string, any>} p Producto del catalogo.
+   * @returns {string} HTML del tramo, o cadena vacia si no hay tramo valido.
+   */
+  function tramoHTML(p) {
+    const tramo = window.PS_CART?.normalizarMayorista?.(p.mayorista, Number(p.precio) || 0);
+    if (!tramo) return '';
+    return '<p class="card-wholesale">Desde ' + tramo.desde + ' unidades: <strong>' +
+      money(tramo.precio) + '</strong> c/u</p>';
+  }
+
   function cardHTML(p) {
     const verified = p.verificado || {};
     const marca = verified.marca && p.marca ? '<span class="card-brand">' + escapeHTML(p.marca) + '</span>' : '';
@@ -151,6 +165,7 @@
       '<div class="card-top">' + marca + '<h3>' + escapeHTML(p.nombre) + '</h3>' +
       '<span class="card-format">' + (verified.formato ? 'Presentación: ' : 'Presentación de referencia: ') + escapeHTML(p.formato || 'A confirmar') + '</span>' + sabor + '</div>' +
       '<p class="card-availability">' + disponibilidad + '</p>' +
+      tramoHTML(p) +
       '<div class="card-foot"><div class="card-price"><small>Precio de referencia</small><strong>' + money(p.precio) + '</strong></div>' +
       '<button class="btn btn-primary btn-sm" type="button" data-cart-add="' + escapeHTML(p.id) + '"' + (agotado ? ' disabled' : '') + '>' + (agotado ? 'Sin stock' : 'Agregar al carrito') + '</button></div></article>';
   }
