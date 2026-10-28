@@ -11,6 +11,13 @@
      formato     → presentación (peso, cápsulas, ml)
      precio      → en guaraníes, sin puntos (0 = "consultar")
      precioAntes → opcional, para mostrar precio tachado
+     mayorista   → opcional: { desde: N, precio: P } -- a partir de N unidades
+                   del MISMO producto, cada unidad sale P. El carrito lo
+                   aplica solo si P < precio y 2 <= N <= 99; un tramo que no
+                   ahorra o que no se puede alcanzar se descarta en silencio
+                   (js/cart.js, normalizarMayorista). Dejarlo sin definir
+                   mientras no se conozca el costo del proveedor: un precio
+                   por volumen fijado sin ese piso puede vender bajo costo.
      objetivos   → ['masa','definicion','belleza','foco','energia']
      badge       → etiqueta corta opcional ('Más vendido', 'Nuevo'…)
      resumen     → una línea, beneficio concreto
@@ -270,6 +277,74 @@ window.PS_CATALOG = [
     resumen: 'Hueso, inmunidad y testosterona. El déficit más común y más barato de corregir.',
     stock: true,
   },
+  /* ---------------- ALIMENTACIÓN REAL (reventa BRASA MONTE) ----------------
+     Productos de terceros que ProteínaSmart revende. A diferencia del resto
+     del catálogo, acá la marca SÍ está verificada: es el dato que se anuncia.
+     Precio = PVP de BRASA MONTE, sin recargo: igualamos su precio para que no
+     haya objeción, y el envío lo absorbe el carrito que ya lo paga.
+     OJO con la vida útil: la carne seca declara 2 a 4 semanas en etiqueta, así
+     que esto va contra pedido, nunca con stock comprado. Ver
+     docs/brasamonte-reventa.md.
+     Por eso `verificado.stock` queda en false como en todo el catálogo: no
+     hay inventario propio que respalde un InStock en los datos estructurados.
+     Se activa recién cuando haya reposición confirmada por escrito. */
+  {
+    id: 'carne-seca-original-200',
+    nombre: 'Carne Seca Original (Beef Jerky)',
+    marca: 'BRASA MONTE',
+    categoria: 'proteinas',
+    formato: '200 g · marinado',
+    precio: 99000,
+    precioAntes: 0,
+    objetivos: ['masa', 'definicion'],
+    badge: 'Comida real',
+    resumen: 'Carne de res del Chaco marinada y secada, lista para comer. Cero azúcar.',
+    stock: true,
+    verificado: { marca: true, formato: true },
+  },
+  {
+    id: 'carne-seca-cecina-200',
+    nombre: 'Carne Seca Tipo Cecina',
+    marca: 'BRASA MONTE',
+    categoria: 'proteinas',
+    formato: '200 g · solo carne y sal',
+    precio: 99000,
+    precioAntes: 0,
+    objetivos: ['masa', 'definicion'],
+    badge: '',
+    resumen: 'Dos ingredientes: carne y sal. Sin marinar, sin conservantes, cero azúcar.',
+    stock: true,
+    verificado: { marca: true, formato: true },
+  },
+  {
+    id: 'carne-seca-original-75',
+    nombre: 'Carne Seca Original (Beef Jerky)',
+    marca: 'BRASA MONTE',
+    categoria: 'proteinas',
+    formato: '75 g · marinado',
+    precio: 39000,
+    precioAntes: 0,
+    objetivos: ['definicion'],
+    badge: '',
+    resumen: 'El formato para probar o llevar al entrenamiento. Cero azúcar.',
+    stock: true,
+    verificado: { marca: true, formato: true },
+  },
+  {
+    id: 'ghee-brasamonte',
+    nombre: 'Ghee (manteca clarificada)',
+    marca: 'BRASA MONTE',
+    categoria: 'keto',
+    formato: '200 ml',
+    precio: 49000,
+    precioAntes: 0,
+    objetivos: ['energia', 'foco'],
+    badge: 'Keto esencial',
+    resumen: 'Manteca pura sin sólidos lácteos. Para cocinar y freír, sin lactosa.',
+    stock: true,
+    verificado: { marca: true, formato: true },
+  },
+
   {
     id: 'nootropico-focus',
     nombre: 'Nootrópico Focus (L-teanina + colina)',
@@ -305,6 +380,10 @@ const PS_ASESORIA_POR_PRODUCTO = {
   'magnesio-glicinato': { protocolo: 'Foco y claridad mental', complemento: 'Omega 3 + Nootrópico Focus' },
   'vitamina-d3-k2': { protocolo: 'Energía sostenida', complemento: 'Aceite MCT + Omega 3' },
   'nootropico-focus': { protocolo: 'Foco y claridad mental', complemento: 'Omega 3 + Magnesio Glicinato' },
+  'carne-seca-original-200': { protocolo: 'Alimentación real', complemento: 'Whey Protein + Aceite MCT' },
+  'carne-seca-cecina-200': { protocolo: 'Alimentación real', complemento: 'Whey Protein + Aceite MCT' },
+  'carne-seca-original-75': { protocolo: 'Alimentación real', complemento: 'Barras Keto + Aceite MCT' },
+  'ghee-brasamonte': { protocolo: 'Keto / Low carb', complemento: 'Aceite MCT + Endulzante Monk Fruit' },
 };
 
 /* Fotos reales recibidas y auditadas contra la ficha de cada producto (peso,
@@ -339,10 +418,80 @@ window.PS_CATALOG = window.PS_CATALOG.map((producto) => {
     ...producto,
     imagen: imagenVerificada || producto.imagen || '',
     sabor: '',
-    verificado: { marca: false, formato: false, sabor: false, stock: false, imagen: !!imagenVerificada },
+    // Por defecto nada esta verificado: un indicador solo se activa si el
+    // producto lo declara con evidencia (ver AGENTS.md). La imagen es la
+    // excepcion: la decide PS_IMAGENES_VERIFICADAS, no el producto.
+    verificado: {
+      marca: producto.verificado?.marca === true,
+      formato: producto.verificado?.formato === true,
+      sabor: producto.verificado?.sabor === true,
+      stock: producto.verificado?.stock === true,
+      imagen: !!imagenVerificada,
+    },
     ...(PS_ASESORIA_POR_PRODUCTO[producto.id] || {}),
   };
 });
+
+/* =========================================================
+   COMBOS (Smart Stacks comprables)
+   El precio NO se escribe acá: se suma de los componentes en
+   window.PS_COMBOS_RESUELTOS, así un cambio de precio del catálogo nunca
+   deja un combo desactualizado. Si un componente no existe o no tiene
+   precio, el combo se descarta entero en vez de publicarse incompleto.
+   ========================================================= */
+const PS_COMBOS_DEF = [
+  {
+    id: 'smart-muscle',
+    nombre: 'Smart Muscle',
+    bajada: 'La base para acompañar un plan de fuerza: proteína suficiente, creatina diaria y aminoácidos.',
+    objetivo: 'masa',
+    componentes: ['whey-isolate-2lb', 'creatina-mono', 'eaa-bcaa'],
+  },
+  {
+    id: 'smart-cut',
+    nombre: 'Smart Cut',
+    bajada: 'Proteína y saciedad para sostener el déficit. Sin quemadores ni promesas.',
+    objetivo: 'definicion',
+    componentes: ['whey-isolate-2lb', 'aceite-mct', 'eaa-bcaa'],
+  },
+  {
+    id: 'smart-40',
+    nombre: 'Smart 40+',
+    bajada: 'Los tres déficits más comunes después de los 40, corregidos con lo que tiene más evidencia.',
+    objetivo: 'energia',
+    componentes: ['omega-3', 'magnesio-glicinato', 'vitamina-d3-k2'],
+  },
+  {
+    id: 'smart-glow',
+    nombre: 'Smart Glow',
+    bajada: 'Base diaria para piel, pelo, uñas y articulaciones. El colágeno ya trae la vitamina C.',
+    objetivo: 'belleza',
+    componentes: ['colageno-hidrolizado', 'magnesio-glicinato'],
+  },
+  {
+    id: 'smart-feeding',
+    nombre: 'Smart Feeding',
+    coMarca: 'BRASA MONTE',
+    bajada: 'Alimentación real baja en carbohidratos: grasa buena para cocinar, proteína entera para el día y el endulzante que reemplaza al azúcar.',
+    objetivo: 'definicion',
+    componentes: ['ghee-brasamonte', 'carne-seca-cecina-200', 'endulzante-monkfruit'],
+  },
+];
+
+/* Resuelve cada combo contra el catálogo ya normalizado. Un combo con un
+   componente faltante o sin precio no se publica: un pack con un hueco es
+   peor que no ofrecerlo. */
+window.PS_COMBOS = PS_COMBOS_DEF.reduce((publicables, combo) => {
+  const items = /** @type {Array<Record<string, any>>} */ ([]);
+  for (const id of combo.componentes) {
+    const item = window.PS_CATALOG.find((producto) => producto.id === id);
+    // Un componente que falta o que quedo sin precio tumba el combo entero.
+    if (!item || !(item.precio > 0)) return publicables;
+    items.push(item);
+  }
+  const precio = items.reduce((suma, item) => suma + item.precio, 0);
+  return publicables.concat({ ...combo, items, precio });
+}, /** @type {Array<PSCombo>} */ ([]));
 
 /* Categorías: título y descripción de cada filtro */
 window.PS_CATEGORIAS = [

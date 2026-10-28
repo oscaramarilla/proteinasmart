@@ -381,3 +381,87 @@ body.cart-open { overflow: hidden; }
   html { scroll-behavior: auto; }
   *, *::before, *::after { animation: none !important; transition: none !important; }
 }
+
+/* ===== Precio por volumen (tramo mayorista) ===== */
+/* Vitrina: la tarjeta avisa el precio por volumen sin competir con el precio
+   de lista, que sigue siendo el ancla. */
+.card-wholesale {
+  font-size: .78rem;
+  color: var(--text-dim);
+  border: 1px dashed var(--border-strong);
+  border-radius: 8px;
+  padding: .4rem .6rem;
+  margin-top: .6rem;
+}
+.card-wholesale strong { color: var(--lime); font-weight: 600; }
+
+/* Carrito: un estado confirma el descuento ya aplicado y el otro dice cuanto
+   falta. El segundo es el que mueve el ticket, asi que se destaca. */
+.cart-wholesale-on,
+.cart-wholesale-off { display: block; font-size: .78rem; margin-top: .3rem; }
+.cart-wholesale-on { color: var(--green); }
+.cart-wholesale-off { color: var(--sand); }
+.cart-totals .cart-wholesale-saving strong { color: var(--green); }
+
+/* ===== Canal mayorista ===== */
+.wholesale-grid {
+  display: grid;
+  gap: 1rem;
+  grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
+  margin-top: 1.5rem;
+}
+.wholesale-item {
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 1.1rem;
+  background: var(--surface);
+}
+.wholesale-item h3 { font-size: .95rem; margin-bottom: .4rem; }
+.wholesale-item p { font-size: .85rem; color: var(--text-dim); }
+.wholesale-cta { display: flex; flex-wrap: wrap; gap: .75rem; margin-top: 1.5rem; }
+
+/* ===== Combos (Smart Stacks comprables) ===== */
+.combo-grid {
+  display: grid;
+  gap: 1.1rem;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+}
+.combo-card {
+  display: flex;
+  flex-direction: column;
+  border: 1px solid var(--border-strong);
+  border-radius: 16px;
+  padding: 1.3rem;
+  background: var(--surface);
+}
+/* La co-marca es el gancho del combo con un tercero: va arriba de todo. */
+.combo-comarca {
+  display: inline-block;
+  align-self: flex-start;
+  font-size: .7rem;
+  font-weight: 700;
+  letter-spacing: .06em;
+  text-transform: uppercase;
+  color: var(--bg);
+  background: var(--lime);
+  border-radius: 99px;
+  padding: .25rem .7rem;
+  margin-bottom: .7rem;
+}
+.combo-card h3 { font-family: 'Sora', sans-serif; font-size: 1.15rem; }
+.combo-bajada { font-size: .86rem; color: var(--text-dim); margin-top: .4rem; }
+.combo-items { list-style: none; padding: 0; margin: 1rem 0; display: grid; gap: .45rem; }
+.combo-items li {
+  display: flex;
+  justify-content: space-between;
+  gap: .75rem;
+  font-size: .85rem;
+  padding-bottom: .45rem;
+  border-bottom: 1px solid var(--border);
+}
+.combo-items li em { font-style: normal; color: var(--lime); font-size: .76rem; }
+.combo-items li span { color: var(--text-dim); white-space: nowrap; }
+.combo-foot { display: flex; flex-wrap: wrap; align-items: end; justify-content: space-between; gap: .75rem; margin-top: auto; }
+.combo-price { display: flex; flex-direction: column; }
+.combo-price small { color: var(--text-dim); font-size: .72rem; }
+.combo-price strong { font-family: 'Sora', sans-serif; font-size: 1.25rem; color: var(--text); }

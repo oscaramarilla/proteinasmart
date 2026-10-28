@@ -10,12 +10,33 @@
   const quantity = (value) => Math.min(MAX_QUANTITY, Math.max(1, Math.floor(Number(value) || 1)));
 
   /**
+   * Valida el tramo mayorista de un producto. Se acepta solo si realmente
+   * baja el precio unitario a partir de una cantidad alcanzable: un tramo que
+   * no ahorra nada, que encarece o que pide mas de MAX_QUANTITY se descarta
+   * en lugar de mostrarse, porque un "precio mayorista" que no se puede
+   * alcanzar o que no ahorra es peor que no tener ninguno.
+   * @param {unknown} mayorista Tramo declarado por el catalogo.
+   * @param {number} precioBase Precio de lista ya normalizado.
+   * @returns {PSTramoMayorista | null} Tramo valido o null.
+   */
+  function normalizarMayorista(mayorista, precioBase) {
+    if (!mayorista || typeof mayorista !== 'object') return null;
+    const desde = Number(/** @type {any} */ (mayorista).desde);
+    const precio = Number(/** @type {any} */ (mayorista).precio);
+    if (!Number.isSafeInteger(desde) || desde < 2 || desde > MAX_QUANTITY) return null;
+    if (!Number.isSafeInteger(precio) || precio <= 0) return null;
+    if (precioBase <= 0 || precio >= precioBase) return null;
+    return { desde, precio };
+  }
+
+  /**
    * Normaliza un item externo al contrato interno del carrito.
-   * @param {Object} producto Producto del catalogo.
+   * @param {Record<string, any>} producto Producto del catalogo.
    * @param {number} [cantidad=1] Cantidad solicitada.
-   * @returns {Object} Item inmutable del carrito.
+   * @returns {PSCartItem} Item inmutable del carrito.
    */
   function normalizarItem(producto, cantidad) {
+    const precio = Number.isSafeInteger(producto.precio) && producto.precio > 0 ? producto.precio : 0;
     return {
       id: String(producto.id),
       nombre: producto.nombre,
@@ -23,7 +44,8 @@
       marca: producto.verificado?.marca ? producto.marca || '' : '',
       sabor: producto.verificado?.sabor ? producto.sabor || '' : '',
       verificado: { marca: producto.verificado?.marca === true, sabor: producto.verificado?.sabor === true },
-      precio: Number.isSafeInteger(producto.precio) && producto.precio > 0 ? producto.precio : 0,
+      precio,
+      mayorista: normalizarMayorista(producto.mayorista, precio),
       cantidad: quantity(cantidad),
       categoria: producto.categoria || '',
       protocolo: producto.protocolo || producto.categoria || 'Asesoría personalizada',
@@ -36,7 +58,7 @@
 
   /**
    * Lee el carrito persistido sin romper la experiencia si localStorage falla.
-   * @returns {Array<Object>} Items validos persistidos.
+   * @returns {Array<PSCartItem>} Items validos persistidos.
    */
   function leerPersistencia() {
     try {
@@ -50,7 +72,7 @@
 
   /**
    * Persiste una copia serializable del estado del carrito.
-   * @param {Array<Object>} items Items actuales.
+   * @param {Array<PSCartItem>} items Items actuales.
    * @returns {void}
    */
   function guardarPersistencia(items) {
@@ -63,9 +85,9 @@
 
   /**
    * Reduce una accion a un nuevo estado sin mutar el anterior.
-   * @param {Array<Object>} estado Estado actual.
+   * @param {Array<PSCartItem>} estado Estado actual.
    * @param {Object} accion Accion del dominio.
-   * @returns {Array<Object>} Nuevo estado.
+   * @returns {Array<PSCartItem>} Nuevo estado.
    */
   function reducer(estado, accion) {
     switch (accion.type) {
@@ -96,12 +118,43 @@
   }
 
   /**
+   * Precio unitario vigente de un item: el del tramo mayorista si la cantidad
+   * lo alcanza, el de lista si no. Es la unica fuente de ese calculo -- la UI
+   * y el checkout la reusan para no derivar el descuento por su cuenta.
+   * @param {PSCartItem} item Item del carrito.
+   * @returns {number} Precio unitario en guaranies.
+   */
+  function precioUnitario(item) {
+    return item.mayorista && item.cantidad >= item.mayorista.desde ? item.mayorista.precio : item.precio;
+  }
+
+  /**
+   * Cuantas unidades faltan para alcanzar el tramo mayorista de un item.
+   * @param {PSCartItem} item Item del carrito.
+   * @returns {number} Unidades faltantes; 0 si no aplica o ya se alcanzo.
+   */
+  function faltanParaMayorista(item) {
+    if (!item.mayorista || item.cantidad >= item.mayorista.desde) return 0;
+    return item.mayorista.desde - item.cantidad;
+  }
+
+  /**
    * Calcula el total entero en guaranies, sin formato de presentacion.
-   * @param {Array<Object>} items Items del carrito.
+   * Aplica el tramo mayorista por item cuando la cantidad lo alcanza.
+   * @param {Array<PSCartItem>} items Items del carrito.
    * @returns {number} Total en guaranies.
    */
   function total(items) {
-    return items.reduce((acumulado, item) => acumulado + item.precio * item.cantidad, 0);
+    return items.reduce((acumulado, item) => acumulado + precioUnitario(item) * item.cantidad, 0);
+  }
+
+  /**
+   * Ahorro en guaranies que los tramos mayoristas ya aplicaron al carrito.
+   * @param {Array<PSCartItem>} items Items del carrito.
+   * @returns {number} Ahorro en guaranies; 0 si ningun tramo esta activo.
+   */
+  function ahorroMayorista(items) {
+    return items.reduce((acumulado, item) => acumulado + (item.precio - precioUnitario(item)) * item.cantidad, 0);
   }
 
   let items = leerPersistencia();
@@ -136,5 +189,5 @@
     return () => listeners.delete(listener);
   }
 
-  window.PS_CART = { dispatch, getState, subscribe, reducer, total, MAX_QUANTITY };
+  window.PS_CART = { dispatch, getState, subscribe, reducer, total, precioUnitario, faltanParaMayorista, ahorroMayorista, normalizarMayorista, MAX_QUANTITY };
 })();

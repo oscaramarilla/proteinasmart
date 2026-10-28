@@ -249,3 +249,52 @@ values
     'Omega 3 + Magnesio Glicinato',
     array['Nuevo']::text[]
   );
+-- ============================================================
+-- Reventa BRASA MONTE. Bloque aparte porque estos SI declaran `marca`:
+-- es el dato que se anuncia, a diferencia del resto del catalogo.
+-- Precio = PVP de BRASA MONTE, sin recargo (igualamos su precio).
+-- Vida util de 2 a 4 semanas en la carne seca: va contra pedido, nunca
+-- con stock comprado. Ver docs/brasamonte-reventa.md.
+-- Espeja los SKU de js/catalog.js; si cambia uno, cambian los dos.
+-- ============================================================
+insert into public.productos (
+  nombre, descripcion, precio, unidad_medida, categoria, marca,
+  objetivos, disciplinas, imagen, stock, protocolo, complemento, etiquetas
+)
+values
+  (
+    'Carne Seca Original (Beef Jerky)',
+    'Carne de res del Chaco marinada y secada, lista para comer. Cero azúcar.',
+    99000, '200 g · marinado', 'proteinas', 'BRASA MONTE',
+    array['masa', 'definicion']::text[],
+    array['healthy-habits', 'low-carb']::text[],
+    null, true, 'Alimentación real', 'Whey Protein + Aceite MCT',
+    array['Comida real']::text[]
+  ),
+  (
+    'Carne Seca Tipo Cecina',
+    'Dos ingredientes: carne y sal. Sin marinar, sin conservantes, cero azúcar.',
+    99000, '200 g · solo carne y sal', 'proteinas', 'BRASA MONTE',
+    array['masa', 'definicion']::text[],
+    array['healthy-habits', 'low-carb']::text[],
+    null, true, 'Alimentación real', 'Whey Protein + Aceite MCT',
+    '{}'::text[]
+  ),
+  (
+    'Carne Seca Original (Beef Jerky)',
+    'El formato para probar o llevar al entrenamiento. Cero azúcar.',
+    39000, '75 g · marinado', 'proteinas', 'BRASA MONTE',
+    array['definicion']::text[],
+    array['healthy-habits', 'low-carb']::text[],
+    null, true, 'Alimentación real', 'Barras Keto + Aceite MCT',
+    '{}'::text[]
+  ),
+  (
+    'Ghee (manteca clarificada)',
+    'Manteca pura sin sólidos lácteos. Para cocinar y freír, sin lactosa.',
+    49000, '200 ml', 'keto', 'BRASA MONTE',
+    array['energia', 'foco']::text[],
+    array['low-carb', 'healthy-habits']::text[],
+    null, true, 'Keto / Low carb', 'Aceite MCT + Endulzante Monk Fruit',
+    array['Keto esencial']::text[]
+  );
