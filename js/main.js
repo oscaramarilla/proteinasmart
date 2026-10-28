@@ -218,6 +218,35 @@
     script.textContent = JSON.stringify(CATALOG.map(productoSchema));
   }
 
+  /**
+   * Dibuja los combos publicables. El precio ya viene sumado de los
+   * componentes por catalog.js: aca no se recalcula nada.
+   * @returns {void}
+   */
+  function renderCombos() {
+    const grid = $('#combosGrid');
+    if (!grid) return;
+    const combos = window.PS_COMBOS || [];
+    if (!combos.length) { grid.innerHTML = ''; return; }
+    grid.innerHTML = combos.map((combo) => {
+      const coMarca = combo.coMarca
+        ? '<span class="combo-comarca">ProteínaSmart + ' + escapeHTML(combo.coMarca) + '</span>'
+        : '';
+      const lista = combo.items.map((item) =>
+        '<li>' + escapeHTML(item.nombre) +
+        (item.verificado?.marca && item.marca ? ' <em>' + escapeHTML(item.marca) + '</em>' : '') +
+        '<span>' + money(item.precio) + '</span></li>').join('');
+      return '<article class="combo-card">' + coMarca +
+        '<h3>' + escapeHTML(combo.nombre) + '</h3>' +
+        '<p class="combo-bajada">' + escapeHTML(combo.bajada) + '</p>' +
+        '<ul class="combo-items">' + lista + '</ul>' +
+        '<div class="combo-foot"><div class="combo-price"><small>' + combo.items.length +
+        ' productos · envío incluido</small><strong>' + money(combo.precio) + '</strong></div>' +
+        '<button class="btn btn-primary btn-sm" type="button" data-combo-add="' +
+        escapeHTML(combo.id) + '">Agregar el combo</button></div></article>';
+    }).join('');
+  }
+
   function renderCatalogo() {
     if (!grid) return;
     // El grid arranca oculto por CSS (.product-grid-engine + aria-hidden) para
@@ -320,6 +349,7 @@
   syncGoalControls();
   renderFiltros();
   renderCatalogo();
+  renderCombos();
   renderSchemaProductos();
   actualizarMetadatos();
   // Categoria pedida por URL limpia (/proteinas, ?categoria=... o el
@@ -346,6 +376,18 @@
   }
 
   document.addEventListener('click', (event) => {
+    const comboAdd = /** @type {HTMLElement | null} */ ((/** @type {Element} */ (event.target)).closest('[data-combo-add]'));
+    if (comboAdd && window.PS_CART) {
+      const combo = (window.PS_COMBOS || []).find((item) => item.id === comboAdd.dataset.comboAdd);
+      if (combo) {
+        // Se agregan los componentes sueltos, no un SKU "combo": asi el
+        // cliente puede sacar uno sin perder el resto, y el carrito sigue
+        // siendo una lista de productos reales que el deposito puede armar.
+        combo.items.forEach((producto) => window.PS_CART.dispatch({ type: 'AGREGAR', producto }));
+        $('#cartStatus').textContent = combo.nombre + ' agregado al carrito (' + combo.items.length + ' productos).';
+      }
+      return;
+    }
     const add = /** @type {HTMLElement | null} */ ((/** @type {Element} */ (event.target)).closest('[data-cart-add]'));
     if (!add || !window.PS_CART) return;
     const producto = CATALOG.find((item) => item.id === add.dataset.cartAdd);
@@ -359,6 +401,7 @@
     const detalle = (/** @type {CustomEvent} */ (event)).detail;
     CATALOG = detalle;
     renderCatalogo();
+    renderCombos();
     renderSchemaProductos();
   });
 

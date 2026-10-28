@@ -16,9 +16,17 @@ interface PSCartItem {
   dosis: string; momento: string; duracion: string;
 }
 
+/** Combo publicable: sus items y su precio ya resueltos por catalog.js. */
+interface PSCombo {
+  id: string; nombre: string; bajada: string; objetivo: string;
+  coMarca?: string; componentes: string[];
+  items: Array<Record<string, any>>; precio: number;
+}
+
 interface Window {
   PS_CONFIG: Record<string, any>;
   PS_CATALOG: Array<Record<string, any>>;
+  PS_COMBOS: Array<PSCombo>;
   PS_CATEGORIAS: Array<{ id: string; nombre: string; icono: string }>;
   PS_OBJETIVOS: Array<{ id: string; nombre: string; icono: string }>;
   PS_CART: {
